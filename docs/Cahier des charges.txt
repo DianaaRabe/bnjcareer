@@ -1,0 +1,157 @@
+Cahier des charges - Plateforme d’accompagnement à l’emploi (avec IA)
+1. Objectif du projet
+Créer une application web permettant aux candidats de :
+●	améliorer leur employabilité
+●	automatiser leur recherche d’emploi
+●	bénéficier d’un accompagnement (coaching individuel et collectif)
+●	accéder à des ressources intelligentes via IA
+Objectif business :
+●	créer une base de données de candidats
+________________________________________
+2. Cibles utilisateurs
+Utilisateurs principaux
+●	Candidats (étudiants, juniors, reconversion)
+Utilisateurs secondaires
+●	Coachs / accompagnants
+●	Administrateurs
+________________________________________
+3. Fonctionnalités principales
+3.1 CV & Matching (IA)
+Création de CV personnalisé
+●	Génération de CV via IA (expériences, compétences)
+●	Templates professionnels
+●	Export PDF + lien partageable
+Matching profil/offre
+●	Score de compatibilité
+●	Analyse des écarts
+●	Suggestions d’amélioration (mots-clés, compétences)
+________________________________________
+3.2 Automatisation et suivi des candidatures
+Intégration job boards
+●	Indeed
+●	Monster
+●	Welcome to the Jungle
+●	Apec
+Fonctionnalités
+●	Centralisation des offres
+●	Candidature en un clic
+●	Dashboard de suivi :
+○	envoyée
+○	en attente
+○	refusée
+○	entretien
+________________________________________
+3.3 Gestion des accompagnements
+Calendrier des ateliers
+●	Vue calendrier
+●	Sessions :
+○	1v1
+○	groupe
+●	Réservation de créneaux
+●	Notifications
+Suivi des objectifs (gamification)
+●	Objectifs personnalisés
+●	Système de progression
+●	Rappels automatiques
+________________________________________
+3.4 Espace de discussion
+Messagerie interne
+●	Chat individuel (coach ↔ candidat)
+●	Chat communautaire
+Fonctionnalités
+●	messages
+●	envoi de fichiers
+●	notifications
+Objectif : empêcher les échanges hors plateforme
+________________________________________
+3.5 Ressources + IA
+Bibliothèque de contenu
+●	Documents (PDF)
+●	Vidéos
+●	Replays d’ateliers
+Chatbot IA
+●	Réponses basées sur les ressources
+●	Conseils personnalisés :
+○	CV
+○	entretiens
+○	recherche d’emploi
+________________________________________
+3.6 Support
+Gestion des tickets
+●	Création et suivi
+Niveaux
+●	Niveau 1 : CSM
+●	Niveau 2 : technique
+________________________________________
+4. Architecture technique
+Frontend
+●	React / Next.js
+Backend
+●	Node.js (NestJS recommandé)
+Base de données
+●	PostgreSQL
+Temps réel
+●	WebSocket (chat, notifications)
+IA
+●	OpenAI / Anthropic :
+○	génération CV
+○	matching
+○	chatbot
+Scraping / agrégation offres
+●	Puppeteer / Apify
+________________________________________
+5. Sécurité
+●	Authentification (JWT / OAuth)
+●	Protection des données utilisateurs
+●	Limitation du partage d’informations externes (anti-bypass)
+________________________________________
+6. Modèle économique
+Abonnement
+●	Accès à la plateforme
+●	Accès aux coachings
+Upsell
+●	Coaching premium
+●	Optimisation CV
+________________________________________
+7. KPI
+●	Taux de rétention
+●	Nombre de candidatures envoyées
+●	Taux de conversion entretien
+●	Engagement utilisateur
+________________________________________
+8. Risques
+Bypass
+Solution :
+●	messagerie intégrée obligatoire
+●	centralisation des interactions
+Faible engagement
+Solution :
+●	objectifs
+●	rappels
+●	communauté
+Instabilité scraping
+Solution :
+●	fallback manuel
+●	API quand possible
+________________________________________
+9. Roadmap MVP
+Phase 1
+●	Authentification
+●	Création de CV
+●	Matching basique
+●	Suivi des candidatures
+●	Chat simple
+Phase 2
+●	Automatisation des candidatures
+●	Calendrier et coaching
+Phase 3
+●	IA avancée
+●	Gamification
+●	Communauté
+________________________________________
+10. Différenciation
+●	IA réellement utile
+●	expérience utilisateur simple
+●	centralisation complète
+●	combinaison accompagnement humain + IA
+
