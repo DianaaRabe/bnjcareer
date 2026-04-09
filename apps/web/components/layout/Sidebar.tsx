@@ -24,7 +24,13 @@ const NAV_ITEMS = [
   { icon: BookOpen, label: "Ressources", href: "/dashboard/ressources" },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  fullName: string;
+  email: string;
+  avatarUrl: string | null;
+}
+
+export function Sidebar({ fullName, email, avatarUrl }: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -32,7 +38,7 @@ export function Sidebar() {
       {/* Logo */}
       <div className="px-6 py-6 border-b border-white/10">
         <img
-          src="https://cdn.prod.website-files.com/63f68048171c386de3e8541b/67e52eccfd0ff87b28410988_BNJ_Logo%20Final_WEB-fit.png"
+          src="https://cdn.prod.website-files.com/68f74eda1b97775fa6dd76a2/691752fe9142ffa21169191b_Logo_white.png"
           alt="BNJ Career"
           className="h-10 object-contain"
         />
@@ -49,16 +55,14 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 group ${
-                active
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 group ${active
                   ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/30"
                   : "text-white/60 hover:bg-white/10 hover:text-white"
-              }`}
+                }`}
             >
               <item.icon
-                className={`w-5 h-5 shrink-0 transition-transform group-hover:scale-110 ${
-                  active ? "text-brand-accent" : ""
-                }`}
+                className={`w-5 h-5 shrink-0 transition-transform group-hover:scale-110 ${active ? "text-brand-accent" : ""
+                  }`}
               />
               <span className="truncate">{item.label}</span>
               {active && (
@@ -72,14 +76,32 @@ export function Sidebar() {
       {/* User */}
       <div className="px-4 py-4 border-t border-white/10">
         <div className="flex items-center gap-3 px-2">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-light to-brand-accent flex items-center justify-center text-sm font-bold text-brand-dark shrink-0">
-            JD
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-white text-sm font-semibold truncate">Jean Dupont</p>
-            <p className="text-white/50 text-xs truncate">Candidat</p>
-          </div>
-          <button className="text-white/40 hover:text-white/80 transition-colors">
+          {/* Avatar : photo ou initiales */}
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt={fullName}
+              className="w-9 h-9 rounded-full object-cover shrink-0 ring-2 ring-white/20"
+            />
+          ) : (
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-light to-brand-accent flex items-center justify-center text-sm font-bold text-brand-dark shrink-0">
+              {fullName.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <Link href="/dashboard/profile" className="flex-1 min-w-0 hover:opacity-80 transition-opacity">
+            <p className="text-white text-sm font-semibold truncate">{fullName}</p>
+            <p className="text-white/50 text-xs truncate">{email}</p>
+          </Link>
+          <button
+            onClick={async () => {
+              const { createClient } = await import('@/lib/supabase/client');
+              const supabase = createClient();
+              await supabase.auth.signOut();
+              window.location.href = '/login';
+            }}
+            className="text-white/40 hover:text-white/80 transition-colors"
+            title="Se déconnecter"
+          >
             <LogOut className="w-4 h-4" />
           </button>
         </div>

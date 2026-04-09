@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.103.0",
     "apify-client": "^2.22.3",
     "autoprefixer": "^10.4.19",
     "lucide-react": "^0.378.0",

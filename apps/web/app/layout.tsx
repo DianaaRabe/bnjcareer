@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 export const metadata: Metadata = {
   title: "BNJ Career",
   description: "Chasseur d'Opportunités",
+  icons: {
+    icon: "/logo.png?v=hello",
+  },
 };
 
 export default function RootLayout({

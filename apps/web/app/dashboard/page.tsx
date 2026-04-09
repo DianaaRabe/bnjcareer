@@ -13,6 +13,7 @@ import {
   ArrowRight,
   Sparkles,
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
 
 const STATS = [
   { label: "Candidatures envoyées", value: "12", icon: Briefcase, color: "text-brand-primary", bg: "bg-brand-100" },
@@ -36,14 +37,30 @@ const MODULES = [
   { icon: BookOpen, label: "Ressources", desc: "Documents, vidéos & IA", href: "/dashboard/ressources", color: "from-orange-500 to-amber-700" },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let displayName = "Candidat";
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("first_name, last_name")
+      .eq("id", user.id)
+      .single();
+
+    const firstName = profile?.first_name || user.user_metadata?.given_name || "";
+    const lastName  = profile?.last_name  || user.user_metadata?.family_name || "";
+    displayName = [firstName, lastName].filter(Boolean).join(" ") || user.email || "Candidat";
+  }
+
   return (
     <div className="p-6 lg:p-8 space-y-8">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-slate-500 font-medium mb-1">Bonjour 👋</p>
-          <h1 className="text-2xl lg:text-3xl font-extrabold text-slate-900">Jean Dupont</h1>
+          <h1 className="text-2xl lg:text-3xl font-extrabold text-slate-900">{displayName}</h1>
           <p className="text-slate-500 mt-1">Voici un résumé de votre parcours</p>
         </div>
         <div className="hidden sm:flex items-center gap-2 bg-brand-100 text-brand-primary px-4 py-2 rounded-full text-sm font-semibold">
