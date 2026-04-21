@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { query, location } = body;
+        const { query, location, country } = body;
 
         const token = process.env.APIFY_API_TOKEN || '';
         if (!token) {
@@ -11,23 +11,22 @@ export async function POST(req: Request) {
         }
 
         const input = {
-            "country": "us",
+            "country": country || "fr",
             "query": query || "Analyst",
-            "location": location || "New York",
-            "maxRows": 10,
+            "location": location || "Paris",
+            "maxRows": 15,
             "remote": "remote",
-            "level": "entry_level",
-            "sort": "relevance",
+            "sort": "date",
             "jobType": "fulltime",
             "fromDays": "14",
-            "urls": [
-                "https://indeed.com/cmp/google",
-                "https://www.indeed.com/jobs?q=engineer&l=San+Francisco&sc=0kf%3Afcckey%28b1f359487c26ba41%29%3B"
-            ],
-            "maxRowsPerUrl": 10,
-            "enableUniqueJobs": false,
-            "includeSimilarJobs": true
+            "enableUniqueJobs": true,
+            "includeSimilarJobs": false
         };
+
+        console.log("=== APIFY SCRAPPER CALL ===");
+        console.log("Reçu depuis le Frontend:", { query, location, country });
+        console.log("Payload envoyé à Apify:", input);
+        console.log("===========================");
 
         // Utilisation directe de l'API REST d'Apify (synchrone)
         // Cela permet d'éviter l'erreur NextJS avec "proxy-agent" contenu dans "apify-client"

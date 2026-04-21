@@ -10,6 +10,7 @@ import {
   Calendar,
   MessageSquare,
   BookOpen,
+  CreditCard,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -20,6 +21,7 @@ const NAV_ITEMS = [
   { icon: Calendar, label: "Coaching", href: "/dashboard/coaching" },
   { icon: MessageSquare, label: "Messages", href: "/dashboard/messages" },
   { icon: BookOpen, label: "Ressources", href: "/dashboard/ressources" },
+  { icon: CreditCard, label: "Abos", href: "/dashboard/subscriptions" },
 ];
 
 export function BottomNav() {

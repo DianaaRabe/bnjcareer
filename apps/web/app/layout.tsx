@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "BNJ Career",
+  title: "BNJ Skills Maker",
   description: "Chasseur d'Opportunités",
   icons: {
     icon: "/logo.png?v=hello",

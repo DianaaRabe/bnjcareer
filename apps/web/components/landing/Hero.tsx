@@ -20,7 +20,7 @@ export function Hero() {
             </div>
             
             <h1 className="text-5xl lg:text-7xl font-extrabold text-white leading-[1.1] animate-slide-up [animation-delay:100ms]">
-              Évoluez avec <span className="text-brand-accent">BNJ Career</span> et l'IA.
+              Évoluez avec <span className="text-brand-accent">BNJ Skills Maker</span> et l'IA.
             </h1>
             
             <p className="text-lg lg:text-xl text-white/70 font-medium leading-relaxed max-w-xl animate-slide-up [animation-delay:200ms]">
@@ -64,7 +64,7 @@ export function Hero() {
               {/* Image from user reference (Stylized professional) */}
               <img 
                 src="https://media.licdn.com/dms/image/v2/D4E22AQFtkrOlgm7JlQ/feedshare-shrink_800/B4EZ0_d7rpGQAc-/0/1774886304804?e=1777507200&v=beta&t=Aac1w54OmNR4Lr3gmmuxUpfMShcgMplLlGt2lLwiJd0" 
-                alt="Candidate épanoui BNJ Career" 
+                alt="Candidate épanoui BNJ Skills Maker" 
                 className="relative z-10 rounded-[2rem] shadow-2xl transition-transform duration-500 group-hover:scale-[1.02] border-4 border-white/10"
               />
               {/* Decorative elements */}

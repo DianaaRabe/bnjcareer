@@ -47,7 +47,7 @@ export default function LoginForm() {
           
           <div className="relative text-center mb-10">
             <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Bienvenue</h1>
-            <p className="text-slate-500 mt-2 font-medium">Connectez-vous pour accéder à BNJ Career</p>
+            <p className="text-slate-500 mt-2 font-medium">Connectez-vous pour accéder à BNJ Skills Maker</p>
           </div>
 
           {errorMsg && (

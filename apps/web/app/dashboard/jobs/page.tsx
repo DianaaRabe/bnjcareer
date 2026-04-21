@@ -5,17 +5,39 @@ import { Target, UploadCloud, Link2, BrainCircuit, CheckCircle, AlertCircle, Che
 
 interface MatchResult {
   score: number;
-  comments: string;
+  verdict: string;
+  reasons: string[];
 }
 
 export default function MatchingPage() {
   const [jobUrl, setJobUrl] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<MatchResult | null>(null);
   const [error, setError] = useState("");
-
+  
   const savedCv = typeof window !== "undefined" ? localStorage.getItem("user_cv_parsed") : null;
+
+  // Récupération des données venant de l'extension
+  React.useEffect(() => {
+    const checkExtensionData = () => {
+      const extData = localStorage.getItem('extension_job_match');
+      if (extData) {
+        try {
+          const { url, description } = JSON.parse(extData);
+          if (url) setJobUrl(url);
+          if (description) setJobDescription(description);
+          // On nettoie pour ne pas écraser au prochain refresh manuel
+          localStorage.removeItem('extension_job_match');
+        } catch (e) {}
+      }
+    };
+
+    checkExtensionData();
+    window.addEventListener('extension_job_loaded', checkExtensionData);
+    return () => window.removeEventListener('extension_job_loaded', checkExtensionData);
+  }, []);
 
   const handleAnalyze = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,22 +47,47 @@ export default function MatchingPage() {
     setResult(null);
 
     try {
-      const formData = new FormData();
-      formData.append("job_url", jobUrl);
-      if (file) {
-        formData.append("cv_file", file);
-      } else if (savedCv) {
-        const blob = new Blob([savedCv], { type: "application/json" });
-        formData.append("cv_data", blob, "cv.json");
+      if (!savedCv) {
+        throw new Error("Veuillez d'abord analyser votre CV dans l'onglet CV.");
       }
+
+      const candidateData = JSON.parse(savedCv);
+      
+      const payload = {
+        candidate: candidateData,
+        offer: {
+          url: jobUrl,
+          description: jobDescription
+        }
+      };
 
       const res = await fetch("https://jobmatchingscore.bnjteammaker.com/analyze", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error(`Erreur API (${res.status})`);
+      
+      if (!res.ok) {
+        let errorMessage = `Erreur API (${res.status})`;
+        try {
+          const errorResponse = await res.text();
+          if (errorResponse) {
+            errorMessage += ` : ${errorResponse}`;
+          }
+        } catch (e) {
+          // ignore
+        }
+        throw new Error(errorMessage);
+      }
+      
       const data = await res.json();
-      setResult({ score: data.score, comments: data.comments || data.comment || "" });
+      setResult({ 
+        score: data.score, 
+        verdict: data.verdict || data.comments || data.comment || "",
+        reasons: Array.isArray(data.reasons) ? data.reasons : []
+      });
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -79,10 +126,25 @@ export default function MatchingPage() {
                   value={jobUrl}
                   onChange={(e) => setJobUrl(e.target.value)}
                   placeholder="https://fr.indeed.com/viewjob?jk=..."
-                  className="w-full pl-11 pr-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary focus:bg-white transition-all"
+                  className="w-full pl-11 pr-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary focus:bg-white text-slate-900 transition-all"
                   required
                 />
               </div>
+            </div>
+
+            {/* Job Description (The workaround for better matching) */}
+            <div>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide block mb-2">
+                Description de l'offre (copier-coller)
+              </label>
+              <textarea
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                placeholder="Collez ici le texte de l'offre pour une analyse précise..."
+                rows={4}
+                className="w-full p-4 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary focus:bg-white text-slate-900 transition-all resize-none"
+                required
+              />
             </div>
 
             {/* CV section */}
@@ -187,10 +249,26 @@ export default function MatchingPage() {
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex-1">
                 <h2 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-brand-primary" />
-                  Analyse détaillée
+                  Verdict & Points Clés
                 </h2>
-                <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap bg-slate-50 rounded-xl p-4 border border-slate-100">
-                  {result.comments || "Aucun commentaire disponible."}
+                <div className="space-y-4">
+                  {result.verdict && (
+                    <div className="text-sm font-semibold text-slate-900 bg-brand-50 p-3 rounded-lg border border-brand-100">
+                      {result.verdict}
+                    </div>
+                  )}
+                  {result.reasons.length > 0 ? (
+                    <ul className="space-y-2">
+                      {result.reasons.map((reason, idx) => (
+                        <li key={idx} className="flex gap-2 text-sm text-slate-700">
+                          <div className="w-1.5 h-1.5 rounded-full bg-brand-primary mt-1.5 shrink-0" />
+                          {reason}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-slate-500 italic">Aucun détail supplémentaire.</p>
+                  )}
                 </div>
               </div>
             </>

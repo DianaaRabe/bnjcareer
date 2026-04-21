@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "BNJ Skills Maker Autofill",
+  "version": "1.0.0",
+  "description": "Pré-remplit automatiquement les formulaires de candidature depuis votre profil BNJ Skills Maker.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost:3000/*",
+        "https://https://bnj-skills-maker.vercel.app//*"
+      ],
+      "js": ["content_scripts/bridge.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_scripts/autofill.js", "content_scripts/extractor.js"],
+      "all_frames": true,
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "BNJ Skills Maker Autofill"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}

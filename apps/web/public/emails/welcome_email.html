@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bienvenue sur BNJ Skills Maker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=monument-extended@400,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 20px 0;
+        background: linear-gradient(135deg, #f8fafb 0%, #fde8d2 100%);
+        font-family:
+          "DM Sans",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        color: #2c3e50;
+        line-height: 1.6;
+      }
+      .email-container {
+        width: 100%;
+        max-width: 640px;
+        margin: 0 auto;
+        background-color: #fffbf7;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      }
+      .header {
+        padding: 40px 30px;
+        text-align: center;
+        background: linear-gradient(135deg, #590293 0%, #3e0863 100%);
+        position: relative;
+      }
+      .header::after {
+        content: "";
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        right: 0;
+        height: 40px;
+        background: #fffbf7;
+        border-radius: 50% 50% 0 0 / 20px 20px 0 0;
+      }
+      .header img {
+        max-width: 180px;
+        height: auto;
+        filter: brightness(0) invert(1);
+      }
+      .content {
+        padding: 50px 30px 40px;
+      }
+      .greeting {
+        font-family: "Monument Extended", "DM Sans", sans-serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: #590293;
+        margin-bottom: 20px;
+        letter-spacing: -0.5px;
+        text-transform: uppercase;
+      }
+      .intro {
+        font-size: 16px;
+        line-height: 1.7;
+        margin-bottom: 35px;
+        color: #4a5568;
+      }
+      .intro strong {
+        color: #3e0863;
+        font-weight: 600;
+      }
+      .section-title {
+        font-family: "Monument Extended", "DM Sans", sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 25px;
+        position: relative;
+        padding-left: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .section-title::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 24px;
+        background: linear-gradient(180deg, #3e0863 0%, #590293 100%);
+        border-radius: 2px;
+      }
+      .showcase {
+        background: linear-gradient(135deg, #fffbf7 0%, #fde8d2 100%);
+        border: 3px solid #3e0863;
+        border-radius: 16px;
+        padding: 35px;
+        margin-bottom: 35px;
+        box-shadow: 0 10px 30px rgba(89, 2, 147, 0.15);
+        position: relative;
+        overflow: hidden;
+      }
+      .showcase::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 6px;
+        height: 100%;
+        background: linear-gradient(180deg, #3e0863 0%, #590293 100%);
+      }
+      .actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        font-family: "Monument Extended", "DM Sans", sans-serif;
+        text-decoration: none;
+        padding: 14px 28px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        justify-content: center;
+        flex: 1;
+        min-width: 200px;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #3e0863 0%, #590293 100%);
+        color: #fffbf7;
+        box-shadow: 0 4px 15px rgba(89, 2, 147, 0.3);
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(89, 2, 147, 0.4);
+      }
+      .btn-icon {
+        font-size: 16px;
+      }
+      .value-props {
+        background: linear-gradient(135deg, #fffbf6 0%, #fff9f3 100%);
+        padding: 30px;
+        border-radius: 12px;
+        border: 2px solid #fde8d2;
+        margin: 35px 0;
+      }
+      .value-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .value-list li {
+        margin-bottom: 16px;
+        font-size: 15px;
+        color: #4a5568;
+        padding-left: 32px;
+        position: relative;
+        line-height: 1.5;
+      }
+      .value-list li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 24px;
+        height: 24px;
+        background: linear-gradient(135deg, #3e0863 0%, #590293 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 14px;
+      }
+      .footer {
+        background-color: #fffbf7;
+        font-size: 13px;
+        color: #718096;
+        text-align: center;
+        padding: 25px 20px;
+        border-top: 1px solid #e2e8f0;
+      }
+      .footer a {
+        color: #3e0863;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="header">
+        <img
+          src="https://cdn.prod.website-files.com/63f68048171c386de3e8541b/67ea9c7cf046ce863a372ed5_BNJ_Logo%20Final%202.svg"
+          alt="BNJ Skills Maker"
+        />
+      </div>
+
+      <div class="content">
+        <div class="greeting">Bienvenue {{first_name}} ! 👋</div>
+
+        <p class="intro">
+          Nous sommes ravis de vous accueillir sur
+          <strong>BNJ Skills Maker</strong>.<br /><br />
+          Votre profil a bien été créé avec succès. Que vous soyez là pour
+          booster votre employabilité ou pour accompagner nos talents, vous êtes
+          au bon endroit.
+        </p>
+
+        <div class="section-title">L'aventure commence</div>
+
+        <div class="showcase">
+          <p class="intro" style="margin-bottom: 0">
+            Notre plateforme utilise l'Intelligence Artificielle couplée à une
+            expertise humaine pour vous offrir la meilleure expérience possible.
+            Explorez dès maintenant votre espace personnel.
+          </p>
+
+          <div class="actions">
+            <a
+              href="https://https://bnj-skills-maker.vercel.app//dashboard"
+              class="btn btn-primary"
+              target="_blank"
+            >
+              <span class="btn-icon">🚀</span>
+              Accéder à mon espace
+            </a>
+          </div>
+        </div>
+
+        <div class="value-props">
+          <div class="section-title">Ce qui vous attend</div>
+          <ul class="value-list">
+            <li>
+              <strong>Outils IA dédiés :</strong> Génération de CV, analyses de
+              matching et simulations d'entretien
+            </li>
+            <li>
+              <strong>Mise en relation ciblée :</strong> Des opportunités
+              sélectionnées selon votre profil
+            </li>
+            <li>
+              <strong>Coaching sur-mesure :</strong> Un accompagnement 1:1 pour
+              révéler votre potentiel
+            </li>
+            <li>
+              <strong>Suivi détaillé :</strong> Un tableau de bord complet pour
+              structurer vos objectifs
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer">
+        Vous recevez cet email suite à votre inscription sur BNJ Skills
+        Maker.<br /><br />
+        <a href="https://https://bnj-skills-maker.vercel.app//"
+          >Visiter notre site</a
+        >
+      </div>
+    </div>
+  </body>
+</html>

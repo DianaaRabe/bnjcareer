@@ -16,12 +16,7 @@ const RESOURCES = [
 
 const CATEGORIES = ["Tous", "Candidature", "Entretien", "Réseau", "Organisation"];
 
-const CHATBOT_REPLIES: Record<string, string> = {
-  cv: "Pour un CV percutant, concentrez-vous sur 3 points clés : 1️⃣ Un titre accrocheur adapté au poste, 2️⃣ Des missions chiffrées (ex: « Augmenté le CA de 20% »), 3️⃣ Un format clair et aéré. Utilisez notre module CV IA pour l'optimiser automatiquement !",
-  entretien: "Pour réussir un entretien : préparez la méthode STAR (Situation, Tâche, Action, Résultat) pour vos exemples. Renseignez-vous sur l'entreprise, préparez 3 questions à poser. Arrivez 10 min en avance et souriez !",
-  salaire: "Pour négocier votre salaire : faites vos recherches sur les fourchettes du marché (LinkedIn Salary, Glassdoor), attendez que l'employeur parle en premier, et proposez une fourchette haute en vous basant sur votre valeur.",
-  default: "Je suis votre assistant carrière BNJ ! Posez-moi une question sur votre recherche d'emploi, votre CV, vos entretiens ou votre négociation salariale. Je suis là pour vous aider ! 💼",
-};
+// Remarques IA retirées vu que c'est géré en dynamique.
 
 interface Message { id: number; me: boolean; text: string; }
 
@@ -29,8 +24,9 @@ export default function RessourcesPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("Tous");
   const [chatInput, setChatInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
   const [chatMessages, setChatMessages] = useState<Message[]>([
-    { id: 1, me: false, text: "Bonjour ! Je suis votre assistant IA BNJ Career. Comment puis-je vous aider aujourd'hui ?" },
+    { id: 1, me: false, text: "Bonjour ! Je suis votre assistant IA BNJ Skills Maker. Comment puis-je vous aider aujourd'hui ?" },
   ]);
 
   const filtered = RESOURCES.filter((r) => {
@@ -39,24 +35,70 @@ export default function RessourcesPage() {
     return matchSearch && matchCat;
   });
 
-  const sendChat = (e: React.FormEvent) => {
+  const sendChat = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!chatInput.trim()) return;
-    const userMsg: Message = { id: Date.now(), me: true, text: chatInput };
+    if (!chatInput.trim() || isTyping) return;
+    
+    const userText = chatInput;
+    const userMsg: Message = { id: Date.now(), me: true, text: userText };
     setChatMessages((prev) => [...prev, userMsg]);
-
-    const lower = chatInput.toLowerCase();
-    const reply =
-      lower.includes("cv") ? CHATBOT_REPLIES.cv :
-      lower.includes("entretien") ? CHATBOT_REPLIES.entretien :
-      lower.includes("salaire") || lower.includes("négocia") ? CHATBOT_REPLIES.salaire :
-      CHATBOT_REPLIES.default;
-
-    setTimeout(() => {
-      setChatMessages((prev) => [...prev, { id: Date.now() + 1, me: false, text: reply }]);
-    }, 800);
-
     setChatInput("");
+    setIsTyping(true);
+
+    const botMsgId = Date.now() + 1;
+    setChatMessages((prev) => [...prev, { id: botMsgId, me: false, text: "..." }]);
+
+    try {
+      const msgsData = chatMessages.map(m => ({
+        role: m.me ? "user" : "assistant",
+        content: m.text
+      })).filter(m => m.id !== 1); // Only send active convo context
+
+      msgsData.push({ role: "user", content: userText });
+
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: msgsData })
+      });
+
+      if (!res.ok) throw new Error("API Route Error");
+      
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder("utf-8");
+      
+      if (reader) {
+        let textAccumulated = "";
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\\n');
+          
+          for (const line of lines) {
+            if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+              try {
+                const data = JSON.parse(line.slice(6));
+                const delta = data.choices[0]?.delta?.content || "";
+                textAccumulated += delta;
+                
+                setChatMessages((prev) => prev.map(m => 
+                  m.id === botMsgId ? { ...m, text: textAccumulated } : m
+                ));
+              } catch (e) {}
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      setChatMessages((prev) => prev.map(m => 
+        m.id === botMsgId ? { ...m, text: "Oups ! Une erreur s'est produite avec l'IA. Veuillez réessayer." } : m
+      ));
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   return (
@@ -183,9 +225,10 @@ export default function RessourcesPage() {
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 placeholder="Posez votre question..."
-                className="flex-1 px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary transition-all"
+                className="flex-1 px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary transition-all disabled:opacity-50"
+                disabled={isTyping}
               />
-              <button type="submit" disabled={!chatInput.trim()}
+              <button type="submit" disabled={!chatInput.trim() || isTyping}
                 className="w-9 h-9 rounded-xl bg-brand-primary text-white flex items-center justify-center disabled:opacity-50 hover:bg-brand-dark transition-all hover:scale-105">
                 <Send className="w-4 h-4" />
               </button>

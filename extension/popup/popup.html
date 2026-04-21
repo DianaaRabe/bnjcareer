@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>BNJ Skills Maker Autofill</title>
+    <style>
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        margin: 0;
+        padding: 16px;
+        width: 320px;
+        background: #f8fafc;
+        color: #0f172a;
+      }
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .logo {
+        width: 40px;
+        height: 40px;
+        background: #112854; /* Brand primary */
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+      }
+      h1 {
+        font-size: 16px;
+        margin: 0;
+        color: #0f172a;
+      }
+      p {
+        font-size: 12px;
+        color: #64748b;
+        margin: 2px 0 0 0;
+      }
+      .card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+      .toggle-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .toggle-label {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      /* Switch styles */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        height: 24px;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #cbd5e1;
+        transition: 0.3s;
+        border-radius: 24px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+      input:checked + .slider {
+        background-color: #112854;
+      }
+      input:checked + .slider:before {
+        transform: translateX(20px);
+      }
+      .profile-info {
+        font-size: 13px;
+        margin-top: 16px;
+      }
+      .profile-info strong {
+        display: block;
+        margin-top: 8px;
+        color: #0f172a;
+      }
+      .profile-info span {
+        color: #475569;
+      }
+      .no-data {
+        color: #dc2626;
+        font-size: 13px;
+        text-align: center;
+        margin-top: 16px;
+        padding: 12px;
+        background: #fef2f2;
+        border-radius: 8px;
+      }
+      .footer-link {
+        display: block;
+        text-align: center;
+        font-size: 12px;
+        text-decoration: none;
+        color: #3b82f6;
+        font-weight: 600;
+        margin-top: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="logo">BNJ</div>
+      <div>
+        <h1>Autofill Intelligent</h1>
+        <p>Candidature en 1 clic</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="toggle-row">
+        <span class="toggle-label">Activer le pré-remplissage</span>
+        <label class="switch">
+          <input type="checkbox" id="toggle-autofill" />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card" id="match-card" style="display: none">
+      <button
+        id="btn-match"
+        style="
+          width: 100%;
+          padding-block-start: 10px;
+          background: #3b82f6;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 10px;
+        "
+      >
+        <span>🎯</span> Analyser le Matching IA
+      </button>
+    </div>
+
+    <div class="card" id="profile-card">
+      <div
+        style="
+          font-weight: 600;
+          font-size: 14px;
+          margin-bottom: 8px;
+          border-bottom: 1px solid #e2e8f0;
+          padding-bottom: 8px;
+        "
+      >
+        Profil détecté
+      </div>
+      <div class="profile-info" id="profile-content">Chargement...</div>
+    </div>
+
+    <div id="no-profile-msg" class="no-data" style="display: none">
+      Aucun profil n'a été détecté. <br /><br />
+      Allez sur votre tableau de bord BNJ Skills Maker et uploadez votre CV pour
+      l'analyser.
+    </div>
+
+    <a
+      href="https://https://bnj-skills-maker.vercel.app//dashboard/cv"
+      target="_blank"
+      class="footer-link"
+      >Gérer mon CV sur BNJ Skills Maker</a
+    >
+
+    <script src="popup.js"></script>
+  </body>
+</html>

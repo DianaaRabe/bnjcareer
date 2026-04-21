@@ -35,3 +35,13 @@ next-env.d.ts
 # IDEs
 .vscode/
 .idea/
+
+# AI Planning & Tasks
+tâche.md
+task.md
+implementation_plan.md
+walkthrough.md
+WALKTHROUGH_HISTORIQUE.md
+.gemini/
+*.csv
+scratch/

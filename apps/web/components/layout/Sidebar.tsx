@@ -10,6 +10,8 @@ import {
   Calendar,
   MessageSquare,
   BookOpen,
+  CreditCard,
+  User,
   ChevronRight,
   LogOut,
 } from "lucide-react";
@@ -22,6 +24,8 @@ const NAV_ITEMS = [
   { icon: Calendar, label: "Accompagnement", href: "/dashboard/coaching" },
   { icon: MessageSquare, label: "Messages", href: "/dashboard/messages" },
   { icon: BookOpen, label: "Ressources", href: "/dashboard/ressources" },
+  { icon: CreditCard, label: "Abonnements", href: "/dashboard/subscriptions" },
+  { icon: User, label: "Mon Profil", href: "/dashboard/profile" },
 ];
 
 interface SidebarProps {
@@ -39,7 +43,7 @@ export function Sidebar({ fullName, email, avatarUrl }: SidebarProps) {
       <div className="px-6 py-6 border-b border-white/10">
         <img
           src="https://cdn.prod.website-files.com/68f74eda1b97775fa6dd76a2/691752fe9142ffa21169191b_Logo_white.png"
-          alt="BNJ Career"
+          alt="BNJ Skills Maker"
           className="h-10 object-contain"
         />
       </div>

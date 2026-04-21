@@ -8,11 +8,11 @@ export function Footer() {
           <div className="flex flex-col items-center md:items-start gap-4">
              <img 
                src="https://cdn.prod.website-files.com/68f74eda1b97775fa6dd76a2/691752fe9142ffa21169191b_Logo_white.png" 
-               alt="BNJ Career" 
+               alt="BNJ Skills Maker" 
                className="h-8 opacity-80"
              />
              <p className="max-w-xs text-center md:text-left">
-               BNJ Career - L'évolution de votre projet professionnel par l'intelligence collective et artificielle.
+               BNJ Skills Maker - L'évolution de votre projet professionnel par l'intelligence collective et artificielle.
              </p>
           </div>
           
@@ -24,7 +24,7 @@ export function Footer() {
         </div>
         
         <div className="mt-12 pt-8 border-t border-white/5 text-center text-xs">
-          © {new Date().getFullYear()} BNJ Career. Tous droits réservés.
+          © {new Date().getFullYear()} BNJ Skils Maker. Tous droits réservés.
         </div>
       </div>
     </footer>

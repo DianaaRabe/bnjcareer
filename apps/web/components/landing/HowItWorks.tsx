@@ -63,7 +63,7 @@ export function HowItWorks() {
                 Prêt à passer à l'étape suivante ?
               </h3>
               <p className="text-white/70 text-lg leading-relaxed font-medium">
-                Rejoignez des milliers de candidats qui ont transformé leur recherche d'emploi grâce à BNJ Career.
+                Rejoignez des milliers de candidats qui ont transformé leur recherche d'emploi grâce à BNJ Skills Maker.
               </p>
               
               <div className="pt-6">
@@ -79,7 +79,7 @@ export function HowItWorks() {
             <div className="mt-12 flex justify-center">
                <img 
                  src="https://media.licdn.com/dms/image/v2/D5622AQG2y2QW7aWL1g/feedshare-shrink_800/B56Z0v96DOH8Ac-/0/1774626251232?e=1777507200&v=beta&t=Bq8758vFe-HY_jpyDeCi0hArkaZCbaQUk719LKyRInA" 
-                 alt="Processus BNJ Career"
+                 alt="Processus BNJ Skills Maker"
                  className="w-full max-w-[400px] rounded-2xl shadow-xl hover:rotate-1 transition-transform"
                />
             </div>

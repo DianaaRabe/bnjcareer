@@ -1,5 +1,6 @@
 import { Sidebar } from "@/components/layout/Sidebar";
 import { BottomNav } from "@/components/layout/BottomNav";
+import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
@@ -15,10 +16,10 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  // Récupérer le profil depuis la table profiles
+  // Fetch profile including onboarding status
   const { data: profile } = await supabase
     .from("profiles")
-    .select("first_name, last_name, avatar_url")
+    .select("first_name, last_name, avatar_url, is_onboarded, role")
     .eq("id", user.id)
     .single();
 
@@ -28,15 +29,21 @@ export default async function DashboardLayout({
   const avatarUrl = profile?.avatar_url || user.user_metadata?.avatar_url || null;
   const email = user.email || "";
 
+  // Show onboarding if not yet completed
+  const needsOnboarding = !profile?.is_onboarded;
+
   return (
     <div className="min-h-screen bg-brand-bg flex">
       <Sidebar fullName={fullName} email={email} avatarUrl={avatarUrl} />
       <main className="flex-1 lg:ml-64 pb-20 lg:pb-0">
-        {/* On passe firstName via searchParams n'est pas idéal,
-            le dashboard page récupèrera ses propres données */}
         {children}
       </main>
       <BottomNav />
+
+      {/* Onboarding modal – rendered as overlay when needed */}
+      {needsOnboarding && (
+        <OnboardingModal role="candidate" userId={user.id} />
+      )}
     </div>
   );
 }

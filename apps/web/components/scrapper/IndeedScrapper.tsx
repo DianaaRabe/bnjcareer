@@ -1,17 +1,86 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ApplyModal } from './ApplyModal';
-import { Search, MapPin, Briefcase, DollarSign, Building, Sparkles, CheckCircle } from 'lucide-react';
+import { Search, MapPin, Briefcase, DollarSign, Building, Sparkles, CheckCircle, Clock, History } from 'lucide-react';
+import { createClient } from "@/lib/supabase/client";
 
-export const IndeedScrapper = () => {
+const COUNTRIES = [
+        { code: 'za', label: 'Afrique du Sud' },
+        { code: 'de', label: 'Allemagne' },
+        { code: 'sa', label: 'Arabie Saoudite' },
+        { code: 'ar', label: 'Argentine' },
+        { code: 'au', label: 'Australie' },
+        { code: 'at', label: 'Autriche' },
+        { code: 'bh', label: 'Bahreïn' },
+        { code: 'be', label: 'Belgique' },
+        { code: 'br', label: 'Brésil' },
+        { code: 'ca', label: 'Canada' },
+        { code: 'cl', label: 'Chili' },
+        { code: 'cn', label: 'Chine' },
+        { code: 'co', label: 'Colombie' },
+        { code: 'kr', label: 'Corée du Sud' },
+        { code: 'cr', label: 'Costa Rica' },
+        { code: 'dk', label: 'Danemark' },
+        { code: 'eg', label: 'Égypte' },
+        { code: 'ae', label: 'Émirats Arabes Unis' },
+        { code: 'ec', label: 'Équateur' },
+        { code: 'es', label: 'Espagne' },
+        { code: 'us', label: 'États-Unis' },
+        { code: 'fi', label: 'Finlande' },
+        { code: 'fr', label: 'France' },
+        { code: 'gr', label: 'Grèce' },
+        { code: 'hk', label: 'Hong Kong' },
+        { code: 'hu', label: 'Hongrie' },
+        { code: 'in', label: 'Inde' },
+        { code: 'id', label: 'Indonésie' },
+        { code: 'ie', label: 'Irlande' },
+        { code: 'il', label: 'Israël' },
+        { code: 'it', label: 'Italie' },
+        { code: 'jp', label: 'Japon' },
+        { code: 'kw', label: 'Koweït' },
+        { code: 'lu', label: 'Luxembourg' },
+        { code: 'my', label: 'Malaisie' },
+        { code: 'ma', label: 'Maroc' },
+        { code: 'mx', label: 'Mexique' },
+        { code: 'ng', label: 'Nigeria' },
+        { code: 'no', label: 'Norvège' },
+        { code: 'nz', label: 'Nouvelle-Zélande' },
+        { code: 'om', label: 'Oman' },
+        { code: 'pk', label: 'Pakistan' },
+        { code: 'pa', label: 'Panama' },
+        { code: 'nl', label: 'Pays-Bas' },
+        { code: 'pe', label: 'Pérou' },
+        { code: 'ph', label: 'Philippines' },
+        { code: 'pl', label: 'Pologne' },
+        { code: 'pt', label: 'Portugal' },
+        { code: 'qa', label: 'Qatar' },
+        { code: 'ro', label: 'Roumanie' },
+        { code: 'uk', label: 'Royaume-Uni' },
+        { code: 'sg', label: 'Singapour' },
+        { code: 'se', label: 'Suède' },
+        { code: 'ch', label: 'Suisse' },
+        { code: 'tw', label: 'Taïwan' },
+        { code: 'cz', label: 'Tchéquie' },
+        { code: 'th', label: 'Thaïlande' },
+        { code: 'tr', label: 'Turquie' },
+        { code: 'ua', label: 'Ukraine' },
+        { code: 'uy', label: 'Uruguay' },
+        { code: 've', label: 'Venezuela' },
+        { code: 'vn', label: 'Vietnam' }
+    ];
+
+export const IndeedScrapper = ({ userId }: { userId?: string }) => {
     const [query, setQuery] = useState('Analyst');
-    const [location, setLocation] = useState('New York');
+    const [location, setLocation] = useState('Paris');
+    const [country, setCountry] = useState('fr');
     const [loading, setLoading] = useState(false);
     const [jobs, setJobs] = useState<any[]>([]);
     const [selectedJob, setSelectedJob] = useState<any>(null);
     const [error, setError] = useState('');
     const [appliedJobs, setAppliedJobs] = useState<Record<string, boolean>>({});
+    const [history, setHistory] = useState<any[]>([]);
+
 
     const syncAppliedJobs = () => {
         const applied: Record<string, boolean> = {};
@@ -24,24 +93,89 @@ export const IndeedScrapper = () => {
         setAppliedJobs(applied);
     };
 
-    React.useEffect(() => {
+    // Synchronisation des candidatures
+    useEffect(() => {
         syncAppliedJobs();
     }, [jobs]);
 
-    const handleSearch = async (e: React.FormEvent) => {
-        e.preventDefault();
+    // Chargement de l'historique au montage
+    useEffect(() => {
+        const fetchHistory = async () => {
+            if (!userId) return;
+            const supabase = createClient();
+            const { data } = await supabase
+                .from('job_searches')
+                .select('*')
+                .eq('user_id', userId)
+                .order('created_at', { ascending: false })
+                .limit(10);
+            
+            if (data) setHistory(data);
+        };
+        fetchHistory();
+    }, [userId]);
+
+    const handleSearch = async (e?: React.FormEvent, forceRefresh = false, searchQ = query, searchL = location, searchC = country) => {
+        if (e) e.preventDefault();
         setLoading(true);
         setError('');
         setJobs([]);
+        
+        // Formattage basique pour comparaison
+        const qRaw = searchQ.trim().toLowerCase();
+        const lRaw = searchL.trim().toLowerCase();
+        const cRaw = searchC.trim().toLowerCase();
+
+        // 1. Vérification dans l'historique local (cache)
+        if (!forceRefresh) {
+            // NOTE: Si 'country' n'existe pas encore en DB on compare juste query et location, 
+            // mais l'idéal est de l'ajouter en DB plus tard.
+            const cached = history.find(h => 
+                h.query.toLowerCase() === qRaw && 
+                h.location.toLowerCase() === lRaw &&
+                (h.country ? h.country.toLowerCase() === cRaw : true)
+            );
+            
+            if (cached && cached.results) {
+                setJobs(cached.results);
+                setQuery(searchQ);
+                setLocation(searchL);
+                setCountry(searchC);
+                setLoading(false);
+                return;
+            }
+        }
+
+        // 2. Appel à Apify si non trouvé ou si on force un rafraîchissement
         try {
             const res = await fetch('/api/scrapper', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query, location })
+                body: JSON.stringify({ query: searchQ, location: searchL, country: searchC })
             });
             const data = await res.json();
             if (data.error) throw new Error(data.error);
-            setJobs(data.items || []);
+            
+            const newJobs = data.items || [];
+            setJobs(newJobs);
+
+            // 3. Sauvegarde dans Supabase
+            if (userId && newJobs.length > 0) {
+                const supabase = createClient();
+                // Assure-toi d'ajouter la colonne 'country' à ta table 'job_searches' dans Supabase !
+                const { data: inserted } = await supabase.from('job_searches').insert({
+                    user_id: userId,
+                    query: searchQ,
+                    location: searchL,
+                    country: searchC,
+                    results: newJobs
+                }).select().single();
+                
+                if (inserted) {
+                    setHistory(prev => [inserted, ...prev.filter(h => h.query.toLowerCase() !== qRaw || h.location.toLowerCase() !== lRaw)].slice(0, 10));
+                }
+            }
+
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -88,6 +222,22 @@ export const IndeedScrapper = () => {
                         placeholder="Emplacement (ex: Paris, Remote)"
                     />
                 </div>
+                <div className="flex-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <select
+                        value={country}
+                        onChange={e => setCountry(e.target.value)}
+                        className="block w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:bg-white transition-all appearance-none"
+                    >
+                        {COUNTRIES.map(c => (
+                            <option key={c.code} value={c.code}>{c.label} ({c.code.toUpperCase()})</option>
+                        ))}
+                    </select>
+                </div>
                 <button
                     type="submit"
                     disabled={loading}
@@ -109,6 +259,25 @@ export const IndeedScrapper = () => {
                     )}
                 </button>
             </form>
+
+            {/* Historique des recherches */}
+            {history.length > 0 && (
+                <div className="flex flex-wrap gap-2 items-center">
+                    <span className="text-xs font-semibold text-slate-500 mr-1 flex items-center gap-1">
+                        <History className="w-3.5 h-3.5" /> Récent :
+                    </span>
+                    {history.map((h, i) => (
+                        <button
+                            key={h.id || i}
+                            onClick={() => handleSearch(undefined, false, h.query, h.location, h.country || 'fr')}
+                            className="text-xs font-medium bg-slate-100 hover:bg-brand-50 text-slate-600 hover:text-brand-primary px-3 py-1.5 rounded-full border border-slate-200 transition-colors flex items-center gap-1.5"
+                        >
+                            <span className="uppercase text-[9px] px-1 bg-slate-200 rounded text-slate-500">{h.country || 'FR'}</span>
+                            <span>{h.query} - {h.location}</span>
+                        </button>
+                    ))}
+                </div>
+            )}
 
             {/* Error */}
             {error && (
