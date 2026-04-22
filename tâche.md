@@ -356,3 +356,4 @@ Aussi, il faut ue le texte saisie dans l'input du message soit en noir, parce ue
 
 2. Pour les modals du coach, on n' a même pas modifié la table dans supabase, du coup, ça renvoie :
    Could not find the 'is_paid' column of 'coach_events' in the schema cache
+

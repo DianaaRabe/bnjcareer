@@ -31,8 +31,56 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // On rafraîchit la session si nécessaire
-  await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const pathname = request.nextUrl.pathname;
+  const isDashboardRoute = pathname === '/dashboard' || pathname.startsWith('/dashboard/');
+  const isCoachRoute = pathname === '/coach' || pathname.startsWith('/coach/');
+  const isLoginRoute = pathname === '/login' || pathname === '/coach-login';
+
+  if (user) {
+    if (isDashboardRoute || isCoachRoute || isLoginRoute) {
+      // User is authenticated, check their actual DB role
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+        
+      const role = profile?.role || 'candidate';
+
+      if (isDashboardRoute && role !== 'candidate') {
+        const url = request.nextUrl.clone();
+        url.pathname = '/coach';
+        return NextResponse.redirect(url);
+      }
+
+      if (isCoachRoute && role !== 'coach') {
+        const url = request.nextUrl.clone();
+        url.pathname = '/dashboard';
+        return NextResponse.redirect(url);
+      }
+
+      if (isLoginRoute) {
+        const url = request.nextUrl.clone();
+        url.pathname = role === 'coach' ? '/coach' : '/dashboard';
+        return NextResponse.redirect(url);
+      }
+    }
+  } else {
+    // User is NOT authenticated
+    if (isDashboardRoute) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/login';
+      return NextResponse.redirect(url);
+    }
+    
+    if (isCoachRoute) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/coach-login';
+      return NextResponse.redirect(url);
+    }
+  }
 
   return response
 }

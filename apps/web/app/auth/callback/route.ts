@@ -11,12 +11,10 @@ export async function GET(request: NextRequest) {
   }
 
   const intendedRole = request.cookies.get('intended_role')?.value;
-  const role = intendedRole === 'coach' ? 'coach' : 'candidate'
-  const targetPath = role === 'coach' ? '/coach' : '/dashboard'
-  const response = NextResponse.redirect(`${origin}${targetPath}`)
+  const role = intendedRole === 'coach' ? 'coach' : 'candidate';
   
-  // Clear the cookie now that we've read it
-  response.cookies.set('intended_role', '', { maxAge: 0, path: '/' })
+  // Create a base response so Supabase can write session cookies to it
+  const response = NextResponse.next();
 
   // Le client Supabase lit le code_verifier depuis les cookies de la REQUEST
   // et écrit les tokens de session dans la RESPONSE.
@@ -57,7 +55,7 @@ export async function GET(request: NextRequest) {
 
   const { data: existingProfile } = await supabase
     .from('profiles')
-    .select('id, first_name, last_name, bio, is_onboarded')
+    .select('id, first_name, last_name, bio, is_onboarded, role')
     .eq('id', user.id)
     .single()
 
@@ -92,7 +90,7 @@ export async function GET(request: NextRequest) {
       !existingProfile.first_name ||
       !existingProfile.last_name
 
-    const updatePayload: Record<string, unknown> = { role }
+    const updatePayload: Record<string, unknown> = {}
 
     if (isMissingRequiredFields) {
       // Force onboarding modal to appear again (migration case)
@@ -100,15 +98,21 @@ export async function GET(request: NextRequest) {
       debugState = 'migration'
     }
 
-    const { error: updateError } = await supabase
-      .from('profiles')
-      .update(updatePayload)
-      .eq('id', user.id)
-    
-    if (updateError) {
-      console.error('[auth/callback] Erreur update profil :', updateError)
+    if (Object.keys(updatePayload).length > 0) {
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update(updatePayload)
+        .eq('id', user.id)
+      
+      if (updateError) {
+        console.error('[auth/callback] Erreur update profil :', updateError)
+      }
     }
   }
+
+  // Calculate correct redirect path based on DB role for existing users
+  const finalRole = existingProfile ? (existingProfile.role || 'candidate') : role;
+  const targetPath = finalRole === 'coach' ? '/coach' : '/dashboard';
 
   // Build final redirect with session cookies carried over
   const targetPathWithDebug = `${targetPath}?debug=${debugState}`
