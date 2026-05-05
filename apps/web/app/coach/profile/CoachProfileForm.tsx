@@ -81,6 +81,7 @@ export function CoachProfileForm({ initialData, userId }: Props) {
   // Step 3 – Professional Info
   const [previousRoles, setPreviousRoles] = useState<PreviousRole[]>(initialData?.previous_roles ?? [])
   const [bio, setBio] = useState(initialData?.bio ?? '')
+  const [videoUrl, setVideoUrl] = useState(initialData?.video_url ?? '')
 
   // Step 4 – Coaching setup
   const [sessionTypes, setSessionTypes] = useState<SessionType[]>(initialData?.session_types ?? [])
@@ -116,6 +117,7 @@ export function CoachProfileForm({ initialData, userId }: Props) {
         certifications,
         previous_roles: previousRoles,
         bio: bio.trim() || null,
+        video_url: videoUrl.trim() || null,
         session_types: sessionTypes,
         support_areas: supportAreas,
       })
@@ -247,6 +249,19 @@ export function CoachProfileForm({ initialData, userId }: Props) {
             className={`${inputClass} resize-none`}
           />
           <p className="text-xs text-slate-400 text-right mt-1">{bio.length}/600</p>
+        </InputField>
+
+        <InputField label="Vidéo d'introduction (1mn)">
+          <input
+            type="url"
+            value={videoUrl}
+            onChange={e => setVideoUrl(e.target.value)}
+            placeholder="Lien YouTube, Vimeo, Loom..."
+            className={inputClass}
+          />
+          <p className="text-xs text-slate-400 mt-1.5">
+            Une courte vidéo pour vous présenter aux candidats.
+          </p>
         </InputField>
       </Section>
 

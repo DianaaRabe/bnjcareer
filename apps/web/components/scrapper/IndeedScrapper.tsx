@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { ApplyModal } from './ApplyModal';
-import { Search, MapPin, Briefcase, DollarSign, Building, Sparkles, CheckCircle, Clock, History } from 'lucide-react';
+import ScrapperOptimizeModal from './ScrapperOptimizeModal';
+import { Search, MapPin, Briefcase, DollarSign, Building, Sparkles, CheckCircle, Clock, History, FileText, X } from 'lucide-react';
 import { createClient } from "@/lib/supabase/client";
 
 const COUNTRIES = [
@@ -71,6 +73,7 @@ const COUNTRIES = [
     ];
 
 export const IndeedScrapper = ({ userId }: { userId?: string }) => {
+    const router = useRouter();
     const [query, setQuery] = useState('Analyst');
     const [location, setLocation] = useState('Paris');
     const [country, setCountry] = useState('fr');
@@ -80,6 +83,7 @@ export const IndeedScrapper = ({ userId }: { userId?: string }) => {
     const [error, setError] = useState('');
     const [appliedJobs, setAppliedJobs] = useState<Record<string, boolean>>({});
     const [history, setHistory] = useState<any[]>([]);
+    const [optimizeJob, setOptimizeJob] = useState<any>(null);
 
 
     const syncAppliedJobs = () => {
@@ -186,14 +190,23 @@ export const IndeedScrapper = ({ userId }: { userId?: string }) => {
     return (
         <div className="p-6 lg:p-8 space-y-6">
             {/* Header */}
-            <div>
-                <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-                    <Sparkles className="w-6 h-6 text-brand-primary" />
-                    Chasseur d'Opportunités
-                </h1>
-                <p className="text-slate-500 text-sm mt-1">
-                    Découvrez les meilleures offres d'emploi sur Indeed et postulez en un clic grâce à notre IA
-                </p>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                    <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+                        <Sparkles className="w-6 h-6 text-brand-primary" />
+                        Chasseur d'Opportunités
+                    </h1>
+                    <p className="text-slate-500 text-sm mt-1">
+                        Découvrez les meilleures offres d'emploi sur Indeed et postulez en un clic grâce à notre IA
+                    </p>
+                </div>
+                <button
+                    onClick={() => router.push('/dashboard/jobs#cv-history')}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-50 hover:bg-brand-100 text-brand-primary font-semibold text-sm rounded-xl border border-brand-100 hover:border-brand-primary/30 transition-all shrink-0"
+                >
+                    <History className="w-4 h-4" />
+                    Voir l'historique des CV optimisés
+                </button>
             </div>
 
             {/* Search form */}
@@ -298,7 +311,7 @@ export const IndeedScrapper = ({ userId }: { userId?: string }) => {
                         <div>
                             <div className="flex justify-between items-start mb-4">
                                 <div className="w-12 h-12 bg-brand-100 text-brand-primary rounded-xl flex items-center justify-center font-bold text-xl shadow-sm border border-brand-light/20 uppercase">
-                                    {(job.company || 'E').charAt(0)}
+                                    {(job.companyName || job.title || 'E').charAt(0)}
                                 </div>
                                 {job.salary && (
                                     <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 font-semibold text-xs px-2.5 py-1 rounded-full border border-green-100">
@@ -309,13 +322,13 @@ export const IndeedScrapper = ({ userId }: { userId?: string }) => {
                             </div>
 
                             <h3 className="text-base font-bold text-slate-900 mb-3 leading-tight group-hover:text-brand-primary transition-colors">
-                                {job.positionName || job.title || 'Poste non spécifié'}
+                                {job.title || 'Poste non spécifié'}
                             </h3>
 
                             <div className="space-y-2 text-xs text-slate-500 font-medium">
                                 <p className="flex items-center gap-2">
                                     <Building className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                                    <span className="truncate">{typeof job.company === 'object' ? (job.company.name || 'Entreprise anonyme') : (job.company || 'Entreprise anonyme')}</span>
+                                    <span className="truncate">{job.companyName || 'Entreprise anonyme'}</span>
                                 </p>
                                 <p className="flex items-center gap-2">
                                     <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
@@ -324,22 +337,33 @@ export const IndeedScrapper = ({ userId }: { userId?: string }) => {
                             </div>
                         </div>
 
-                        {appliedJobs[job.id || job.jobKey || job.url] ? (
-                            <button disabled className="mt-6 w-full bg-green-50 text-green-700 font-bold py-3 rounded-xl border border-green-200 flex items-center justify-center gap-2 text-sm cursor-not-allowed">
-                                <CheckCircle className="w-4 h-4" />
-                                Déjà postulé
-                            </button>
-                        ) : (
+                        <div className="mt-6 space-y-2">
+                            {appliedJobs[job.id || job.jobKey || job.url] ? (
+                                <button disabled className="w-full bg-green-50 text-green-700 font-bold py-3 rounded-xl border border-green-200 flex items-center justify-center gap-2 text-sm cursor-not-allowed">
+                                    <CheckCircle className="w-4 h-4" />
+                                    Déjà postulé
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => setSelectedJob(job)}
+                                    className="w-full bg-slate-50 hover:bg-brand-primary text-slate-700 hover:text-white font-bold py-3 rounded-xl border border-slate-200 hover:border-transparent transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-sm hover:shadow-md hover:shadow-brand-primary/20"
+                                >
+                                    Candidater Maintenant
+                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </button>
+                            )}
                             <button
-                                onClick={() => setSelectedJob(job)}
-                                className="mt-6 w-full bg-slate-50 hover:bg-brand-primary text-slate-700 hover:text-white font-bold py-3 rounded-xl border border-slate-200 hover:border-transparent transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-sm hover:shadow-md hover:shadow-brand-primary/20"
+                                onClick={() => setOptimizeJob(job)}
+                                disabled={!job.descriptionText}
+                                className="w-full bg-brand-50 hover:bg-brand-100 text-brand-primary font-semibold py-2.5 rounded-xl border border-brand-100 hover:border-brand-primary/30 transition-all duration-300 flex items-center justify-center gap-2 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                                title={!job.descriptionText ? 'Description de l\'offre non disponible' : undefined}
                             >
-                                Candidater Maintenant
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                </svg>
+                                <Sparkles className="w-3.5 h-3.5" />
+                                Optimiser mon CV pour ce poste
                             </button>
-                        )}
+                        </div>
                     </div>
                 ))}
 
@@ -372,6 +396,23 @@ export const IndeedScrapper = ({ userId }: { userId?: string }) => {
                         const key = selectedJob.id || selectedJob.jobKey || selectedJob.url;
                         if (key) setAppliedJobs(prev => ({ ...prev, [key]: true }));
                     }}
+                />
+            )}
+
+            {/* ── Optimize CV Modal ──────────────────────────────────────── */}
+            {optimizeJob && optimizeJob.descriptionText && (
+                <ScrapperOptimizeModal
+                    job={{
+                        title: optimizeJob.title || 'Poste non spécifié',
+                        companyName: optimizeJob.companyName || undefined,
+                        descriptionText: optimizeJob.descriptionText,
+                        jobUrl: optimizeJob.jobUrl || undefined,
+                        applyUrl: optimizeJob.applyUrl || undefined,
+                        emails: optimizeJob.emails || [],
+                        salary: optimizeJob.salary || undefined,
+                        location: optimizeJob.location || undefined,
+                    }}
+                    onClose={() => setOptimizeJob(null)}
                 />
             )}
         </div>

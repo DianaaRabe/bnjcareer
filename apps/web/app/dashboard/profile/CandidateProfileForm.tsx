@@ -87,6 +87,7 @@ export function CandidateProfileForm({ initialData, initialSkills, userId }: Pro
   const [avatarUrl, setAvatarUrl] = useState(initialData?.avatar_url ?? '')
   const [bio, setBio] = useState(initialData?.bio ?? '')
   const [educationLevel, setEducationLevel] = useState<EducationLevel | ''>(initialData?.education_level ?? '')
+  const [trainingEstablishment, setTrainingEstablishment] = useState(initialData?.training_establishment ?? '')
   const [industry, setIndustry] = useState(initialData?.industry ?? '')
   const [currentStatus, setCurrentStatus] = useState<CurrentStatus | ''>(initialData?.current_status ?? '')
   const [strengths, setStrengths] = useState<string[]>(initialData?.strengths ?? [])
@@ -111,6 +112,7 @@ export function CandidateProfileForm({ initialData, initialSkills, userId }: Pro
         avatar_url: avatarUrl || null,
         bio: bio.trim() || null,
         education_level: educationLevel || null,
+        training_establishment: trainingEstablishment.trim() || null,
         industry: industry.trim() || null,
         current_status: currentStatus || null,
         strengths,
@@ -131,7 +133,7 @@ export function CandidateProfileForm({ initialData, initialSkills, userId }: Pro
       await fetch('/api/onboarding/complete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role: 'candidate', skills, first_name: firstName, last_name: lastName, birth_date: birthDate, phone, education_level: educationLevel, industry, current_status: currentStatus, strengths, weaknesses, main_goal: mainGoal, avatar_url: avatarUrl, bio, is_onboarded: true, is_update: true }),
+        body: JSON.stringify({ role: 'candidate', skills, first_name: firstName, last_name: lastName, birth_date: birthDate, phone, education_level: educationLevel, training_establishment: trainingEstablishment, industry, current_status: currentStatus, strengths, weaknesses, main_goal: mainGoal, avatar_url: avatarUrl, bio, is_onboarded: true, is_update: true }),
       })
     }
 
@@ -197,6 +199,10 @@ export function CandidateProfileForm({ initialData, initialSkills, userId }: Pro
             <option value="">Sélectionnez votre niveau</option>
             {EDUCATION_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
+        </InputField>
+
+        <InputField label="Établissement de formation">
+          <input type="text" value={trainingEstablishment} onChange={e => setTrainingEstablishment(e.target.value)} placeholder="ex: HEC Paris, Sorbonne..." className={inputClass} />
         </InputField>
 
         <InputField label="Secteur / Domaine">

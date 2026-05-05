@@ -16,6 +16,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import { EventModal } from "@/components/coach/EventModal";
+import { CoachNotifications } from "@/components/coach/CoachNotifications";
 
 const STATS = [
   { label: "Candidats assignés", value: "24", icon: Users, color: "text-brand-primary", bg: "bg-brand-100" },
@@ -66,6 +67,7 @@ export default function CoachDashboard() {
           <p className="text-slate-500 mt-1">Gérez vos candidats et optimisez leur employabilité.</p>
         </div>
         <div className="flex items-center gap-3">
+          <CoachNotifications />
           <button 
             onClick={() => setIsModalOpen(true)}
             className="inline-flex items-center gap-2 bg-brand-primary text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-brand-primary/20 hover:bg-brand-dark transition-all"

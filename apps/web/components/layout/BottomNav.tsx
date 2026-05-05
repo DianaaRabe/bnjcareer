@@ -11,6 +11,7 @@ import {
   MessageSquare,
   BookOpen,
   CreditCard,
+  GraduationCap,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -18,6 +19,7 @@ const NAV_ITEMS = [
   { icon: FileText, label: "CV", href: "/dashboard/cv" },
   { icon: Briefcase, label: "Offres", href: "/dashboard/scrapper" },
   { icon: Target, label: "Matching", href: "/dashboard/jobs" },
+  { icon: GraduationCap, label: "Cours", href: "/dashboard/formations" },
   { icon: Calendar, label: "Coaching", href: "/dashboard/coaching" },
   { icon: MessageSquare, label: "Messages", href: "/dashboard/messages" },
   { icon: BookOpen, label: "Ressources", href: "/dashboard/ressources" },

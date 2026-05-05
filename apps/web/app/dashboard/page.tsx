@@ -4,6 +4,7 @@ import {
   Briefcase,
   Target,
   Calendar,
+  Users,
   MessageSquare,
   BookOpen,
   TrendingUp,
@@ -12,14 +13,17 @@ import {
   Star,
   ArrowRight,
   Sparkles,
+  GraduationCap,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { EventNotifications } from "@/components/dashboard/EventNotifications";
 
 const STATS = [
   { label: "Candidatures envoyées", value: "12", icon: Briefcase, color: "text-brand-primary", bg: "bg-brand-100" },
   { label: "Score moyen matching", value: "74%", icon: Target, color: "text-green-600", bg: "bg-green-50" },
   { label: "Entretiens obtenus", value: "3", icon: CheckCircle, color: "text-blue-600", bg: "bg-blue-50" },
   { label: "Objectifs accomplis", value: "5/8", icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
+  { label: "Formations en cours", value: "2", icon: GraduationCap, color: "text-violet-600", bg: "bg-violet-50" },
 ];
 
 const RECENT_JOBS = [
@@ -33,7 +37,9 @@ const MODULES = [
   { icon: Briefcase, label: "Offres d'emploi", desc: "Scrapper Indeed & postuler", href: "/dashboard/scrapper", color: "from-blue-600 to-blue-800" },
   { icon: Target, label: "Matching IA", desc: "Analyser la compatibilité", href: "/dashboard/jobs", color: "from-green-600 to-emerald-800" },
   { icon: Calendar, label: "Accompagnement", desc: "Ateliers & objectifs", href: "/dashboard/coaching", color: "from-violet-600 to-purple-800" },
+  { icon: Users, label: "Coachs", desc: "Trouver votre coach idéal", href: "/dashboard/coaches", color: "from-blue-500 to-indigo-700" },
   { icon: MessageSquare, label: "Messages", desc: "Chat avec votre coach", href: "/dashboard/messages", color: "from-pink-600 to-rose-800" },
+  { icon: GraduationCap, label: "Formations", desc: "Vidéos, quiz & certificats", href: "/dashboard/formations", color: "from-amber-500 to-orange-700" },
   { icon: BookOpen, label: "Ressources", desc: "Documents, vidéos & IA", href: "/dashboard/ressources", color: "from-orange-500 to-amber-700" },
 ];
 
@@ -68,6 +74,9 @@ export default async function DashboardPage() {
           IA activée
         </div>
       </div>
+
+      {/* Notifications */}
+      <EventNotifications />
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

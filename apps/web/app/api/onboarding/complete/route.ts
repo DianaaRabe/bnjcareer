@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
       birth_date: data.birth_date || null,
       phone: data.phone?.trim() || null,
       education_level: data.education_level || null,
+      training_establishment: data.training_establishment?.trim() || null,
       industry: data.industry?.trim() || null,
       current_status: data.current_status || null,
       strengths: data.strengths,
@@ -69,6 +70,7 @@ export async function POST(request: NextRequest) {
       bio: data.bio?.trim() || null,
       session_types: data.session_types,
       support_areas: data.support_areas,
+      video_url: data.video_url || null,
       is_onboarded: true,
     }
 

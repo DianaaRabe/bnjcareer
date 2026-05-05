@@ -52,6 +52,20 @@ export function Step2Education({ data, onChange }: Props) {
         </select>
       </div>
 
+      {/* Training Establishment */}
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+          Établissement de formation <span className="text-red-400">*</span>
+        </label>
+        <input
+          type="text"
+          value={data.training_establishment}
+          onChange={(e) => onChange({ training_establishment: e.target.value })}
+          placeholder="ex: HEC Paris, Sorbonne, EPITECH..."
+          className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 placeholder-slate-300 outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all"
+        />
+      </div>
+
       {/* Industry */}
       <div>
         <label className="block text-sm font-semibold text-slate-700 mb-1.5">

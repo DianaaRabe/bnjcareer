@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, UploadCloud, Copy, ExternalLink, CheckCircle, BrainCircuit } from 'lucide-react';
+import { X, UploadCloud, Copy, ExternalLink, CheckCircle, BrainCircuit, Mail, AlertCircle } from 'lucide-react';
 
 export const ApplyModal = ({ job, onClose, onApplied }: { job: any, onClose: () => void, onApplied: () => void }) => {
     const [step, setStep] = useState<'loading' | 'upload' | 'analyzing' | 'ready'>('loading');
@@ -7,6 +7,44 @@ export const ApplyModal = ({ job, onClose, onApplied }: { job: any, onClose: () 
     const [file, setFile] = useState<File | null>(null);
     const [copied, setCopied] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [isSendingEmail, setIsSendingEmail] = useState(false);
+    const [emailSent, setEmailSent] = useState(false);
+    const [emailError, setEmailError] = useState('');
+    
+    const hasEmails = job.emails && job.emails.length > 0;
+
+    const handleSendEmail = async () => {
+        if (!hasEmails) return;
+        setIsSendingEmail(true);
+        setEmailError("");
+
+        try {
+            const companyEmail = job.emails[0];
+            const res = await fetch("/api/candiboost/send", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    companyEmail,
+                    jobTitle: getJobTitle(),
+                    coverLetter: generateMotivation(),
+                    isGeneric: true,
+                }),
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Erreur lors de l'envoi de l'email.");
+            
+            setEmailSent(true);
+            onApplied();
+            const jobKey = job.id || job.jobKey || job.url;
+            if (jobKey) localStorage.setItem(`applied_${jobKey}`, "true");
+        } catch (err: any) {
+            setEmailError(err.message || "Erreur inattendue");
+        } finally {
+            setIsSendingEmail(false);
+        }
+    };
+
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -54,8 +92,8 @@ export const ApplyModal = ({ job, onClose, onApplied }: { job: any, onClose: () 
         }
     };
 
-    const getJobTitle = () => job.positionName || job.title || 'ce poste';
-    const getJobCompany = () => typeof job.company === 'object' ? job.company?.name || 'votre entreprise' : (job.company || 'votre entreprise');
+    const getJobTitle = () => job.title || 'ce poste';
+    const getJobCompany = () => job.companyName || 'votre entreprise';
 
     const generateMotivation = () => {
         const title = getJobTitle();
@@ -199,13 +237,51 @@ export const ApplyModal = ({ job, onClose, onApplied }: { job: any, onClose: () 
                                 </div>
                             </div>
                             
-                            <button 
-                                onClick={handleApply}
-                                className="w-full flex items-center justify-center gap-2 py-4.5 bg-gradient-to-r from-brand-primary to-brand-dark hover:from-brand-light hover:to-brand-primary text-white font-extrabold text-lg rounded-xl shadow-xl shadow-brand-primary/30 transition-all duration-300 hover:scale-[1.02]"
-                            >
-                                <ExternalLink className="w-5 h-5" />
-                                Candidater sur la plateforme
-                            </button>
+                            <div className="space-y-3">
+                                <button 
+                                    onClick={handleApply}
+                                    className="w-full flex items-center justify-center gap-2 py-4 bg-white border-2 border-brand-primary text-brand-primary font-extrabold text-base rounded-xl hover:bg-brand-50 transition-all duration-300"
+                                >
+                                    <ExternalLink className="w-5 h-5" />
+                                    Candidater sur la plateforme
+                                </button>
+
+                                <div className="relative group">
+                                    <button 
+                                        onClick={handleSendEmail}
+                                        disabled={!hasEmails || isSendingEmail || emailSent}
+                                        className={`w-full flex items-center justify-center gap-2 py-4 font-extrabold text-base rounded-xl transition-all duration-300 shadow-xl shadow-brand-primary/20 ${
+                                            emailSent
+                                                ? "bg-green-50 text-green-700 border-2 border-green-200 cursor-default shadow-none"
+                                                : hasEmails
+                                                    ? "bg-gradient-to-r from-brand-primary to-brand-dark hover:from-brand-light hover:to-brand-primary text-white hover:scale-[1.02]"
+                                                    : "bg-slate-100 text-slate-400 cursor-not-allowed shadow-none"
+                                        }`}
+                                    >
+                                        {emailSent ? (
+                                            <><CheckCircle className="w-5 h-5" /> Candidature envoyée !</>
+                                        ) : isSendingEmail ? (
+                                            <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Envoi en cours...</>
+                                        ) : (
+                                            <><Mail className="w-5 h-5" /> Envoyer ma candidature par email</>
+                                        )}
+                                    </button>
+                                    
+                                    {!hasEmails && (
+                                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs font-medium px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                                            Aucun email de contact disponible
+                                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-800 rotate-45" />
+                                        </div>
+                                    )}
+                                </div>
+                                
+                                {emailError && (
+                                    <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+                                        <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                                        <p className="text-xs text-amber-700">{emailError}</p>
+                                    </div>
+                                )}
+                            </div>
                             <p className="text-center text-xs text-slate-400 mt-4 font-medium">
                                 N'oubliez pas de coller le message sur la plateforme de destination !
                             </p>

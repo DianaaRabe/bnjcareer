@@ -11,16 +11,16 @@ export default function CoachLandingPage() {
       <Navbar />
 
       {/* Hero Section */}
-      <main className="flex-1 pt-32 pb-20 relative">
+      <main className="flex-1 pt-24 pb-20 relative">
         {/* Background glow effects */}
         <div className="absolute top-20 left-10 w-96 h-96 bg-brand-primary/40 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-10 right-10 w-80 h-80 bg-brand-light/20 rounded-full blur-[80px] pointer-events-none" />
 
         <div className="container mx-auto px-6">
-          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
             {/* Text Content */}
             <div className="flex-1 text-center lg:text-left z-10">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-primary/20 border border-brand-primary/30 mb-6 text-brand-accent text-sm font-bold tracking-wide">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-primary/20 border border-brand-primary/30 mb-4 text-brand-accent text-sm font-bold tracking-wide">
                 <span className="relative flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-accent opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-accent"></span>
@@ -28,11 +28,11 @@ export default function CoachLandingPage() {
                 PORTAIL COACH
               </div>
               
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-4">
                 Devenez le mentor qui propulse les <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-brand-light font-black">talents de demain.</span>
               </h1>
               
-              <p className="text-lg md:text-xl text-white/70 mb-10 max-w-2xl mx-auto lg:mx-0">
+              <p className="text-lg md:text-xl text-white/70 mb-8 max-w-2xl mx-auto lg:mx-0">
                 Aidez nos candidats à se démarquer. Partagez votre expertise, optimisez leur employabilité et faites grandir votre réseau sur la plateforme BNJ Skills Maker.
               </p>
 
@@ -57,12 +57,12 @@ export default function CoachLandingPage() {
 
             {/* Graphic / Image Content */}
             <div className="flex-1 w-full max-w-lg lg:max-w-none relative z-10">
-              <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl xl:scale-110 xl:origin-left">
+              <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl xl:scale-110 xl:origin-left aspect-[4/3]">
                 {/* Provided LinkedIn Image */}
                 <img 
-                  src="https://media.licdn.com/dms/image/v2/D4E22AQHTFouR7M_Kdg/feedshare-shrink_800/B4EZ2V1uYUIcAc-/0/1776335382395?e=1778112000&v=beta&t=kc7Mc5SCCKS2GR2F-QVpxQA9wy7JHkxH11IDNxALQhc" 
+                  src="/illustrations/BNJ-coach-landing-2.jpg" 
                   alt="Devenir Coach BNJ" 
-                  className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-700"
+                  className="w-full h-full object-cover object-top transform hover:scale-105 transition-transform duration-700"
                 />
                 
                 {/* Overlay gradient at bottom */}

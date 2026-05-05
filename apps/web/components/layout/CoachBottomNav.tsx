@@ -8,11 +8,13 @@ import {
   Calendar,
   MessageSquare,
   BookOpen,
+  GraduationCap,
 } from "lucide-react";
 
 const COACH_NAV_ITEMS = [
   { icon: LayoutDashboard, label: "Accueil", href: "/coach" },
   { icon: Users, label: "Candidats", href: "/coach/candidates" },
+  { icon: GraduationCap, label: "Formations", href: "/coach/formations" },
   { icon: Calendar, label: "Sessions", href: "/coach/calendar" },
   { icon: MessageSquare, label: "Messages", href: "/coach/messages" },
   { icon: BookOpen, label: "Ressources", href: "/coach/resources" },

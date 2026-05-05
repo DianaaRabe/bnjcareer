@@ -26,6 +26,7 @@ export interface CandidateOnboardingData {
 
   // Step 2 – Education & Career
   education_level: EducationLevel | ''
+  training_establishment: string
   industry: string
   current_status: CurrentStatus | ''
 
@@ -48,6 +49,7 @@ export const defaultCandidateData: CandidateOnboardingData = {
   birth_date: '',
   phone: '',
   education_level: '',
+  training_establishment: '',
   industry: '',
   current_status: '',
   strengths: [],
@@ -70,6 +72,7 @@ export interface CoachOnboardingData {
   first_name: string
   last_name: string
   avatar_url: string
+  video_url: string
 
   // Step 2 – Expertise
   specialization: string
@@ -89,6 +92,7 @@ export const defaultCoachData: CoachOnboardingData = {
   first_name: '',
   last_name: '',
   avatar_url: '',
+  video_url: '',
   specialization: '',
   experience_years: '',
   certifications: [],

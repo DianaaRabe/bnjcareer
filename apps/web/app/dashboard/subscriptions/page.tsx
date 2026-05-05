@@ -12,6 +12,7 @@ const PLANS = [
       "Accès complet aux offres d'emploi",
       "Création de 2 CVs professionnels par mois",
       "Suivi basique des candidatures",
+      "Accès aux formations gratuites",
       "Support par email classique",
     ],
     icon: Shield,
@@ -27,6 +28,8 @@ const PLANS = [
       "Tout ce qui est inclus dans Basic",
       "Génération de CVs illimitée",
       "Matching IA avancé avec suggestions",
+      "Accès illimité à toutes les formations",
+      "Certifications PDF incluses",
       "Messagerie prioritaire avec les coachs",
       "Mise en avant de votre profil",
     ],
@@ -45,7 +48,7 @@ export default function SubscriptionsPage() {
     status: "actif"
   };
 
-  const handlePayment = (planName: string, method: "paypal" | "visa") => {
+  const handlePayment = (planName: string, method: "mongopay" | "visa" | "mastercard") => {
     alert(`Redirection vers la passerelle de paiement ${method.toUpperCase()} pour le plan ${planName}...`);
   };
 
@@ -88,12 +91,7 @@ export default function SubscriptionsPage() {
             </div>
 
             <div>
-              <button 
-                onClick={handleCancel}
-                className="px-4 py-2 text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors"
-              >
-                Résilier l'abonnement
-              </button>
+              {/* Le bouton de résiliation a été déplacé en bas de page pour plus de subtilité */}
             </div>
           </div>
         </div>
@@ -173,19 +171,31 @@ export default function SubscriptionsPage() {
                 
                 {!isCurrentPlan && (
                   <button
-                    onClick={() => handlePayment(plan.name, "paypal")}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold bg-[#0070ba] text-white hover:bg-[#003087] transition-all shadow-md"
+                    onClick={() => handlePayment(plan.name, "mongopay")}
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold bg-[#001f3f] text-white hover:bg-[#00152b] transition-all shadow-md"
                   >
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                      <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zM6.98 21.337h4.093c.524 0 .968-.382 1.05-.9l1.12-7.106h2.19c4.298 0 7.664-1.747 8.647-6.797.03-.149.054-.294.077-.437.292-1.867-.002-3.137-1.012-4.287C21.933 5.518 19.925 4.975 17.355 4.975h-7.46a.641.641 0 0 0-.633.74L6.98 21.337z" />
-                    </svg>
-                    PayPal
+                    {/* MongoPay icon placeholder - simple text or generic icon */}
+                    <span className="text-xl leading-none">💳</span>
+                    MongoPay
                   </button>
                 )}
               </div>
             </div>
           );
         })}
+      </div>
+
+      {/* Subscription Footer / Cancel Action */}
+      <div className="pt-12 pb-8 border-t border-slate-100 flex flex-col items-center space-y-4">
+        <p className="text-slate-400 text-xs max-w-md text-center leading-relaxed">
+          Votre abonnement est renouvelé automatiquement chaque mois. Vous pouvez gérer vos préférences de facturation ou résilier votre contrat à tout moment depuis cet espace.
+        </p>
+        <button 
+          onClick={handleCancel}
+          className="text-slate-300 hover:text-red-400 text-[10px] font-medium transition-colors hover:underline"
+        >
+          Résilier mon abonnement
+        </button>
       </div>
     </div>
   );

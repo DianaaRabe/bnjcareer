@@ -63,7 +63,7 @@ export function Hero() {
             <div className="relative z-10 w-full max-w-[500px] mx-auto group">
               {/* Image from user reference (Stylized professional) */}
               <img 
-                src="https://media.licdn.com/dms/image/v2/D4E22AQFtkrOlgm7JlQ/feedshare-shrink_800/B4EZ0_d7rpGQAc-/0/1774886304804?e=1777507200&v=beta&t=Aac1w54OmNR4Lr3gmmuxUpfMShcgMplLlGt2lLwiJd0" 
+                src="/illustrations/BNJ-landing-1.jpeg" 
                 alt="Candidate épanoui BNJ Skills Maker" 
                 className="relative z-10 rounded-[2rem] shadow-2xl transition-transform duration-500 group-hover:scale-[1.02] border-4 border-white/10"
               />

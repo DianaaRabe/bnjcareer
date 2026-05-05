@@ -12,8 +12,10 @@ import {
   BookOpen,
   CreditCard,
   User,
+  Users,
   ChevronRight,
   LogOut,
+  GraduationCap,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -22,6 +24,8 @@ const NAV_ITEMS = [
   { icon: Briefcase, label: "Offres d'emploi", href: "/dashboard/scrapper" },
   { icon: Target, label: "Matching IA", href: "/dashboard/jobs" },
   { icon: Calendar, label: "Accompagnement", href: "/dashboard/coaching" },
+  { icon: GraduationCap, label: "Formations", href: "/dashboard/formations" },
+  { icon: Users, label: "Recherche Coachs", href: "/dashboard/coaches" },
   { icon: MessageSquare, label: "Messages", href: "/dashboard/messages" },
   { icon: BookOpen, label: "Ressources", href: "/dashboard/ressources" },
   { icon: CreditCard, label: "Abonnements", href: "/dashboard/subscriptions" },

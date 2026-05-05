@@ -99,6 +99,23 @@ export function Step3ProfessionalInfo({ data, onChange }: Props) {
         />
         <p className="text-xs text-slate-400 text-right mt-1">{data.bio.length}/600</p>
       </div>
+
+      {/* Video URL */}
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+          Vidéo d'introduction (1mn) <span className="text-slate-400 font-normal text-xs">(optionnel)</span>
+        </label>
+        <input
+          type="url"
+          value={data.video_url}
+          onChange={(e) => onChange({ video_url: e.target.value })}
+          placeholder="Lien YouTube, Vimeo, Loom..."
+          className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-800 placeholder-slate-300 outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 transition-all"
+        />
+        <p className="text-xs text-slate-400 mt-1.5">
+          Une courte vidéo pour vous présenter aux candidats.
+        </p>
+      </div>
     </div>
   )
 }

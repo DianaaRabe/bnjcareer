@@ -49,10 +49,12 @@ export default function RessourcesPage() {
     setChatMessages((prev) => [...prev, { id: botMsgId, me: false, text: "..." }]);
 
     try {
-      const msgsData = chatMessages.map(m => ({
-        role: m.me ? "user" : "assistant",
-        content: m.text
-      })).filter(m => m.id !== 1); // Only send active convo context
+      const msgsData = chatMessages
+        .filter(m => m.id !== 1 && m.text !== "...")
+        .map(m => ({
+          role: m.me ? "user" : "assistant",
+          content: m.text
+        }));
 
       msgsData.push({ role: "user", content: userText });
 
@@ -225,7 +227,7 @@ export default function RessourcesPage() {
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 placeholder="Posez votre question..."
-                className="flex-1 px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary transition-all disabled:opacity-50"
+                className="flex-1 px-3 py-2 text-sm text-slate-900 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary transition-all disabled:opacity-50"
                 disabled={isTyping}
               />
               <button type="submit" disabled={!chatInput.trim() || isTyping}

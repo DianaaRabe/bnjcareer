@@ -78,7 +78,7 @@ export function HowItWorks() {
             {/* Minimalist 3D character placeholder/image */}
             <div className="mt-12 flex justify-center">
                <img 
-                 src="https://media.licdn.com/dms/image/v2/D5622AQG2y2QW7aWL1g/feedshare-shrink_800/B56Z0v96DOH8Ac-/0/1774626251232?e=1777507200&v=beta&t=Bq8758vFe-HY_jpyDeCi0hArkaZCbaQUk719LKyRInA" 
+                 src="/illustrations/BNJ-landing-2.jpeg" 
                  alt="Processus BNJ Skills Maker"
                  className="w-full max-w-[400px] rounded-2xl shadow-xl hover:rotate-1 transition-transform"
                />

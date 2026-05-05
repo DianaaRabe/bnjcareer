@@ -1,14 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { Calendar, Users, User, Clock, MapPin, CheckCircle, Star, ChevronRight, Trophy, Target, Flame } from "lucide-react";
-
-const WORKSHOPS = [
-  { id: 1, title: "Optimiser son CV avec l'IA", type: "groupe", date: "Vendredi 11 Avr.", time: "14h00 – 15h30", location: "Visio Zoom", host: "Sarah M.", spots: 3, enrolled: false },
-  { id: 2, title: "Préparer ses entretiens", type: "1v1", date: "Lundi 14 Avr.", time: "10h00 – 11h00", location: "Visio Teams", host: "Marc D.", spots: 1, enrolled: true },
-  { id: 3, title: "Réseautage LinkedIn efficace", type: "groupe", date: "Mercredi 16 Avr.", time: "17h00 – 18h30", location: "Présentiel Paris", host: "Lucie P.", spots: 8, enrolled: false },
-  { id: 4, title: "Négociation salariale", type: "groupe", date: "Vendredi 18 Avr.", time: "14h00 – 15h30", location: "Visio Zoom", host: "Thomas R.", spots: 5, enrolled: false },
-];
+import React, { useState, useEffect, useCallback } from "react";
+import { Calendar, Users, User, Clock, MapPin, CheckCircle, Star, ChevronRight, Trophy, Target, Flame, Loader2 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 const OBJECTIVES = [
   { label: "CV complété à 100%", done: false, points: 50, progress: 85 },
@@ -19,13 +13,87 @@ const OBJECTIVES = [
 ];
 
 export default function CoachingPage() {
-  const [enrolled, setEnrolled] = useState<number[]>([2]);
+  const [events, setEvents] = useState<any[]>([]);
+  const [enrolled, setEnrolled] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const supabase = createClient();
+
+  // Extracted into a reusable function so we can call it after each action
+  const loadData = useCallback(async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // 1. Fetch upcoming events with current_participants from DB
+    const { data: eventsData, error: eventsError } = await supabase
+      .from('coach_events')
+      .select('*, coach:profiles(first_name, last_name)')
+      .gte('start_time', new Date().toISOString())
+      .order('start_time', { ascending: true });
+
+    if (eventsError) {
+      console.error('[coaching] Error fetching events:', eventsError);
+    }
+
+    // 2. Separately fetch this user's bookings (avoids RLS issues with other users' bookings)
+    const { data: userBookings, error: bookingsError } = await supabase
+      .from('bookings')
+      .select('event_id')
+      .eq('user_id', user.id)
+      .eq('status', 'booked');
+
+    if (bookingsError) {
+      console.error('[coaching] Error fetching bookings:', bookingsError);
+    }
+
+    if (eventsData) {
+      setEvents(eventsData);
+    }
+
+    if (userBookings) {
+      setEnrolled(userBookings.map(b => b.event_id));
+    }
+  }, [supabase]);
+
+  useEffect(() => {
+    const init = async () => {
+      setIsLoading(true);
+      await loadData();
+      setIsLoading(false);
+    };
+    init();
+  }, [loadData]);
+
+  const toggleEnrollment = async (eventId: string) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    setActionLoading(eventId);
+
+    try {
+      const action = enrolled.includes(eventId) ? 'unbook' : 'book';
+      
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event_id: eventId, action }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        console.error('[coaching] Booking error:', data.error);
+        return;
+      }
+
+      // Re-fetch everything from DB so current_participants is accurate
+      await loadData();
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const totalPoints = OBJECTIVES.filter((o) => o.done).reduce((acc, o) => acc + o.points, 0);
   const maxPoints = OBJECTIVES.reduce((acc, o) => acc + o.points, 0);
-
-  const toggle = (id: number) => {
-    setEnrolled((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
-  };
 
   return (
     <div className="p-6 lg:p-8 space-y-8">
@@ -47,61 +115,97 @@ export default function CoachingPage() {
             </span>
           </div>
 
-          {WORKSHOPS.map((ws) => (
-            <div key={ws.id} className={`bg-white rounded-2xl p-5 shadow-sm border transition-all duration-200 ${
-              enrolled.includes(ws.id) ? "border-brand-light ring-2 ring-brand-primary/10" : "border-slate-100 hover:shadow-md"
-            }`}>
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full ${
-                      ws.type === "1v1" ? "bg-brand-100 text-brand-primary" : "bg-blue-50 text-blue-700"
-                    }`}>
-                      {ws.type === "1v1" ? <User className="w-3 h-3" /> : <Users className="w-3 h-3" />}
-                      {ws.type === "1v1" ? "Individuel" : "Groupe"}
-                    </span>
-                    {enrolled.includes(ws.id) && (
-                      <span className="inline-flex items-center gap-1 text-xs font-bold text-green-700 bg-green-50 px-2.5 py-1 rounded-full">
-                        <CheckCircle className="w-3 h-3" /> Inscrit
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-base font-bold text-slate-900 mb-2">{ws.title}</h3>
-                  <div className="space-y-1.5 text-xs text-slate-500">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                      {ws.date}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-3.5 h-3.5 text-slate-400" />
-                      {ws.time}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                      {ws.location}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col items-end gap-3 shrink-0">
-                  <div className="text-right">
-                    <p className="text-xs text-slate-400">Animé par</p>
-                    <p className="text-sm font-semibold text-slate-700">{ws.host}</p>
-                  </div>
-                  <p className="text-xs text-slate-400">{ws.spots} place(s)</p>
-                  <button
-                    onClick={() => toggle(ws.id)}
-                    className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${
-                      enrolled.includes(ws.id)
-                        ? "bg-red-50 text-red-600 hover:bg-red-100"
-                        : "bg-brand-primary text-white hover:bg-brand-dark shadow-md shadow-brand-primary/20"
-                    }`}
-                  >
-                    {enrolled.includes(ws.id) ? "Se désinscrire" : "S'inscrire"}
-                  </button>
-                </div>
-              </div>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="w-8 h-8 text-brand-primary animate-spin" />
             </div>
-          ))}
+          ) : events.length === 0 ? (
+            <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl p-10 text-center text-slate-500 font-medium">
+              Aucun atelier prévu pour le moment.
+            </div>
+          ) : (
+            events.map((ws) => {
+              const isEnrolled = enrolled.includes(ws.id);
+              const bookingCount = ws.current_participants || 0;
+              const remainingSpots = (ws.max_participants || 10) - bookingCount;
+              const isFull = remainingSpots <= 0 && !isEnrolled;
+              const coachName = `${ws.coach?.first_name || ''} ${ws.coach?.last_name || ''}`.trim() || 'Coach';
+
+              return (
+                <div key={ws.id} className={`bg-white rounded-2xl p-5 shadow-sm border transition-all duration-200 ${
+                  isEnrolled ? "border-brand-light ring-2 ring-brand-primary/10" : "border-slate-100 hover:shadow-md"
+                }`}>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full ${
+                          ws.type === "1v1" ? "bg-brand-100 text-brand-primary" : "bg-blue-50 text-blue-700"
+                        }`}>
+                          {ws.type === "1v1" ? <User className="w-3 h-3" /> : <Users className="w-3 h-3" />}
+                          {ws.type === "1v1" ? "Individuel" : "Groupe"}
+                        </span>
+                        {isEnrolled && (
+                          <span className="inline-flex items-center gap-1 text-xs font-bold text-green-700 bg-green-50 px-2.5 py-1 rounded-full">
+                            <CheckCircle className="w-3 h-3" /> Inscrit
+                          </span>
+                        )}
+                        {ws.is_paid && (
+                          <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">
+                            {ws.price} €
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-base font-bold text-slate-900 mb-2">{ws.title}</h3>
+                      <div className="space-y-1.5 text-xs text-slate-500">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                          {new Date(ws.start_time).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          {new Date(ws.start_time).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} – {new Date(ws.end_time).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                        {ws.meet_link && (
+                          <div className="flex items-center gap-2 text-brand-primary font-medium">
+                            <MapPin className="w-3.5 h-3.5" />
+                            Session en ligne
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-3 shrink-0">
+                      <div className="text-right">
+                        <p className="text-xs text-slate-400">Animé par</p>
+                        <p className="text-sm font-semibold text-slate-700">{coachName}</p>
+                      </div>
+                      <p className={`text-xs ${remainingSpots <= 2 ? 'text-red-500 font-bold' : 'text-slate-400'}`}>
+                        {ws.type === '1v1' 
+                          ? (bookingCount > 0 && !isEnrolled ? 'Déjà réservé' : 'Disponible')
+                          : `${remainingSpots} place(s) restante(s)`
+                        }
+                      </p>
+                      <button
+                        onClick={() => toggleEnrollment(ws.id)}
+                        disabled={isFull || actionLoading === ws.id}
+                        className={`px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 ${
+                          actionLoading === ws.id
+                            ? "bg-slate-100 text-slate-400 cursor-wait"
+                            : isEnrolled
+                            ? "bg-red-50 text-red-600 hover:bg-red-100"
+                            : isFull
+                            ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                            : "bg-brand-primary text-white hover:bg-brand-dark shadow-md shadow-brand-primary/20"
+                        }`}
+                      >
+                        {actionLoading === ws.id && <Loader2 className="w-3 h-3 animate-spin" />}
+                        {actionLoading === ws.id ? "En cours..." : isEnrolled ? "Se désinscrire" : isFull ? "Complet" : "S'inscrire"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
 
         {/* Gamification */}
