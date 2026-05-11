@@ -164,7 +164,7 @@ export default function CreateFormationPage() {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="Ex: Maîtriser l'entretien d'embauche technique"
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-lg font-bold focus:bg-white focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all"
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-lg font-bold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all"
                 />
               </div>
 
@@ -175,7 +175,7 @@ export default function CreateFormationPage() {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={4}
                   placeholder="Décrivez ce que les candidats vont apprendre..."
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium focus:bg-white focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all resize-none"
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:bg-white focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all resize-none"
                 />
               </div>
 
@@ -184,7 +184,7 @@ export default function CreateFormationPage() {
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold outline-none appearance-none"
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 outline-none appearance-none"
                 >
                   <option>Entretien</option>
                   <option>CV</option>
@@ -199,7 +199,7 @@ export default function CreateFormationPage() {
                 <select
                   value={formData.level}
                   onChange={(e) => setFormData({ ...formData, level: e.target.value })}
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold outline-none appearance-none"
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 outline-none appearance-none"
                 >
                   <option value="débutant">Débutant</option>
                   <option value="intermédiaire">Intermédiaire</option>
@@ -213,7 +213,7 @@ export default function CreateFormationPage() {
                   type="number"
                   value={formData.price}
                   onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold outline-none"
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 placeholder:text-slate-400 outline-none"
                 />
                 <p className="text-[10px] text-slate-400 font-bold px-2">0 = Gratuit</p>
               </div>
@@ -225,7 +225,7 @@ export default function CreateFormationPage() {
                   value={formData.duration_label}
                   onChange={(e) => setFormData({ ...formData, duration_label: e.target.value })}
                   placeholder="Ex: 30 jours, 6 semaines..."
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold outline-none"
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 placeholder:text-slate-400 outline-none"
                 />
               </div>
             </div>
@@ -310,7 +310,7 @@ export default function CreateFormationPage() {
                         type="text"
                         value={modules[editingModule].title}
                         onChange={(e) => updateModule(editingModule, { title: e.target.value })}
-                        className="w-full px-5 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold outline-none"
+                        className="w-full px-5 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-900 placeholder:text-slate-400 outline-none"
                       />
                     </div>
 
@@ -323,7 +323,7 @@ export default function CreateFormationPage() {
                            value={modules[editingModule].video_url}
                            onChange={(e) => updateModule(editingModule, { video_url: e.target.value })}
                            placeholder="https://youtube.com/watch?v=..."
-                           className="w-full pl-11 pr-5 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-medium outline-none"
+                           className="w-full pl-11 pr-5 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-medium text-slate-900 placeholder:text-slate-400 outline-none"
                          />
                       </div>
                     </div>
@@ -334,7 +334,7 @@ export default function CreateFormationPage() {
                         value={modules[editingModule].transcript}
                         onChange={(e) => updateModule(editingModule, { transcript: e.target.value })}
                         rows={6}
-                        className="w-full px-5 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-medium outline-none resize-none"
+                        className="w-full px-5 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-medium text-slate-900 placeholder:text-slate-400 outline-none resize-none"
                       />
                     </div>
 
@@ -372,7 +372,7 @@ export default function CreateFormationPage() {
                                         updated[editingModule].exercise_data[exIdx].question = e.target.value;
                                         setModules(updated);
                                      }}
-                                     className="w-full bg-transparent border-b border-slate-200 py-1 text-xs font-bold outline-none"
+                                     className="w-full bg-transparent border-b border-slate-200 py-1 text-xs font-bold text-slate-900 placeholder:text-slate-400 outline-none"
                                    />
                                    <div className="grid grid-cols-2 gap-2">
                                       {ex.options.map((opt, oIdx) => (
@@ -386,7 +386,7 @@ export default function CreateFormationPage() {
                                               setModules(updated);
                                            }}
                                            className={`px-3 py-2 rounded-lg text-[10px] border transition-all ${
-                                             ex.correct_answer === opt ? "bg-green-50 border-green-200 text-green-700 font-bold" : "bg-white border-slate-100"
+                                             ex.correct_answer === opt ? "bg-green-50 border-green-200 text-green-700 font-bold" : "bg-white border-slate-100 text-slate-900"
                                            }`}
                                          />
                                       ))}
@@ -399,7 +399,7 @@ export default function CreateFormationPage() {
                                            updated[editingModule].exercise_data[exIdx].correct_answer = e.target.value;
                                            setModules(updated);
                                         }}
-                                        className="text-[10px] bg-white border border-slate-200 rounded px-2 py-1"
+                                        className="text-[10px] bg-white border border-slate-200 rounded px-2 py-1 text-slate-900"
                                       >
                                          {ex.options.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
                                       </select>

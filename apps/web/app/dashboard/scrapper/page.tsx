@@ -1,5 +1,4 @@
-import React from 'react';
-import { IndeedScrapper } from '../../../components/scrapper/IndeedScrapper';
+import MultiSourceScrapper from '../../../components/scrapper/MultiSourceScrapper';
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from 'next/navigation';
 
@@ -11,5 +10,5 @@ export default async function ScrapperPage() {
         redirect('/login');
     }
 
-    return <IndeedScrapper userId={user.id} />;
+    return <MultiSourceScrapper userId={user.id} />;
 }

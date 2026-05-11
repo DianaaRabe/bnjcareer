@@ -10,9 +10,18 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "start": "turbo run start",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "seed": "cd prisma && npx ts-node --project tsconfig.seed.json seed.ts",
+    "seed:bnj": "cd prisma && npx ts-node --project tsconfig.seed.json seed-benjamin-fanilo.ts",
+    "seed:messaging": "cd prisma && npx ts-node --project tsconfig.seed.json seed-messaging.ts",
+    "cleanup:duplicates": "cd prisma && npx ts-node --project tsconfig.seed.json cleanup-duplicates.ts"
   },
   "devDependencies": {
-    "turbo": "^1.13.2"
+    "@supabase/supabase-js": "^2.103.0",
+    "@types/node": "^20",
+    "dotenv": "^17.4.2",
+    "ts-node": "^10.9.2",
+    "turbo": "^1.13.2",
+    "typescript": "^5"
   }
 }
