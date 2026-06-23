@@ -42,7 +42,7 @@ export default async function DashboardLayout({
 
       {/* Onboarding modal – rendered as overlay when needed */}
       {needsOnboarding && (
-        <OnboardingModal role="candidate" userId={user.id} />
+        <OnboardingModal role="candidate" userId={user.id} initialData={{ first_name: firstName, last_name: lastName }} />
       )}
     </div>
   );

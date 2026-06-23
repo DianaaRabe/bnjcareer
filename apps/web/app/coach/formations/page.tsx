@@ -228,7 +228,7 @@ export default function CoachFormationsPage() {
                              <Users className="w-4 h-4" />
                           </Link>
                           <Link
-                            href={`/coach/formations/edit/${f.id}`}
+                            href={`/coach/formations/${f.id}`}
                             className="p-2 hover:bg-slate-200 text-slate-400 hover:text-slate-900 rounded-xl transition-all"
                             title="Modifier"
                           >

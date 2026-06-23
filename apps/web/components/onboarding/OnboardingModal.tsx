@@ -29,9 +29,10 @@ const COACH_LABELS = ['Identité', 'Expertise', 'Expérience', 'Coaching']
 interface OnboardingModalProps {
   role: UserRole
   userId: string
+  initialData?: Record<string, unknown>
 }
 
-export function OnboardingModal({ role, userId }: OnboardingModalProps) {
+export function OnboardingModal({ role, userId, initialData }: OnboardingModalProps) {
   const {
     currentStep,
     totalSteps,
@@ -44,7 +45,7 @@ export function OnboardingModal({ role, userId }: OnboardingModalProps) {
     submitError,
     handleNext,
     goBack,
-  } = useOnboarding({ role, userId })
+  } = useOnboarding({ role, userId, initialData })
 
   // Block body scroll while modal is open
   useEffect(() => {

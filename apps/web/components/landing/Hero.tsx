@@ -5,7 +5,7 @@ import { Sparkles, TrendingUp, CheckCircle2 } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-brand-dark">
+    <section className="relative min-h-[90vh] flex items-center pt-28 pb-32 overflow-hidden bg-brand-dark">
       {/* Decorative blobs */}
       <div className="absolute top-0 right-0 -mr-24 -mt-24 w-[500px] h-[500px] rounded-full bg-brand-primary/20 blur-[120px] animate-pulse"></div>
       <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-[400px] h-[400px] rounded-full bg-brand-accent/10 blur-[100px]"></div>
@@ -60,29 +60,32 @@ export function Hero() {
 
           {/* Right Image */}
           <div className="flex-1 relative animate-fade-in [animation-delay:300ms]">
-            <div className="relative z-10 w-full max-w-[500px] mx-auto group">
-              {/* Image from user reference (Stylized professional) */}
-              <img 
-                src="/illustrations/BNJ-landing-1.jpeg" 
-                alt="Candidate épanoui BNJ Skills Maker" 
+            {/* Soft background blob — far behind, no aggressive glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[120%] bg-gradient-to-br from-brand-primary/40 to-transparent rounded-full blur-[80px] pointer-events-none"></div>
+
+            {/* Floating image container — just gentle vertical float */}
+            <div className="relative z-10 w-full max-w-[500px] mx-auto group animate-float">
+              <img
+                src="/illustrations/BNJ-landing-1.jpeg"
+                alt="Candidate épanoui BNJ Skills Maker"
                 className="relative z-10 rounded-[2rem] shadow-2xl transition-transform duration-500 group-hover:scale-[1.02] border-4 border-white/10"
               />
-              {/* Decorative elements */}
-              <div className="absolute -top-6 -right-6 bg-brand-accent p-6 rounded-2xl shadow-xl animate-bounce [animation-duration:3s]">
-                 <TrendingUp className="w-8 h-8 text-brand-dark" />
-                 <p className="text-[10px] font-black uppercase text-brand-dark mt-2">+40% Succès</p>
+
+              {/* Top-right floating card — gentle independent float */}
+              <div className="absolute -top-3 -right-3 sm:-top-6 sm:-right-6 z-20 bg-brand-accent p-3 sm:p-6 rounded-xl sm:rounded-2xl shadow-xl animate-float-delayed">
+                <TrendingUp className="w-5 h-5 sm:w-8 sm:h-8 text-brand-dark" />
+                <p className="text-[9px] sm:text-[10px] font-black uppercase text-brand-dark mt-1 sm:mt-2">+40% Succès</p>
               </div>
-              <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl rotate-3">
-                 <div className="flex items-center gap-2 mb-2">
-                   <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                   <span className="text-[10px] font-bold text-slate-400">SESSION COACHING</span>
-                 </div>
-                 <p className="text-sm font-black text-slate-900 leading-tight">Prochaine séance<br/>disponible !</p>
+
+              {/* Bottom-left floating card — gentle wobble */}
+              <div className="absolute -bottom-3 -left-3 sm:-bottom-6 sm:-left-6 z-20 bg-white p-3 sm:p-6 rounded-xl sm:rounded-2xl shadow-xl animate-wobble">
+                <div className="flex items-center gap-2 mb-1 sm:mb-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                  <span className="text-[9px] sm:text-[10px] font-bold text-slate-400">SESSION COACHING</span>
+                </div>
+                <p className="text-xs sm:text-sm font-black text-slate-900 leading-tight">Prochaine séance<br/>disponible !</p>
               </div>
             </div>
-            
-            {/* Background geometry */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[120%] bg-gradient-to-br from-brand-primary/40 to-transparent rounded-full blur-[80px]"></div>
           </div>
         </div>
       </div>

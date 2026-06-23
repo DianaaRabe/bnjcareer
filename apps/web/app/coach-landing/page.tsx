@@ -8,7 +8,7 @@ import { ArrowRight, ShieldCheck, Video, Users } from "lucide-react";
 export default function CoachLandingPage() {
   return (
     <div className="min-h-screen bg-brand-dark overflow-hidden flex flex-col font-sans">
-      <Navbar />
+      <Navbar variant="coach" />
 
       {/* Hero Section */}
       <main className="flex-1 pt-24 pb-20 relative">

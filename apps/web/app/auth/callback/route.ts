@@ -10,8 +10,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/login?error=no_code`)
   }
 
-  const intendedRole = request.cookies.get('intended_role')?.value;
+  const intendedRole   = request.cookies.get('intended_role')?.value;
+  const intendedTenant = request.cookies.get('intended_tenant')?.value ?? 'fr';
   const role = intendedRole === 'coach' ? 'coach' : 'candidate';
+  const nextPath = searchParams.get('next');  // e.g. /reset-password
   
   // Create a base response so Supabase can write session cookies to it
   const response = NextResponse.next();
@@ -42,6 +44,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(
       `${origin}/login?error=${encodeURIComponent(error?.message || 'Session vide')}`
     )
+  }
+
+  // ── Password recovery flow: redirect straight to reset page ──────────
+  if (nextPath === '/reset-password') {
+    const recoveryResponse = NextResponse.redirect(`${origin}/reset-password`)
+    // Carry over all cookies so the session is available on the reset page
+    request.cookies.getAll().forEach(c => recoveryResponse.cookies.set(c.name, c.value))
+    response.cookies.getAll().forEach(c => recoveryResponse.cookies.set(c.name, c.value))
+    return recoveryResponse
   }
 
   // ── Auto-inscription : créer le profil si c'est la première connexion ──
@@ -115,14 +126,17 @@ export async function GET(request: NextRequest) {
   const targetPath = finalRole === 'coach' ? '/coach' : '/dashboard';
 
   // Build final redirect with session cookies carried over
-  const targetPathWithDebug = `${targetPath}?debug=${debugState}`
-  
+  // Keep the tenant param so middleware can detect it in dev (no subdomain)
+  const tenantSuffix = intendedTenant !== 'fr' ? `&tenant=${intendedTenant}` : ''
+  const targetPathWithDebug = `${targetPath}?debug=${debugState}${tenantSuffix}`
+
   const finalResponse = NextResponse.redirect(`${origin}${targetPathWithDebug}`)
   request.cookies.getAll().forEach(c => finalResponse.cookies.set(c.name, c.value))
   response.cookies.getAll().forEach(c => finalResponse.cookies.set(c.name, c.value))
-  
-  // Clear the intended_role cookie
-  finalResponse.cookies.set('intended_role', '', { maxAge: 0, path: '/' })
+
+  // Clear the intended_role and intended_tenant cookies
+  finalResponse.cookies.set('intended_role',   '', { maxAge: 0, path: '/' })
+  finalResponse.cookies.set('intended_tenant', '', { maxAge: 0, path: '/' })
 
   return finalResponse
 }

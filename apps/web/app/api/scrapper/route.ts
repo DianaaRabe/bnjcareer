@@ -3,25 +3,29 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { query, location, country } = body;
+        const { query, location, country, jobType } = body;
 
         const token = process.env.APIFY_API_TOKEN || '';
         if (!token) {
             return NextResponse.json({ error: "APIFY_API_TOKEN est manquant dans .env" }, { status: 500 });
         }
 
-        const input = {
+        // Build input — only include jobType if the user explicitly selected one,
+        // so that the "Tous" option doesn't artificially restrict results.
+        const input: Record<string, unknown> = {
             "country": country || "fr",
             "query": query || "Analyst",
             "location": location || "Paris",
             "maxRows": 15,
             "remote": "remote",
             "sort": "date",
-            "jobType": "fulltime",
             "fromDays": "14",
             "enableUniqueJobs": true,
-            "includeSimilarJobs": false
+            "includeSimilarJobs": false,
         };
+        if (jobType && typeof jobType === 'string' && jobType.trim() !== '') {
+            input.jobType = jobType.trim();
+        }
 
         console.log("=== APIFY SCRAPPER CALL ===");
         console.log("Reçu depuis le Frontend:", { query, location, country });

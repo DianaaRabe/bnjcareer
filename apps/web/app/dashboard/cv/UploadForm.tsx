@@ -459,7 +459,7 @@ export default function UploadForm({
               ou glissez-déposez le fichier ici
             </p>
             <p className="text-xs text-slate-400 mt-4 text-center max-w-[280px]">
-              Formats acceptés : PDF. Taille max : 5 MB.
+              Formats acceptés : PDF. Taille max : 2 MB.
             </p>
           </div>
         )}

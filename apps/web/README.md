@@ -22,7 +22,7 @@ Ouvrez [http://localhost:3000](http://localhost:3000) pour voir le résultat.
 
 Cette application communique avec plusieurs services externes :
 *   **Extraction CV** : `https://cv-encryptor.onrender.com/api/extract-cv-upload`
-*   **Matching Score** : `https://jobmatchingscore.bnjteammaker.com/analyze`
+*   **Matching Score** : `https://jobmatchscore.onrender.com/analyze`
 *   **Scrapping Indeed** : Via l'API Apify (token nécessaire dans `.env`).
 
 ---

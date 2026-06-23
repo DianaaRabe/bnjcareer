@@ -14,7 +14,9 @@
     "seed": "cd prisma && npx ts-node --project tsconfig.seed.json seed.ts",
     "seed:bnj": "cd prisma && npx ts-node --project tsconfig.seed.json seed-benjamin-fanilo.ts",
     "seed:messaging": "cd prisma && npx ts-node --project tsconfig.seed.json seed-messaging.ts",
-    "cleanup:duplicates": "cd prisma && npx ts-node --project tsconfig.seed.json cleanup-duplicates.ts"
+    "cleanup:duplicates": "cd prisma && npx ts-node --project tsconfig.seed.json cleanup-duplicates.ts",
+    "seed:resources": "cd prisma && npx ts-node --project tsconfig.seed.json seed-resources.ts",
+    "seed:candidats": "cd prisma && npx ts-node --project tsconfig.seed.json seed-candidats-reels.ts"
   },
   "devDependencies": {
     "@supabase/supabase-js": "^2.103.0",

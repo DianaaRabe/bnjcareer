@@ -181,7 +181,7 @@ export default function MatchingPage() {
       };
 
       const res = await fetch(
-        "https://jobmatchingscore.bnjteammaker.com/analyze",
+        "https://jobmatchscore.onrender.com/analyze",
         {
           method: "POST",
           headers: {

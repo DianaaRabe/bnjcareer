@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { callLLM, extractCVOptimization, LLMError } from "@/lib/llm/client";
+import {
+  extractImmutableContact,
+  formatImmutableExperiences,
+  formatImmutableEducation,
+} from "@/lib/cv/immutable";
 
 export const maxDuration = 60; // Allow up to 60s for LLM response
 
@@ -81,98 +87,39 @@ export async function POST(req: NextRequest) {
       cvData
     );
 
-    // Call OpenRouter LLM
-    const llmResponse = await fetch(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
-          "HTTP-Referer":
-            req.headers.get("origin") || "http://localhost:3000",
-          "X-Title": "BNJ Skills Maker - CV Optimizer",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash-lite",
-          messages: [
-            { role: "system", content: systemPrompt },
-            {
-              role: "user",
-              content:
-                "Optimise ce CV maintenant. Réponds UNIQUEMENT avec le JSON demandé, sans aucun texte avant ou après.",
-            },
-          ],
-          temperature: 0.3,
-          max_tokens: 8000,
-        }),
-      }
-    );
-
-    if (!llmResponse.ok) {
-      const errText = await llmResponse.text();
-      console.error("[cv-optimize] LLM API error:", errText);
-      await admin
-        .from("cv_optimizations")
-        .update({ status: "failed" })
-        .eq("id", optRecord.id);
-      return NextResponse.json(
-        { error: "AI optimization failed" },
-        { status: 502 }
-      );
-    }
-
-    const llmData = await llmResponse.json();
-    const rawContent =
-      llmData.choices?.[0]?.message?.content || "";
-
-    // Parse the JSON from LLM response
+    // Call LLM via the centralized wrapper (with fallback chain)
     let optimizedHtml = "";
     let improvements: any[] = [];
 
     try {
-      // Try to extract JSON from potential markdown code blocks
-      let jsonStr = rawContent.trim();
-      
-      // Remove markdown code fences if present
-      if (jsonStr.startsWith("```")) {
-        jsonStr = jsonStr.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
-      }
+      const { content: rawContent, model } = await callLLM({
+        messages: [
+          { role: "system", content: systemPrompt },
+          {
+            role: "user",
+            content:
+              "Optimise ce CV maintenant. Réponds UNIQUEMENT avec le JSON demandé, sans aucun texte avant ou après.",
+          },
+        ],
+        temperature: 0.3,
+        maxTokens: 6000,
+        jsonMode: true,
+        referer: req.headers.get("origin") || undefined,
+      });
+      console.log(`[cv-optimize] LLM used: ${model}`);
 
-      const parsed = JSON.parse(jsonStr);
-      optimizedHtml = parsed.optimized_html || "";
-      improvements = parsed.improvements || [];
-    } catch (parseErr) {
-      console.error("[cv-optimize] JSON parse error:", parseErr);
-      console.error("[cv-optimize] Raw content:", rawContent.substring(0, 500));
-
-      // Attempt to salvage: look for JSON within the response
-      const jsonMatch = rawContent.match(/\{[\s\S]*"optimized_html"[\s\S]*\}/);
-      if (jsonMatch) {
-        try {
-          const fallback = JSON.parse(jsonMatch[0]);
-          optimizedHtml = fallback.optimized_html || "";
-          improvements = fallback.improvements || [];
-        } catch {
-          await admin
-            .from("cv_optimizations")
-            .update({ status: "failed" })
-            .eq("id", optRecord.id);
-          return NextResponse.json(
-            { error: "Failed to parse AI response" },
-            { status: 500 }
-          );
-        }
-      } else {
-        await admin
-          .from("cv_optimizations")
-          .update({ status: "failed" })
-          .eq("id", optRecord.id);
-        return NextResponse.json(
-          { error: "Failed to parse AI response" },
-          { status: 500 }
-        );
+      const parsed = extractCVOptimization(rawContent);
+      optimizedHtml = parsed.optimized_html;
+      improvements = parsed.improvements;
+    } catch (err) {
+      if (err instanceof LLMError) {
+        console.error("[cv-optimize] All LLM models failed:", err.attempts);
+        await admin.from("cv_optimizations").update({ status: "failed" }).eq("id", optRecord.id);
+        return NextResponse.json({ error: "AI optimization failed" }, { status: 502 });
       }
+      console.error("[cv-optimize] JSON parse error:", err);
+      await admin.from("cv_optimizations").update({ status: "failed" }).eq("id", optRecord.id);
+      return NextResponse.json({ error: "Failed to parse AI response" }, { status: 500 });
     }
 
     // Update the record with results
@@ -234,11 +181,58 @@ function buildOptimizationPrompt(
     other: "Autre",
   };
 
+  const immutable = extractImmutableContact(cvData, profile);
+  const immutableExperiences = formatImmutableExperiences(cvData);
+  const immutableEducation   = formatImmutableEducation(cvData);
+
   return `Tu es un expert senior en rédaction de CV et en systèmes ATS (Applicant Tracking Systems).
 Tu as 15 ans d'expérience en recrutement et tu connais parfaitement les algorithmes de parsing ATS.
 
+## ⚠️⚠️⚠️ RÈGLES INVIOLABLES — LIS ET RESPECTE CETTE SECTION AVANT TOUT ⚠️⚠️⚠️
+
+Ton rôle est de **reformuler** et **réorganiser** le CV pour mieux passer les filtres ATS.
+Tu n'es PAS rédacteur fiction. Tu NE peux PAS inventer, embellir ou fabriquer des faits.
+
+### A. INFORMATIONS DE CONTACT — RECOPIE-LES VERBATIM, NE LES MODIFIE JAMAIS
+- Nom complet  : "${immutable.name ?? "(NON RENSEIGNÉ — écris 'Non renseigné' et N'INVENTE PAS)"}"
+- Email        : "${immutable.email ?? "(NON RENSEIGNÉ — écris 'Non renseigné' et NE FABRIQUE PAS d'email)"}"
+- Téléphone    : "${immutable.phone ?? "(NON RENSEIGNÉ — écris 'Non renseigné' et NE FABRIQUE PAS de numéro)"}"
+- Localisation : "${immutable.location ?? "(NON RENSEIGNÉ — écris 'Non renseigné' et NE FABRIQUE PAS de ville)"}"
+- LinkedIn     : "${immutable.linkedin ?? "(NON RENSEIGNÉ — laisse vide)"}"
+
+### B. EXPÉRIENCES PROFESSIONNELLES — LISTE FIXE
+${immutableExperiences}
+
+Pour chaque expérience tu peux :
+  ✅ Réécrire la description / les bullets
+  ✅ Réordonner les expériences
+
+Tu NE peux PAS :
+  ❌ Changer le nom de l'entreprise, l'intitulé du poste, ou les dates
+  ❌ Ajouter ou supprimer une expérience
+
+### C. FORMATIONS — LISTE FIXE (totalement immutable)
+${immutableEducation}
+
+Tu NE peux RIEN modifier dans les formations : ni le diplôme, ni l'établissement, ni les dates.
+
+### D. CE QUE TU PEUX RÉELLEMENT FAIRE
+  ✅ Réécrire le **résumé / profil professionnel**
+  ✅ Réécrire le **titre du poste visé** affiché sous le nom
+  ✅ Réécrire les **bullets d'expérience** avec verbes d'action + quantification
+  ✅ **Réordonner** par pertinence
+  ✅ **Ajouter des compétences techniques** UNIQUEMENT si plausibles vu son parcours
+
+### E. INTERDICTIONS ABSOLUES (= MENSONGE)
+  ❌ Inventer un poste, employeur, mission, diplôme, école, certification, langue
+  ❌ Modifier nom, email, téléphone ou ville
+  ❌ Ajouter des compétences sans lien avec le parcours réel
+
+Si une info manque dans le CV original, OMETS-LA ou écris "Non renseigné". N'INVENTE JAMAIS.
+
 ## MISSION
-Optimise le CV ci-dessous pour maximiser les chances de passer les filtres ATS et impressionner les recruteurs humains.
+Optimise le CV ci-dessous pour maximiser les chances de passer les filtres ATS et impressionner les recruteurs humains,
+en respectant strictement les règles A-E ci-dessus.
 
 ## PROFIL DU CANDIDAT
 - Nom : ${profile?.first_name || "Non renseigné"} ${profile?.last_name || ""}
@@ -261,7 +255,7 @@ ${JSON.stringify(cvData, null, 2)}
 4. **Quantification des résultats** : Ajouter des métriques et résultats concrets quand c'est plausible (+X%, X projets, X personnes managées...)
 5. **Résumé professionnel** : Écrire un résumé de 2-3 lignes percutantes en haut du CV, aligné avec l'objectif "${mainGoalLabels[profile?.main_goal] || "professionnel"}"
 6. **Compétences organisées** : Organiser en catégories claires (Techniques, Soft Skills, Outils & Logiciels)
-7. **Formatage ATS-safe** : AUCUN tableau, AUCUNE colonne CSS, AUCUN élément graphique complexe. Les ATS ne lisent que du texte linéaire.
+7. **Formatage ATS-safe** : AUCUN tableau HTML, AUCUNE image, AUCUN SVG, AUCUN élément graphique complexe. Le seul "display:flex" autorisé est celui utilisé dans le template ci-dessous (titre/dates d'expérience) — c'est un pattern standard 2026 lu correctement par tous les ATS modernes.
 8. **Longueur** : Optimiser pour 1-2 pages imprimables
 9. **Dates** : Format standard français (Janvier 2023 - Présent)
 10. **Contact** : Inclure email, téléphone, ville si disponibles
@@ -290,18 +284,100 @@ Réponds UNIQUEMENT avec un objet JSON valide (pas de markdown, pas de backticks
 - "medium" : amélioration significative
 - "low" : ajustement mineur
 
-## RÈGLES HTML STRICTES
-- Le HTML doit être dans un seul <div> racine
-- Style inline uniquement (pas de <style> tags)
-- Police : font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif
-- Couleur texte principal : #1e293b
-- Couleur accents/titres de section : #590293
-- Couleur bordures subtiles : #e2e8f0
-- Fond des sections alternées : #f8fafc
-- Taille titre nom : 28px, bold
-- Taille titres sections : 16px, uppercase, letter-spacing 1px
-- Taille texte normal : 13px, line-height 1.6
-- max-width : 800px, margin 0 auto, padding 40px
-- Séparateurs entre sections : border-bottom 2px solid #590293
-- Le HTML doit être complet, autonome et directement imprimable`;
+## RÈGLES HTML — CRITIQUES POUR LE PARSING JSON
+- **OBLIGATOIRE** : Utilise UNIQUEMENT des single quotes (') pour TOUS les attributs HTML
+  → Exemple : <div style='color: #1e293b'> ET NON <div style="color: #1e293b">
+  → Pourquoi : le HTML est embarqué dans une string JSON (double quotes), donc utiliser des
+     double quotes en HTML casse le JSON.
+- Pas de retour à la ligne dans les valeurs JSON (un seul long HTML sur une ligne logique).
+
+## TEMPLATE HTML À SUIVRE STRICTEMENT (ATS-OPTIMISÉ)
+Tu DOIS reproduire EXACTEMENT cette structure, en remplaçant uniquement les contenus textuels.
+Ne modifie PAS les styles, les couleurs, les balises ou la hiérarchie.
+
+**Pourquoi cette structure est ATS-safe :**
+- Header en colonne unique → les vieux ATS lisent le nom et les contacts dans le bon ordre
+- Contact info séparée par " · " (texte réel) → l'ATS sépare correctement email/tel/ville
+- Pills en inline-block → l'espace HTML naturel entre les spans = séparateur ATS
+
+\`\`\`html
+<div style='max-width:820px;margin:0 auto;padding:48px 56px;background:#ffffff;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;color:#1e293b;font-size:13px;line-height:1.6'>
+
+  <!-- HEADER : single-column, max compatibilité ATS -->
+  <header style='border-bottom:3px solid #590293;padding-bottom:18px;margin-bottom:28px'>
+    <h1 style='margin:0;font-size:32px;font-weight:700;color:#0f172a;letter-spacing:-0.5px'>PRÉNOM NOM</h1>
+    <p style='margin:6px 0 10px;font-size:15px;color:#590293;font-weight:600'>Titre du poste visé</p>
+    <p style='margin:0;font-size:12px;color:#475569'>email@exemple.com · +33 X XX XX XX XX · Ville, Pays · linkedin.com/in/profil</p>
+  </header>
+
+  <!-- RÉSUMÉ PROFESSIONNEL -->
+  <section style='margin-bottom:28px'>
+    <h2 style='margin:0 0 10px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Profil professionnel</h2>
+    <p style='margin:0;color:#334155'>2-3 phrases percutantes qui résument l'expertise, l'objectif et la valeur ajoutée du candidat.</p>
+  </section>
+
+  <!-- EXPÉRIENCE — titre+dates en flex (standard moderne, OK ATS), reste single-col -->
+  <section style='margin-bottom:28px'>
+    <h2 style='margin:0 0 14px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Expérience professionnelle</h2>
+
+    <div style='margin-bottom:18px'>
+      <div style='display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px'>
+        <span style='font-size:14px;font-weight:700;color:#0f172a'>Intitulé du poste</span>
+        <span style='font-size:12px;color:#64748b;font-weight:500'>Janvier 2023 — Présent</span>
+      </div>
+      <div style='font-size:13px;color:#590293;font-weight:600;margin-bottom:8px'>Nom de l'entreprise · Ville</div>
+      <ul style='margin:0;padding-left:18px;color:#334155'>
+        <li style='margin-bottom:4px'>Verbe d'action au passé + description quantifiée (+X%, X projets)…</li>
+        <li style='margin-bottom:4px'>Verbe d'action au passé + résultat concret…</li>
+        <li style='margin-bottom:4px'>Verbe d'action au passé + impact mesurable…</li>
+      </ul>
+    </div>
+
+    <!-- Répéter le bloc ci-dessus pour chaque expérience -->
+  </section>
+
+  <!-- FORMATION -->
+  <section style='margin-bottom:28px'>
+    <h2 style='margin:0 0 14px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Formation</h2>
+    <div style='margin-bottom:12px'>
+      <div style='display:flex;justify-content:space-between;align-items:baseline'>
+        <span style='font-size:14px;font-weight:700;color:#0f172a'>Diplôme</span>
+        <span style='font-size:12px;color:#64748b;font-weight:500'>2020 — 2023</span>
+      </div>
+      <div style='font-size:13px;color:#475569;margin-top:2px'>Établissement · Ville</div>
+    </div>
+  </section>
+
+  <!-- COMPÉTENCES — pills en inline-block (espace HTML naturel = séparateur ATS) -->
+  <section style='margin-bottom:28px'>
+    <h2 style='margin:0 0 12px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Compétences techniques</h2>
+    <div>
+      <span style='display:inline-block;background:#f3e8ff;color:#590293;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;margin:0 4px 6px 0'>React</span>
+      <span style='display:inline-block;background:#f3e8ff;color:#590293;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;margin:0 4px 6px 0'>TypeScript</span>
+      <!-- Répéter pour chaque compétence. Garde l'espace/newline naturel entre les balises pour l'ATS. -->
+    </div>
+  </section>
+
+  <!-- LANGUES — ligne inline avec séparateur texte "·" (ATS-friendly) -->
+  <section style='margin-bottom:28px'>
+    <h2 style='margin:0 0 10px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Langues</h2>
+    <p style='margin:0;color:#334155'><strong style='color:#0f172a'>Français</strong> — Natif · <strong style='color:#0f172a'>Anglais</strong> — Courant (C1)</p>
+  </section>
+
+  <!-- CENTRES D'INTÉRÊT (optionnel) -->
+  <section>
+    <h2 style='margin:0 0 10px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Centres d'intérêt</h2>
+    <p style='margin:0;color:#334155'>Liste ou phrase courte séparée par " · ", 3-5 items max.</p>
+  </section>
+
+</div>
+\`\`\`
+
+## RÈGLES DE REMPLISSAGE
+- Si une section n'a pas de données pertinentes pour ce candidat, OMETS-LA entièrement plutôt que de la laisser vide.
+- Adapte le titre sous le nom à l'objectif réel du candidat ("Développeuse Full-Stack & AI Engineer", "Chef de projet digital", etc).
+- Pour les compétences : 8-20 pills max, les plus pertinentes en premier.
+- Les bullets d'expérience commencent TOUJOURS par un verbe d'action au passé.
+- Le résumé professionnel doit faire 2-3 phrases, pas plus.
+- Le HTML retourné doit être SUR UNE SEULE LIGNE LOGIQUE (pas de \\n entre les balises) pour minimiser les problèmes d'échappement JSON.`;
 }

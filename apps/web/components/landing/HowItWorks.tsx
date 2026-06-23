@@ -7,7 +7,7 @@ const STEPS = [
   {
     icon: UserPlus,
     title: "Inscrivez-vous en 2 secondes",
-    desc: "Connectez-vous avec votre compte Google et rejoignez la communauté BNJ.",
+    desc: "Créez votre compte en quelques clics et rejoignez la communauté BNJ.",
   },
   {
     icon: Wand2,
@@ -71,7 +71,7 @@ export function HowItWorks() {
               </div>
               
               <p className="text-xs text-center text-white/40 pt-4">
-                Pas de formulaire interminable. Juste vous et votre futur job.
+                Inscription gratuite. Juste vous et votre futur job.
               </p>
             </div>
             

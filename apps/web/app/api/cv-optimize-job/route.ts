@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { callLLM, extractCVOptimization, LLMError } from "@/lib/llm/client";
+import {
+  extractImmutableContact,
+  formatImmutableExperiences,
+  formatImmutableEducation,
+} from "@/lib/cv/immutable";
 
 export const maxDuration = 60; // Allow up to 60s for LLM response
 
@@ -104,106 +110,41 @@ export async function POST(req: NextRequest) {
       matchAnalysis
     );
 
-    // ── Call OpenRouter LLM ──────────────────────────────────────────────
-    const llmResponse = await fetch(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
-          "HTTP-Referer":
-            req.headers.get("origin") || "http://localhost:3000",
-          "X-Title": "BNJ Skills Maker - Job CV Optimizer",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash-lite",
-          messages: [
-            { role: "system", content: systemPrompt },
-            {
-              role: "user",
-              content:
-                "Optimise ce CV pour ce poste spécifique maintenant. Réponds UNIQUEMENT avec le JSON demandé, sans aucun texte avant ou après.",
-            },
-          ],
-          temperature: 0.3,
-          max_tokens: 10000,
-        }),
-      }
-    );
-
-    if (!llmResponse.ok) {
-      const errText = await llmResponse.text();
-      console.error("[cv-optimize-job] LLM API error:", errText);
-      await admin
-        .from("job_cv_versions")
-        .update({ status: "failed" })
-        .eq("id", versionRecord.id);
-      return NextResponse.json(
-        { error: "AI optimization failed" },
-        { status: 502 }
-      );
-    }
-
-    const llmData = await llmResponse.json();
-    const rawContent = llmData.choices?.[0]?.message?.content || "";
-
-    // ── Parse the JSON from LLM response ─────────────────────────────────
+    // ── Call LLM via centralized wrapper (with fallback chain) ──────────
     let optimizedHtml = "";
     let improvements: any[] = [];
     let matchSummary = "";
 
     try {
-      let jsonStr = rawContent.trim();
+      const { content: rawContent, model } = await callLLM({
+        messages: [
+          { role: "system", content: systemPrompt },
+          {
+            role: "user",
+            content:
+              "Optimise ce CV pour ce poste spécifique maintenant. Réponds UNIQUEMENT avec le JSON demandé, sans aucun texte avant ou après.",
+          },
+        ],
+        temperature: 0.3,
+        maxTokens: 6000,
+        jsonMode: true,
+        referer: req.headers.get("origin") || undefined,
+      });
+      console.log(`[cv-optimize-job] LLM used: ${model}`);
 
-      // Remove markdown code fences if present
-      if (jsonStr.startsWith("```")) {
-        jsonStr = jsonStr
-          .replace(/^```(?:json)?\s*\n?/, "")
-          .replace(/\n?```\s*$/, "");
-      }
-
-      const parsed = JSON.parse(jsonStr);
-      optimizedHtml = parsed.optimized_html || "";
-      improvements = parsed.improvements || [];
+      const parsed = extractCVOptimization(rawContent);
+      optimizedHtml = parsed.optimized_html;
+      improvements = parsed.improvements;
       matchSummary = parsed.match_summary || "";
-    } catch (parseErr) {
-      console.error("[cv-optimize-job] JSON parse error:", parseErr);
-      console.error(
-        "[cv-optimize-job] Raw content:",
-        rawContent.substring(0, 500)
-      );
-
-      // Attempt to salvage JSON from response
-      const jsonMatch = rawContent.match(
-        /\{[\s\S]*"optimized_html"[\s\S]*\}/
-      );
-      if (jsonMatch) {
-        try {
-          const fallback = JSON.parse(jsonMatch[0]);
-          optimizedHtml = fallback.optimized_html || "";
-          improvements = fallback.improvements || [];
-          matchSummary = fallback.match_summary || "";
-        } catch {
-          await admin
-            .from("job_cv_versions")
-            .update({ status: "failed" })
-            .eq("id", versionRecord.id);
-          return NextResponse.json(
-            { error: "Failed to parse AI response" },
-            { status: 500 }
-          );
-        }
-      } else {
-        await admin
-          .from("job_cv_versions")
-          .update({ status: "failed" })
-          .eq("id", versionRecord.id);
-        return NextResponse.json(
-          { error: "Failed to parse AI response" },
-          { status: 500 }
-        );
+    } catch (err) {
+      if (err instanceof LLMError) {
+        console.error("[cv-optimize-job] All LLM models failed:", err.attempts);
+        await admin.from("job_cv_versions").update({ status: "failed" }).eq("id", versionRecord.id);
+        return NextResponse.json({ error: "AI optimization failed" }, { status: 502 });
       }
+      console.error("[cv-optimize-job] JSON parse error:", err);
+      await admin.from("job_cv_versions").update({ status: "failed" }).eq("id", versionRecord.id);
+      return NextResponse.json({ error: "Failed to parse AI response" }, { status: 500 });
     }
 
     // ── Update the record with results ───────────────────────────────────
@@ -288,12 +229,72 @@ ${matchAnalysis.reasons?.map((r) => `  - ${r}`).join("\n") || "  - Aucun détail
 Tu dois utiliser ces informations pour cibler précisément les lacunes et maximiser la compatibilité.`
     : "";
 
+  const immutable = extractImmutableContact(cvData, profile);
+  const immutableExperiences = formatImmutableExperiences(cvData);
+  const immutableEducation   = formatImmutableEducation(cvData);
+
   return `Tu es un expert senior en rédaction de CV, spécialisé dans l'optimisation ciblée pour des postes spécifiques.
 Tu as 15 ans d'expérience en recrutement et tu connais parfaitement les algorithmes ATS et les attentes des recruteurs.
 
-## MISSION CRITIQUE
-Adapte le CV ci-dessous pour MAXIMISER les chances d'être sélectionné pour ce poste SPÉCIFIQUE.
-Tu dois créer une version du CV parfaitement alignée avec cette offre d'emploi.
+## ⚠️⚠️⚠️ RÈGLES INVIOLABLES — LIS ET RESPECTE CETTE SECTION AVANT TOUT ⚠️⚠️⚠️
+
+Ton rôle est de **reformuler** et **réorganiser** le CV pour l'aligner avec un poste cible.
+Tu n'es PAS rédacteur fiction. Tu NE peux PAS inventer, embellir ou fabriquer des faits.
+
+### A. INFORMATIONS DE CONTACT — RECOPIE-LES VERBATIM, NE LES MODIFIE JAMAIS
+- Nom complet  : "${immutable.name ?? "(NON RENSEIGNÉ — écris 'Non renseigné' et NE TROUVE PAS de nom à la place)"}"
+- Email        : "${immutable.email ?? "(NON RENSEIGNÉ — écris 'Non renseigné' et NE FABRIQUE PAS d'email)"}"
+- Téléphone    : "${immutable.phone ?? "(NON RENSEIGNÉ — écris 'Non renseigné' et NE FABRIQUE PAS de numéro)"}"
+- Localisation : "${immutable.location ?? "(NON RENSEIGNÉ — écris 'Non renseigné' et NE FABRIQUE PAS de ville)"}"
+- LinkedIn     : "${immutable.linkedin ?? "(NON RENSEIGNÉ — laisse vide)"}"
+
+🚨 INTERDICTION FORMELLE : ne change PAS la ville du candidat pour qu'elle corresponde à la ville du poste.
+   Si le candidat habite à "Antananarivo, Madagascar" et postule à Paris, son CV doit dire "Antananarivo, Madagascar".
+   C'est au recruteur de décider s'il accepte les candidats à distance.
+
+### B. EXPÉRIENCES PROFESSIONNELLES — LISTE FIXE
+Voici la liste EXACTE des expériences du candidat (tu n'en ajoutes pas, tu n'en supprimes pas) :
+${immutableExperiences}
+
+Pour chaque expérience tu peux :
+  ✅ Réécrire la description / les bullets pour faire ressortir la pertinence avec le poste cible
+  ✅ Réordonner les bullets, les regrouper
+  ✅ Réordonner les expériences entre elles (la plus pertinente en premier)
+
+Tu NE peux PAS :
+  ❌ Changer le nom de l'entreprise
+  ❌ Changer l'intitulé du poste qui a été occupé
+  ❌ Changer les dates
+  ❌ Ajouter une expérience qui n'est pas dans la liste ci-dessus
+  ❌ Supprimer une expérience
+
+### C. FORMATIONS — LISTE FIXE (totalement immutable)
+${immutableEducation}
+
+Tu NE peux RIEN modifier dans les formations : ni le diplôme, ni l'établissement, ni les dates.
+Tu peux uniquement les réordonner.
+
+### D. CE QUE TU PEUX RÉELLEMENT FAIRE
+  ✅ Réécrire complètement le **résumé / profil professionnel** (2-3 phrases qui ciblent le poste)
+  ✅ Réécrire le **titre du poste visé** affiché sous le nom (ex: "Développeuse Full-Stack" → "Développeuse Full-Stack & AI Engineer")
+  ✅ Réécrire les **bullets d'expérience** avec des verbes d'action + mots-clés du poste
+  ✅ **Réordonner** les expériences et les compétences pour mettre les plus pertinentes en haut
+  ✅ **Ajouter des compétences techniques** UNIQUEMENT si elles sont raisonnablement plausibles vu son parcours
+      (ex: s'il a React dans son CV, tu peux ajouter "Next.js" ou "React Hooks". Mais pas "Kubernetes" si rien dans son CV n'y fait référence.)
+
+### E. INTERDICTIONS ABSOLUES (= MENSONGE = CV ÉLIMINÉ EN ENTRETIEN)
+  ❌ Inventer un poste, un employeur, une mission qui n'existe pas
+  ❌ Inventer un diplôme, une école, une certification
+  ❌ Inventer une langue parlée
+  ❌ Ajouter des compétences sans aucun lien avec le parcours réel
+  ❌ Modifier le nom, l'email, le téléphone ou la ville
+  ❌ Changer la ville pour qu'elle matche celle du poste
+
+Si une info manque dans le CV original, OMETS-LA ou écris "Non renseigné". N'INVENTE JAMAIS.
+
+## MISSION
+Adapte le CV ci-dessous pour MAXIMISER les chances d'être sélectionné pour ce poste SPÉCIFIQUE,
+en respectant strictement les règles A-E ci-dessus.
 
 ## OFFRE D'EMPLOI CIBLE
 ### Titre du poste : ${job.title}
@@ -330,24 +331,19 @@ ${JSON.stringify(cvData, null, 2)}
 - Mets en avant les compétences qui matchent directement avec les exigences
 - Ajuste le résumé professionnel pour cibler spécifiquement ce poste
 
-### 3. Comblement des lacunes
+### 3. Comblement des lacunes (dans le respect strict des règles A-E)
 - Si le candidat a des compétences transférables qui couvrent un gap, mets-les en avant
 - Reformule les expériences existantes pour faire ressortir la pertinence
-- ⚠️ NE JAMAIS INVENTER de fausses expériences ou compétences
-- ⚠️ SEULEMENT reformuler et réorganiser le contenu existant
+- Ajoute des compétences techniques plausibles vu son parcours (voir règle D)
 
 ### 4. Optimisation ATS ciblée
 - Structure avec des sections standards (Profil, Expérience, Formation, Compétences)
 - Bullet points commençant par des verbes d'action pertinents pour ce domaine
 - Quantification des résultats quand c'est plausible
-- Format linéaire sans tableaux ni colonnes CSS
+- Format ATS-safe : AUCUN tableau HTML, AUCUNE image, AUCUN SVG. Le seul "display:flex" autorisé est celui utilisé dans le template ci-dessous (titre/dates d'expérience) — pattern standard 2026 lu correctement par tous les ATS modernes.
 
-## ⚠️ CONTRAINTES ABSOLUES
-- NE PAS inventer d'expériences ou de données fictives
-- NE PAS ajouter de compétences que le candidat ne possède pas
-- SEULEMENT reformuler et réorganiser le contenu EXISTANT
-- Rester réaliste et crédible
-- Garder un ton professionnel
+## RAPPEL : RELIS LA SECTION "⚠️⚠️⚠️ RÈGLES INVIOLABLES" CI-DESSUS AVANT DE GÉNÉRER LA RÉPONSE
+Les infos de contact, expériences et formations DOIVENT correspondre exactement à celles listées dans la section A/B/C ci-dessus. Toute déviation = mensonge.
 
 ## FORMAT DE SORTIE
 Réponds UNIQUEMENT avec un objet JSON valide (pas de markdown, pas de backticks) :
@@ -375,18 +371,80 @@ Réponds UNIQUEMENT avec un objet JSON valide (pas de markdown, pas de backticks
 - "medium" : amélioration significative de l'alignement
 - "low" : ajustement mineur
 
-## RÈGLES HTML STRICTES
-- Le HTML doit être dans un seul <div> racine
-- Style inline uniquement (pas de <style> tags)
-- Police : font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif
-- Couleur texte principal : #1e293b
-- Couleur accents/titres de section : #590293
-- Couleur bordures subtiles : #e2e8f0
-- Fond des sections alternées : #f8fafc
-- Taille titre nom : 28px, bold
-- Taille titres sections : 16px, uppercase, letter-spacing 1px
-- Taille texte normal : 13px, line-height 1.6
-- max-width : 800px, margin 0 auto, padding 40px
-- Séparateurs entre sections : border-bottom 2px solid #590293
-- Le HTML doit être complet, autonome et directement imprimable`;
+## RÈGLES HTML — CRITIQUES POUR LE PARSING JSON
+- **OBLIGATOIRE** : Utilise UNIQUEMENT des single quotes (') pour TOUS les attributs HTML
+  → Exemple : <div style='color: #1e293b'> ET NON <div style="color: #1e293b">
+- Pas de retour à la ligne dans les valeurs JSON.
+
+## TEMPLATE HTML À SUIVRE STRICTEMENT (ATS-OPTIMISÉ)
+Tu DOIS reproduire EXACTEMENT cette structure, en remplaçant uniquement les contenus textuels.
+
+**Pourquoi cette structure est ATS-safe :**
+- Header single-column → lecture nom+contact dans le bon ordre même par vieux ATS
+- Contact info séparée par " · " (texte réel) → email/tel/ville parsés correctement
+- Pills en inline-block → l'espace HTML naturel = séparateur de skills pour l'ATS
+
+\`\`\`html
+<div style='max-width:820px;margin:0 auto;padding:48px 56px;background:#ffffff;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;color:#1e293b;font-size:13px;line-height:1.6'>
+
+  <header style='border-bottom:3px solid #590293;padding-bottom:18px;margin-bottom:28px'>
+    <h1 style='margin:0;font-size:32px;font-weight:700;color:#0f172a;letter-spacing:-0.5px'>PRÉNOM NOM</h1>
+    <p style='margin:6px 0 10px;font-size:15px;color:#590293;font-weight:600'>Titre aligné avec le poste visé</p>
+    <p style='margin:0;font-size:12px;color:#475569'>email@exemple.com · +33 X XX XX XX XX · Ville, Pays · linkedin.com/in/profil</p>
+  </header>
+
+  <section style='margin-bottom:28px'>
+    <h2 style='margin:0 0 10px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Profil professionnel</h2>
+    <p style='margin:0;color:#334155'>2-3 phrases alignées avec les exigences du poste cible.</p>
+  </section>
+
+  <section style='margin-bottom:28px'>
+    <h2 style='margin:0 0 14px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Expérience professionnelle</h2>
+    <div style='margin-bottom:18px'>
+      <div style='display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px'>
+        <span style='font-size:14px;font-weight:700;color:#0f172a'>Intitulé du poste</span>
+        <span style='font-size:12px;color:#64748b;font-weight:500'>Janvier 2023 — Présent</span>
+      </div>
+      <div style='font-size:13px;color:#590293;font-weight:600;margin-bottom:8px'>Entreprise · Ville</div>
+      <ul style='margin:0;padding-left:18px;color:#334155'>
+        <li style='margin-bottom:4px'>Bullet réécrit pour faire écho au job ciblé, avec verbe d'action + métrique.</li>
+        <li style='margin-bottom:4px'>Bullet mettant en avant des compétences explicitement demandées dans l'offre.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section style='margin-bottom:28px'>
+    <h2 style='margin:0 0 14px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Formation</h2>
+    <div>
+      <div style='display:flex;justify-content:space-between;align-items:baseline'>
+        <span style='font-size:14px;font-weight:700;color:#0f172a'>Diplôme</span>
+        <span style='font-size:12px;color:#64748b;font-weight:500'>2020 — 2023</span>
+      </div>
+      <div style='font-size:13px;color:#475569;margin-top:2px'>Établissement · Ville</div>
+    </div>
+  </section>
+
+  <section style='margin-bottom:28px'>
+    <h2 style='margin:0 0 12px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Compétences techniques</h2>
+    <div>
+      <span style='display:inline-block;background:#f3e8ff;color:#590293;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;margin:0 4px 6px 0'>Skill 1</span>
+      <span style='display:inline-block;background:#f3e8ff;color:#590293;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;margin:0 4px 6px 0'>Skill 2</span>
+      <!-- Garde l'espace/newline naturel entre les balises pour l'ATS. -->
+    </div>
+  </section>
+
+  <section style='margin-bottom:28px'>
+    <h2 style='margin:0 0 10px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Langues</h2>
+    <p style='margin:0;color:#334155'><strong style='color:#0f172a'>Français</strong> — Natif</p>
+  </section>
+
+</div>
+\`\`\`
+
+## RÈGLES DE REMPLISSAGE
+- Priorise les compétences et expériences pertinentes pour CE poste spécifique en haut de chaque section.
+- Le titre sous le nom doit refléter le poste ciblé.
+- Réécris les bullets d'expérience pour matcher le vocabulaire de l'offre (mots-clés ATS).
+- Omets les sections sans données pertinentes.
+- Le HTML retourné doit être SUR UNE SEULE LIGNE LOGIQUE.`;
 }

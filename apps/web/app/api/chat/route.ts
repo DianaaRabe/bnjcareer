@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { callLLMStream, LLMError } from "@/lib/llm/client";
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,22 +21,14 @@ export async function POST(req: NextRequest) {
       userProfile = data;
     }
 
-    const response = await fetch(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
-          "HTTP-Referer": req.headers.get("origin") || "http://localhost:3000",
-          "X-Title": "BNJ Skills Maker",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash-lite",
-          messages: [
-            {
-              role: "system",
-              content: `
+    const response = await callLLMStream({
+      referer: req.headers.get("origin") || undefined,
+      temperature: 0.7,
+      maxTokens: 2000,
+      messages: [
+        {
+          role: "system",
+          content: `
             Tu es l'assistant intelligent de BNJ Skills Maker.
 
             🎯 Ton rôle :
@@ -62,17 +55,10 @@ export async function POST(req: NextRequest) {
             - motivant
             - direct (pas de blabla inutile)
             `,
-            },
-            ...(messages || []),
-          ],
-          stream: true,
-        }),
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error(`OpenRouter API error: ${response.statusText}`);
-    }
+        },
+        ...(messages || []),
+      ],
+    });
 
     // Pass the stream directly to the client
     return new Response(response.body, {
@@ -84,8 +70,9 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: any) {
     console.error("Chat API Error:", error);
+    const status = error instanceof LLMError ? 502 : 500;
     return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
+      status,
       headers: { "Content-Type": "application/json" },
     });
   }

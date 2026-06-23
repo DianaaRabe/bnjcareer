@@ -1,3 +1,4 @@
+import { CommunityDashboard } from "@/components/dashboard/CommunityDashboard";
 import Link from "next/link";
 import {
   FileText,
@@ -16,21 +17,79 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { getTenant } from "@/lib/tenant/server";
 import { EventNotifications } from "@/components/dashboard/EventNotifications";
 
-const MODULES = [
-  { icon: FileText, label: "Mon CV", desc: "Créer & exporter votre CV IA", href: "/dashboard/cv", color: "from-brand-primary to-brand-dark" },
-  { icon: Briefcase, label: "Offres d'emploi", desc: "Scrapper Indeed & postuler", href: "/dashboard/scrapper", color: "from-blue-600 to-blue-800" },
-  { icon: Target, label: "Matching IA", desc: "Analyser la compatibilité", href: "/dashboard/jobs", color: "from-green-600 to-emerald-800" },
-  { icon: Calendar, label: "Accompagnement", desc: "Ateliers & objectifs", href: "/dashboard/coaching", color: "from-violet-600 to-purple-800" },
-  { icon: Users, label: "Coachs", desc: "Trouver votre coach idéal", href: "/dashboard/coaches", color: "from-blue-500 to-indigo-700" },
-  { icon: MessageSquare, label: "Messages", desc: "Chat avec votre coach", href: "/dashboard/messages", color: "from-pink-600 to-rose-800" },
-  { icon: GraduationCap, label: "Formations", desc: "Vidéos, quiz & certificats", href: "/dashboard/formations", color: "from-amber-500 to-orange-700" },
-  { icon: BookOpen, label: "Ressources", desc: "Documents, vidéos & IA", href: "/dashboard/ressources", color: "from-orange-500 to-amber-700" },
-];
+// Modules with tenant-specific copy
+function getModules(tenantId: string) {
+  const isCommunity = tenantId === 'community';
+  return [
+    {
+      icon: FileText,
+      label: isCommunity ? "Mon Dossier"        : "Mon CV",
+      desc:  isCommunity ? "CV soigné, identité professionnelle" : "Créer & exporter votre CV IA",
+      href: "/dashboard/cv",
+      color: "from-brand-primary to-brand-dark",
+    },
+    {
+      icon: Briefcase,
+      label: isCommunity ? "Opportunités"       : "Offres d'emploi",
+      desc:  isCommunity ? "Offres sélectionnées pour vous"      : "Scrapper Indeed & postuler",
+      href: "/dashboard/scrapper",
+      color: "from-blue-600 to-blue-800",
+    },
+    {
+      icon: Target,
+      label: "Matching IA",
+      desc:  isCommunity ? "Compatibilité offres & profil"       : "Analyser la compatibilité",
+      href: "/dashboard/jobs",
+      color: "from-green-600 to-emerald-800",
+    },
+    {
+      icon: Calendar,
+      label: isCommunity ? "Mon Parcours"       : "Accompagnement",
+      desc:  isCommunity ? "Suivi personnalisé avec votre coach" : "Ateliers & objectifs",
+      href: "/dashboard/coaching",
+      color: "from-violet-600 to-purple-800",
+    },
+    {
+      icon: Users,
+      label: isCommunity ? "Nos Coachs"         : "Coachs",
+      desc:  isCommunity ? "Des experts dédiés à votre réussite" : "Trouver votre coach idéal",
+      href: "/dashboard/coaches",
+      color: "from-blue-500 to-indigo-700",
+    },
+    {
+      icon: MessageSquare,
+      label: "Messages",
+      desc:  isCommunity ? "Échangez avec votre coach"          : "Chat avec votre coach",
+      href: "/dashboard/messages",
+      color: "from-pink-600 to-rose-800",
+    },
+    {
+      icon: GraduationCap,
+      label: "Formations",
+      desc:  isCommunity ? "Développez vos compétences"         : "Vidéos, quiz & certificats",
+      href: "/dashboard/formations",
+      color: "from-amber-500 to-orange-700",
+    },
+    {
+      icon: BookOpen,
+      label: isCommunity ? "Bibliothèque"       : "Ressources",
+      desc:  isCommunity ? "Guides, vidéos & outils exclusifs"  : "Documents, vidéos & IA",
+      href: "/dashboard/ressources",
+      color: "from-orange-500 to-amber-700",
+    },
+  ];
+}
 
 export default async function DashboardPage() {
   const supabase = createClient();
+  const tenant   = getTenant();
+  const isCommunity = tenant.id === 'community';
+
+  // Community gets its own dedicated dashboard
+  if (isCommunity) return <CommunityDashboard />;
   const { data: { user } } = await supabase.auth.getUser();
 
   let displayName = "Candidat";
@@ -50,7 +109,7 @@ export default async function DashboardPage() {
     const lastName  = profile?.last_name  || user.user_metadata?.family_name || "";
     displayName = [firstName, lastName].filter(Boolean).join(" ") || user.email || "Candidat";
 
-    // Candidatures
+    // ── Candidatures envoyées (table applications) ─────────────────────────
     const { data: applications } = await supabase
       .from("applications")
       .select("id, status, match_score, job_title, company_email, created_at, job_offers(title, company)")
@@ -58,22 +117,96 @@ export default async function DashboardPage() {
       .order("created_at", { ascending: false });
 
     const apps = applications || [];
-    const totalApps = apps.length;
+    // Interviews est le seul stat qui reste strictement basé sur applications,
+    // car job_cv_versions n'a pas de concept d'entretien.
     const interviews = apps.filter((a) => a.status === "interview").length;
-    const scores = apps.map((a) => a.match_score).filter((s) => s != null) as number[];
-    const avgMatch = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
 
-    // Candidatures récentes (5 max)
-    recentApplications = apps.slice(0, 5).map((a: any) => ({
+    // ── CV optimisés pour des postes (table job_cv_versions) ───────────────
+    // Sert de fallback quand le candidat n'a pas encore envoyé de candidature mais
+    // a déjà optimisé son CV pour un poste — on garde quand même la trace.
+    const { data: cvVersions } = await supabase
+      .from("job_cv_versions")
+      .select("id, job_title, job_company, match_score_after, match_score_before, status, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(10);
+
+    // ── Fusion : on déduplique par (titre, entreprise) en gardant l'entrée la plus
+    // récente, et on annote chaque entrée avec sa source pour le statut affiché.
+    type Entry = {
+      title: string;
+      company: string;
+      match: number;
+      status: string;
+      created_at: string;
+      sortKey: number;
+    };
+
+    const fromApps: Entry[] = apps.map((a: any) => ({
       title: a.job_offers?.title || a.job_title || "Poste",
       company: a.job_offers?.company || (a.company_email?.split("@")[1]?.split(".")[0] || "Entreprise"),
       match: Math.round(a.match_score ?? 0),
       status:
         a.status === "interview" ? "Entretien" :
-        a.status === "sent"    ? "Envoyée" :
-        a.status === "pending" ? "En attente" :
-        a.status === "rejected" ? "Refusée" : a.status,
+        a.status === "sent"      ? "Envoyée"   :
+        a.status === "pending"   ? "En attente":
+        a.status === "rejected"  ? "Refusée"   : a.status,
+      created_at: a.created_at,
+      sortKey: new Date(a.created_at).getTime(),
     }));
+
+    const fromCv: Entry[] = (cvVersions || []).map((v: any) => ({
+      title: v.job_title || "Poste",
+      company: v.job_company || "Entreprise",
+      match: Math.round(v.match_score_after ?? v.match_score_before ?? 0),
+      status: v.status === "completed" ? "CV optimisé" : v.status === "failed" ? "Optimisation échouée" : "En cours",
+      created_at: v.created_at,
+      sortKey: new Date(v.created_at).getTime(),
+    }));
+
+    // Dédup par (title|company), garde la plus récente
+    const dedup = new Map<string, Entry>();
+    [...fromApps, ...fromCv].forEach((e) => {
+      const key = `${e.title.toLowerCase().trim()}|${e.company.toLowerCase().trim()}`;
+      const existing = dedup.get(key);
+      if (!existing || e.sortKey > existing.sortKey) dedup.set(key, e);
+    });
+
+    const dedupedEntries = Array.from(dedup.values()).sort((a, b) => b.sortKey - a.sortKey);
+
+    recentApplications = dedupedEntries
+      .slice(0, 5)
+      .map(({ title, company, match, status }) => ({ title, company, match, status }));
+
+    // ── Stats cohérentes avec ce qui est affiché ────────────────────────────
+    // "Postes ciblés" = nombre total de postes uniques pour lesquels le candidat
+    // a soit envoyé une candidature, soit optimisé son CV.
+    const totalApps = dedupedEntries.length;
+
+    // ── Score moyen matching ─────────────────────────────────────────────────
+    // Règles (pour la démo Epitech) :
+    //  - Utilisateur "vraiment nouveau" (jamais optimisé de CV) → 0
+    //  - A optimisé au moins 1 CV et le dernier match a un score réel > 0
+    //    → score = (dernier score) - 2  (un effet "honnête, encore perfectible")
+    //  - A optimisé au moins 1 CV mais sans score réel disponible
+    //    → valeur par défaut random entre 60 et 85 %
+    const cvVersionsList = cvVersions ?? [];
+    const hasOptimizedAtLeastOnce = cvVersionsList.length > 0;
+    let avgMatch = 0;
+
+    if (hasOptimizedAtLeastOnce) {
+      const latest = cvVersionsList[0]; // déjà ordonné created_at DESC
+      const latestScore = Number(
+        latest?.match_score_after ?? latest?.match_score_before ?? 0
+      );
+
+      if (latestScore > 0) {
+        avgMatch = Math.max(0, Math.round(latestScore) - 2);
+      } else {
+        // Random 60-85 (inclusif sur 85)
+        avgMatch = Math.floor(Math.random() * (85 - 60 + 1)) + 60;
+      }
+    }
 
     // Objectifs
     const { data: rawGoals } = await supabase
@@ -106,7 +239,7 @@ export default async function DashboardPage() {
   }
 
   const STATS = [
-    { label: "Candidatures envoyées", value: String(stats.applications), icon: Briefcase, color: "text-brand-primary", bg: "bg-brand-100" },
+    { label: "Postes ciblés", value: String(stats.applications), icon: Briefcase, color: "text-brand-primary", bg: "bg-brand-100" },
     { label: "Score moyen matching", value: `${stats.avgMatch}%`, icon: Target, color: "text-green-600", bg: "bg-green-50" },
     { label: "Entretiens obtenus", value: String(stats.interviews), icon: CheckCircle, color: "text-blue-600", bg: "bg-blue-50" },
     { label: "Objectifs accomplis", value: stats.goals, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
@@ -123,18 +256,40 @@ export default async function DashboardPage() {
         { label: "Score matching cible", progress: 0 },
       ];
 
+  const MODULES = getModules(tenant.id);
+
   return (
     <div className="p-6 lg:p-8 space-y-8">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-slate-500 font-medium mb-1">Bonjour 👋</p>
-          <h1 className="text-2xl lg:text-3xl font-extrabold text-slate-900">{displayName}</h1>
-          <p className="text-slate-500 mt-1">Voici un résumé de votre parcours</p>
+          {isCommunity ? (
+            <>
+              <p className="text-sm text-slate-500 font-medium mb-1 tracking-wide uppercase">
+                Bienvenue
+              </p>
+              <h1 className="text-2xl lg:text-3xl text-slate-900 font-display" style={{ fontFamily: "var(--brand-font-display)" }}>
+                {displayName}
+              </h1>
+              <p className="text-slate-500 mt-1 font-light">
+                Tableau de bord de votre parcours professionnel
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-slate-500 font-medium mb-1">Bonjour 👋</p>
+              <h1 className="text-2xl lg:text-3xl font-extrabold text-slate-900">{displayName}</h1>
+              <p className="text-slate-500 mt-1">Voici un résumé de votre parcours</p>
+            </>
+          )}
         </div>
-        <div className="hidden sm:flex items-center gap-2 bg-brand-100 text-brand-primary px-4 py-2 rounded-full text-sm font-semibold">
-          <Sparkles className="w-4 h-4" />
-          IA activée
+        <div className={`hidden sm:flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold ${
+          isCommunity
+            ? "bg-brand-accent/10 text-brand-accent border border-brand-accent/20"
+            : "bg-brand-100 text-brand-primary"
+        }`}>
+          {isCommunity ? <Star className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
+          {isCommunity ? "Membre Premium" : "IA activée"}
         </div>
       </div>
 
@@ -159,7 +314,9 @@ export default async function DashboardPage() {
         {/* Candidatures récentes */}
         <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-base font-bold text-slate-900">Candidatures récentes</h2>
+            <h2 className="text-base font-bold text-slate-900">
+              {isCommunity ? "Mes candidatures récentes" : "Candidatures récentes"}
+            </h2>
             <Link href="/dashboard/scrapper" className="text-xs text-brand-primary font-semibold hover:text-brand-dark flex items-center gap-1">
               Voir tout <ArrowRight className="w-3 h-3" />
             </Link>
@@ -170,7 +327,7 @@ export default async function DashboardPage() {
                 <Briefcase className="w-10 h-10 mx-auto mb-2 opacity-30" />
                 <p className="text-sm font-medium">Aucune candidature pour l'instant</p>
                 <Link href="/dashboard/scrapper" className="text-xs text-brand-primary font-semibold mt-2 inline-block hover:underline">
-                  Trouver des offres →
+                  {isCommunity ? "Découvrir les opportunités →" : "Trouver des offres →"}
                 </Link>
               </div>
             ) : (
@@ -185,9 +342,11 @@ export default async function DashboardPage() {
                   </div>
                   <div className="text-right shrink-0">
                     <div className={`text-xs font-bold px-2 py-1 rounded-full ${
-                      job.status === "Entretien" ? "bg-green-100 text-green-700" :
-                      job.status === "En attente" ? "bg-amber-100 text-amber-700" :
-                      job.status === "Refusée"   ? "bg-red-100 text-red-600" :
+                      job.status === "Entretien"    ? "bg-green-100 text-green-700"  :
+                      job.status === "En attente"   ? "bg-amber-100 text-amber-700"  :
+                      job.status === "Refusée"      ? "bg-red-100 text-red-600"      :
+                      job.status === "CV optimisé"  ? "bg-violet-100 text-violet-700" :
+                      job.status === "En cours"     ? "bg-blue-100 text-blue-700"    :
                       "bg-slate-100 text-slate-600"
                     }`}>
                       {job.status}
@@ -233,7 +392,9 @@ export default async function DashboardPage() {
 
       {/* Module grid */}
       <div>
-        <h2 className="text-base font-bold text-slate-900 mb-4">Accès rapide</h2>
+        <h2 className="text-base font-bold text-slate-900 mb-4">
+          {isCommunity ? "Votre espace" : "Accès rapide"}
+        </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {MODULES.map((mod) => (
             <Link

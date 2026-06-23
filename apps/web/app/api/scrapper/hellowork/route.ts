@@ -12,6 +12,7 @@ export async function POST(req: Request) {
       distance  = '20',       // km
       sort_by   = 'relevance',
       limit     = 30,
+      contract,               // optional array of contract types (CDI, CDD, Stage…)
     } = body
 
     const token = process.env.APIFY_API_TOKEN_HELLOWORK
@@ -19,13 +20,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'APIFY_API_TOKEN_HELLOWORK manquant dans .env' }, { status: 500 })
     }
 
-    const input = {
+    const input: Record<string, unknown> = {
       sort_by,
       keywords: keywords || 'Développeur',
       location: location || 'Paris',
       distance: String(distance),
       period,
       limit: Math.min(Number(limit) || 30, 100),
+    }
+    // Only include the contract filter when the user selected at least one type
+    if (Array.isArray(contract) && contract.length > 0) {
+      input.contract = contract
     }
 
     const url = `https://api.apify.com/v2/acts/${ACTOR_ID}/run-sync-get-dataset-items?token=${token}`
