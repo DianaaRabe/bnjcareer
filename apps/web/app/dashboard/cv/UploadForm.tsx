@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import CVOptimizationView from "./CVOptimizationView";
+import CVEditor, { normalizeCVData, type CVData } from "./CVEditor";
 
 // ── Optimization step definitions ─────────────────────────────────────────
 const OPTIMIZATION_STEPS = [
@@ -76,6 +77,26 @@ export default function UploadForm({
   const [optimization, setOptimization] =
     useState<OptimizationRecord | null>(latestOptimization);
   const [optimizationError, setOptimizationError] = useState("");
+
+  // Parsed CV data (structured JSON) — source of truth for the manual editor
+  // and the optimization request. Loaded from localStorage on mount.
+  const [cvData, setCvData] = useState<CVData | null>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("user_cv_parsed");
+    if (saved) {
+      try {
+        setCvData(normalizeCVData(JSON.parse(saved)));
+      } catch {
+        // Corrupted cache — ignore
+      }
+    }
+  }, []);
+
+  const handleEditorSave = (data: CVData) => {
+    localStorage.setItem("user_cv_parsed", JSON.stringify(data));
+    setCvData(data);
+  };
 
   // Advance step animation during optimization
   useEffect(() => {
@@ -158,12 +179,14 @@ export default function UploadForm({
       if (res.ok) {
         const jsonResponse = await res.json();
         const extractedData = jsonResponse.data || jsonResponse;
+        const normalized = normalizeCVData(extractedData);
         localStorage.setItem(
           "user_cv_parsed",
-          JSON.stringify(extractedData)
+          JSON.stringify(normalized)
         );
+        setCvData(normalized);
         setMessage({
-          text: "CV uploadé et analysé avec succès !",
+          text: "CV uploadé et analysé avec succès ! Vérifiez les informations extraites ci-dessous.",
           type: "success",
         });
       } else {
@@ -194,9 +217,13 @@ export default function UploadForm({
     setOptimization(null);
 
     try {
-      // Get CV data from localStorage
-      const savedCv = localStorage.getItem("user_cv_parsed");
-      if (!savedCv) {
+      // Prefer the in-memory (possibly edited) data; fall back to cache.
+      let dataToOptimize: CVData | null = cvData;
+      if (!dataToOptimize) {
+        const savedCv = localStorage.getItem("user_cv_parsed");
+        if (savedCv) dataToOptimize = normalizeCVData(JSON.parse(savedCv));
+      }
+      if (!dataToOptimize) {
         setOptimizationError(
           "Aucune donnée CV trouvée. Veuillez d'abord uploader et analyser votre CV."
         );
@@ -204,12 +231,10 @@ export default function UploadForm({
         return;
       }
 
-      const cvData = JSON.parse(savedCv);
-
       const response = await fetch("/api/cv-optimize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cvData }),
+        body: JSON.stringify({ cvData: dataToOptimize }),
       });
 
       if (!response.ok) {
@@ -281,6 +306,11 @@ export default function UploadForm({
             </div>
           </div>
         </div>
+      )}
+
+      {/* ── Manual CV Editor ─────────────────────────────────────────────── */}
+      {cvData && (
+        <CVEditor initialData={cvData} onSave={handleEditorSave} />
       )}
 
       {/* ── Optimization Progress ────────────────────────────────────────── */}

@@ -14,6 +14,7 @@ import {
   Eye,
 } from "lucide-react";
 import JobCVOptimizer from "@/components/jobs/JobCVOptimizer";
+import CoverLetterGenerator from "@/components/jobs/CoverLetterGenerator";
 import JobCVComparisonModal from "@/components/jobs/JobCVComparisonModal";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -427,6 +428,19 @@ export default function ScrapperOptimizeModal({
                       <p className="text-xs text-amber-700">{emailError}</p>
                     </div>
                   )}
+                </div>
+
+                {/* Cover letter generation */}
+                <div className="pt-4 border-t border-slate-100">
+                  <div className="mb-3">
+                    <h4 className="text-sm font-bold text-slate-900">
+                      Lettre de motivation
+                    </h4>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Générée à partir de votre profil, votre CV et cette offre.
+                    </p>
+                  </div>
+                  <CoverLetterGenerator job={jobDataForOptimizer} />
                 </div>
 
                 {/* Apply link shortcut */}

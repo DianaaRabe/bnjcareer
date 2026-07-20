@@ -6,6 +6,7 @@ import {
   extractImmutableContact,
   formatImmutableExperiences,
   formatImmutableEducation,
+  formatCvExtras,
 } from "@/lib/cv/immutable";
 
 export const maxDuration = 60; // Allow up to 60s for LLM response
@@ -102,7 +103,7 @@ export async function POST(req: NextRequest) {
           },
         ],
         temperature: 0.3,
-        maxTokens: 6000,
+        maxTokens: 4500,
         jsonMode: true,
         referer: req.headers.get("origin") || undefined,
       });
@@ -184,6 +185,7 @@ function buildOptimizationPrompt(
   const immutable = extractImmutableContact(cvData, profile);
   const immutableExperiences = formatImmutableExperiences(cvData);
   const immutableEducation   = formatImmutableEducation(cvData);
+  const cvExtras             = formatCvExtras(cvData);
 
   return `Tu es un expert senior en rédaction de CV et en systèmes ATS (Applicant Tracking Systems).
 Tu as 15 ans d'expérience en recrutement et tu connais parfaitement les algorithmes de parsing ATS.
@@ -245,8 +247,8 @@ en respectant strictement les règles A-E ci-dessus.
 - Compétences : ${JSON.stringify(skills)}
 - Bio : ${profile?.bio || "Non renseignée"}
 
-## DONNÉES CV EXISTANT
-${JSON.stringify(cvData, null, 2)}
+## DONNÉES CV EXISTANT (extras — le contact, les expériences et les formations figurent déjà dans les sections A/B/C)
+${cvExtras}
 
 ## RÈGLES D'OPTIMISATION ATS
 1. **Structure ATS-compatible** : Utiliser des titres de section standards que les ATS reconnaissent (Profil Professionnel, Expérience Professionnelle, Formation, Compétences Techniques, Langues, Centres d'intérêt)

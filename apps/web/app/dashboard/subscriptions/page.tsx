@@ -19,7 +19,7 @@ const PLANS = [
   {
     id: "basic",
     name: "Basic",
-    price: "9.80",
+    price: "34.80",
     description: "L'essentiel pour démarrer votre recherche d'emploi.",
     features: [
       "Accès complet aux offres d'emploi",
@@ -35,7 +35,7 @@ const PLANS = [
   {
     id: "pro",
     name: "Pro",
-    price: "16.00",
+    price: "50.00",
     description: "Tous les outils avancés pour accélérer votre carrière.",
     features: [
       "Tout ce qui est inclus dans Basic",

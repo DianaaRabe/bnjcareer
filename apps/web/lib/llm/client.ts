@@ -86,9 +86,13 @@ const PROVIDERS: Record<string, ProviderConfig> = {
       "GROQ_API_KEY_5",
     ]),
     supportsJsonMode: true,
+    // Keep this list in sync with live Groq availability — decommissioned models
+    // (e.g. deepseek-r1-distill-llama-70b, removed 2026) poison the fallback chain
+    // by returning a hard 400, so the loop treats it as "model down" and skips to
+    // the next one. All three below are verified live + JSON-mode compatible.
     models: [
       "llama-3.3-70b-versatile",
-      "deepseek-r1-distill-llama-70b",
+      "openai/gpt-oss-120b",
       "llama-3.1-8b-instant",
     ],
   },
@@ -162,73 +166,93 @@ export async function callLLM(opts: LLMOptions): Promise<LLMResponse> {
   const models = override ? [override] : provider.models
   const attempts: { model: string; error: string }[] = []
 
+  const requestedMax = opts.maxTokens ?? 4000
+
   for (const model of models) {
     const keys = shuffle(allKeys)
-    let modelHadNonRateLimitError = false
+    let goToNextModel = false
 
-    for (let i = 0; i < keys.length; i++) {
+    for (let i = 0; i < keys.length && !goToNextModel; i++) {
       const apiKey = keys[i]
       const keyLabel = `key#${i + 1}`
 
-      try {
-        const body: Record<string, unknown> = {
-          model,
-          messages: opts.messages,
-          temperature: opts.temperature ?? 0.3,
-          max_tokens: opts.maxTokens ?? 4000,
-        }
-        if (opts.jsonMode && provider.supportsJsonMode) {
-          body.response_format = { type: "json_object" }
-        }
+      // Per-key adaptive output budget. Free-tier providers bill
+      // (prompt_tokens + max_tokens) against a tokens-per-minute (TPM) cap and
+      // return HTTP 413 "request too large" when the sum exceeds it. Rather than
+      // give up, we shrink max_tokens and retry the SAME key — a smaller output
+      // budget lowers the billed request size and usually clears the limit.
+      let maxTokens = requestedMax
+      let shrinkRetries = 0
 
-        const res = await fetch(provider.endpoint, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            "Content-Type": "application/json",
-            ...(provider.extraHeaders?.(opts.referer) ?? {}),
-          },
-          body: JSON.stringify(body),
-        })
-
-        if (res.ok) {
-          const data = await res.json()
-          const content = data.choices?.[0]?.message?.content
-          if (!content) {
-            attempts.push({ model: `${model}/${keyLabel}`, error: "empty response content" })
-            modelHadNonRateLimitError = true
-            break
+      while (true) {
+        try {
+          const body: Record<string, unknown> = {
+            model,
+            messages: opts.messages,
+            temperature: opts.temperature ?? 0.3,
+            max_tokens: maxTokens,
           }
-          if (attempts.length > 0) {
-            console.log(`[llm:${provider.name}] succeeded with ${model} via ${keyLabel} after ${attempts.length} attempt(s)`)
+          if (opts.jsonMode && provider.supportsJsonMode) {
+            body.response_format = { type: "json_object" }
           }
-          return { content, model }
-        }
 
-        const errText = await res.text()
-        const summary = `HTTP ${res.status}: ${errText.slice(0, 200)}`
-        console.warn(`[llm:${provider.name}] ${model} ${keyLabel} failed → ${summary}`)
-        attempts.push({ model: `${model}/${keyLabel}`, error: summary })
+          const res = await fetch(provider.endpoint, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${apiKey}`,
+              "Content-Type": "application/json",
+              ...(provider.extraHeaders?.(opts.referer) ?? {}),
+            },
+            body: JSON.stringify(body),
+          })
 
-        if (isRateLimitOrQuota(res.status)) {
-          // Try the next key with the same model
-          continue
+          if (res.ok) {
+            const data = await res.json()
+            const content = data.choices?.[0]?.message?.content
+            if (!content) {
+              attempts.push({ model: `${model}/${keyLabel}`, error: "empty response content" })
+              goToNextModel = true
+              break
+            }
+            if (attempts.length > 0) {
+              console.log(`[llm:${provider.name}] succeeded with ${model} via ${keyLabel} after ${attempts.length} attempt(s)`)
+            }
+            return { content, model }
+          }
+
+          const errText = await res.text()
+          const summary = `HTTP ${res.status}: ${errText.slice(0, 200)}`
+
+          // TPM "request too large" → shrink output budget and retry same key.
+          const tooLarge =
+            res.status === 413 ||
+            /request too large|tokens per minute|\bTPM\b|reduce your/i.test(errText)
+          if (tooLarge && shrinkRetries < 4 && maxTokens > 1500) {
+            const next = Math.max(1500, Math.floor(maxTokens * 0.6))
+            console.warn(`[llm:${provider.name}] ${model} ${keyLabel} 413 TPM → shrink max_tokens ${maxTokens}→${next}`)
+            maxTokens = next
+            shrinkRetries++
+            continue // retry same model + key with a smaller output budget
+          }
+
+          console.warn(`[llm:${provider.name}] ${model} ${keyLabel} failed → ${summary}`)
+          attempts.push({ model: `${model}/${keyLabel}`, error: summary })
+
+          if (isRateLimitOrQuota(res.status)) {
+            break // try the next key with the same model
+          }
+          // Real error on this model (model down, bad request, too-large-at-floor) → next model
+          goToNextModel = true
+          break
+        } catch (err: any) {
+          const summary = err?.message || String(err)
+          console.warn(`[llm:${provider.name}] ${model} ${keyLabel} threw → ${summary}`)
+          attempts.push({ model: `${model}/${keyLabel}`, error: summary })
+          goToNextModel = true
+          break
         }
-        // Real error on this model (model down, bad request, etc.) → try next model
-        modelHadNonRateLimitError = true
-        break
-      } catch (err: any) {
-        const summary = err?.message || String(err)
-        console.warn(`[llm:${provider.name}] ${model} ${keyLabel} threw → ${summary}`)
-        attempts.push({ model: `${model}/${keyLabel}`, error: summary })
-        modelHadNonRateLimitError = true
-        break
       }
     }
-
-    // If we exhausted all keys with rate-limit errors, continue to next model.
-    // If we got a non-rate-limit error, we've already broken to next model.
-    void modelHadNonRateLimitError
   }
 
   throw new LLMError(
