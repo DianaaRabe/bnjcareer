@@ -1,0 +1,29 @@
+{
+  "app.name": "BNJ Skills Maker",
+
+  "common.loading": "Chargement…",
+  "common.error": "Une erreur est survenue, veuillez réessayer",
+  "common.retry": "Réessayer",
+  "common.cancel": "Annuler",
+  "common.save": "Enregistrer",
+  "common.or": "ou",
+
+  "auth.login.title": "Bienvenue",
+  "auth.login.subtitle": "Connectez-vous pour accéder à {appName}",
+  "auth.login.email.label": "Email",
+  "auth.login.email.placeholder": "prenom.nom@exemple.com",
+  "auth.login.password.label": "Mot de passe",
+  "auth.login.password.forgot": "Mot de passe oublié ?",
+  "auth.login.password.show": "Afficher le mot de passe",
+  "auth.login.password.hide": "Masquer le mot de passe",
+  "auth.login.submit": "Se connecter",
+  "auth.login.submit.loading": "Connexion…",
+  "auth.login.google": "Se connecter avec Google",
+  "auth.login.signup.prompt": "Pas encore de compte ?",
+  "auth.login.signup.link": "Créer un compte",
+  "auth.login.legal": "En vous connectant, vous acceptez nos {terms} et notre {privacy}.",
+  "auth.login.legal.terms": "conditions d'utilisation",
+  "auth.login.legal.privacy": "politique de confidentialité",
+  "auth.login.error.invalidCredentials": "Email ou mot de passe incorrect",
+  "auth.login.error.unexpected": "Connexion impossible pour le moment, veuillez réessayer"
+}

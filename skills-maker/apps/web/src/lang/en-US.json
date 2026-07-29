@@ -1,0 +1,29 @@
+{
+  "app.name": "BNJ Skills Maker",
+
+  "common.loading": "Loading…",
+  "common.error": "Something went wrong, please try again",
+  "common.retry": "Retry",
+  "common.cancel": "Cancel",
+  "common.save": "Save",
+  "common.or": "or",
+
+  "auth.login.title": "Welcome",
+  "auth.login.subtitle": "Sign in to access {appName}",
+  "auth.login.email.label": "Email",
+  "auth.login.email.placeholder": "firstname.lastname@example.com",
+  "auth.login.password.label": "Password",
+  "auth.login.password.forgot": "Forgot password?",
+  "auth.login.password.show": "Show password",
+  "auth.login.password.hide": "Hide password",
+  "auth.login.submit": "Sign in",
+  "auth.login.submit.loading": "Signing in…",
+  "auth.login.google": "Sign in with Google",
+  "auth.login.signup.prompt": "Don't have an account yet?",
+  "auth.login.signup.link": "Create an account",
+  "auth.login.legal": "By signing in, you agree to our {terms} and our {privacy}.",
+  "auth.login.legal.terms": "terms of service",
+  "auth.login.legal.privacy": "privacy policy",
+  "auth.login.error.invalidCredentials": "Incorrect email or password",
+  "auth.login.error.unexpected": "Unable to sign in right now, please try again"
+}
