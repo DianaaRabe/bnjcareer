@@ -1,0 +1,23 @@
+{
+  "name": "skills-maker",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Skills Maker — refonte stack découplée (Express + Apollo GraphQL + Prisma / Vite + React)",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "dev:api": "npm run dev -w apps/api",
+    "dev:web": "npm run dev -w apps/web",
+    "db:migrate": "npm run db:migrate -w apps/api",
+    "db:seed": "npm run db:seed -w apps/api",
+    "codegen": "npm run codegen -w apps/web"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

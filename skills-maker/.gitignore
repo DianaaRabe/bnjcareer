@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.local
+*.tsbuildinfo
+
+# codegen (types générés)
+apps/web/src/gql/
+apps/api/src/gql/
+
+# prisma
+apps/api/prisma/*.db
