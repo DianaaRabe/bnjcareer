@@ -1,0 +1,261 @@
+// Ported from schema.sql (Supabase). `profiles` was split into User (auth) + Profile (personal data);
+// FKs that referenced profiles(id) now reference User. @@map/@map keep original names for data migration.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Enums (from SQL CHECK constraints)
+// ─────────────────────────────────────────────────────────────
+
+enum Role {
+  CANDIDATE
+  COACH
+  ADMIN
+}
+
+enum ApplicationStatus {
+  SENT
+  PENDING
+  REJECTED
+  INTERVIEW
+}
+
+enum BookingStatus {
+  BOOKED
+  CANCELED
+}
+
+enum EventType {
+  ONE_ON_ONE // '1v1'
+  GROUP      // 'group'
+}
+
+enum ResourceType {
+  PDF
+  VIDEO
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+// ─────────────────────────────────────────────────────────────
+// Identity & profile
+// ─────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         Role     @default(CANDIDATE)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  profile        Profile?
+  cvs            Cv[]
+  applications   Application[]
+  bookings       Booking[]
+  goals          Goal[]
+  tickets        Ticket[]
+  messages       Message[]                  @relation("SentMessages")
+  calendarEvents CalendarEvent[]            @relation("CoachEvents")
+  conversations  ConversationParticipant[]
+  skills         UserSkill[]
+
+  @@map("users")
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName String?  @map("first_name")
+  lastName  String?  @map("last_name")
+  phone     String?
+  bio       String?
+  avatarUrl String?  @map("avatar_url")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("profiles")
+}
+
+// ─────────────────────────────────────────────────────────────
+// CV & job offers
+// ─────────────────────────────────────────────────────────────
+
+model Cv {
+  id        String   @id @default(uuid())
+  userId    String?  @map("user_id")
+  user      User?    @relation(fields: [userId], references: [id])
+  content   Json?
+  template  String?
+  pdfUrl    String?  @map("pdf_url")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("cvs")
+}
+
+model JobOffer {
+  id          String        @id @default(uuid())
+  title       String
+  company     String?
+  description String?
+  source      String?
+  url         String?
+  createdAt   DateTime      @default(now()) @map("created_at")
+  application Application[]
+
+  @@map("job_offers")
+}
+
+model Application {
+  id         String            @id @default(uuid())
+  userId     String?           @map("user_id")
+  user       User?             @relation(fields: [userId], references: [id])
+  jobOfferId String?           @map("job_offer_id")
+  jobOffer   JobOffer?         @relation(fields: [jobOfferId], references: [id])
+  status     ApplicationStatus @default(PENDING)
+  matchScore Float?            @map("match_score")
+  createdAt  DateTime          @default(now()) @map("created_at")
+
+  matchAnalysis MatchAnalysis?
+
+  @@map("applications")
+}
+
+model MatchAnalysis {
+  id            String      @id @default(uuid())
+  applicationId String      @unique @map("application_id")
+  application   Application @relation(fields: [applicationId], references: [id])
+  score         Float?
+  gaps          Json?
+  suggestions   Json?
+
+  @@map("match_analyses")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Coaching (calendar & bookings)
+// ─────────────────────────────────────────────────────────────
+
+model CalendarEvent {
+  id        String    @id @default(uuid())
+  coachId   String?   @map("coach_id")
+  coach     User?     @relation("CoachEvents", fields: [coachId], references: [id])
+  title     String?
+  type      EventType?
+  startTime DateTime? @map("start_time")
+  endTime   DateTime? @map("end_time")
+  bookings  Booking[]
+
+  @@map("calendar_events")
+}
+
+model Booking {
+  id      String        @id @default(uuid())
+  eventId String?       @map("event_id")
+  event   CalendarEvent? @relation(fields: [eventId], references: [id])
+  userId  String?       @map("user_id")
+  user    User?         @relation(fields: [userId], references: [id])
+  status  BookingStatus @default(BOOKED)
+
+  @@map("bookings")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Messaging
+// ─────────────────────────────────────────────────────────────
+
+model Conversation {
+  id           String                    @id @default(uuid())
+  createdAt    DateTime                  @default(now()) @map("created_at")
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  conversationId String       @map("conversation_id")
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  userId         String       @map("user_id")
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@id([conversationId, userId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String        @id @default(uuid())
+  conversationId String?       @map("conversation_id")
+  conversation   Conversation? @relation(fields: [conversationId], references: [id])
+  senderId       String?       @map("sender_id")
+  sender         User?         @relation("SentMessages", fields: [senderId], references: [id])
+  content        String?
+  createdAt      DateTime      @default(now()) @map("created_at")
+
+  @@map("messages")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Goals, resources, skills, support
+// ─────────────────────────────────────────────────────────────
+
+model Goal {
+  id       String  @id @default(uuid())
+  userId   String? @map("user_id")
+  user     User?   @relation(fields: [userId], references: [id])
+  title    String?
+  progress Int     @default(0)
+  target   Int?
+
+  @@map("goals")
+}
+
+model Resource {
+  id    String        @id @default(uuid())
+  title String?
+  type  ResourceType?
+  url   String?
+
+  @@map("resources")
+}
+
+model Skill {
+  id    String      @id @default(uuid())
+  name  String      @unique
+  users UserSkill[]
+
+  @@map("skills")
+}
+
+model UserSkill {
+  userId  String @map("user_id")
+  user    User   @relation(fields: [userId], references: [id])
+  skillId String @map("skill_id")
+  skill   Skill  @relation(fields: [skillId], references: [id])
+
+  @@id([userId, skillId])
+  @@map("user_skills")
+}
+
+model Ticket {
+  id        String       @id @default(uuid())
+  userId    String?      @map("user_id")
+  user      User?        @relation(fields: [userId], references: [id])
+  status    TicketStatus @default(OPEN)
+  priority  String?
+  message   String?
+  createdAt DateTime     @default(now()) @map("created_at")
+
+  @@map("tickets")
+}
