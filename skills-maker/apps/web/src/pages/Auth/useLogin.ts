@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLoginMutation } from "@/graphql/hooks/auth/useLoginMutation";
+import { useLoginMutation } from "@/graphql/hooks/auth";
 import { useTranslate } from "@/hooks/useTranslate";
 import { setToken } from "@/lib/auth";
 
