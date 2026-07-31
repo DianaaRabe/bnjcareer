@@ -5,4 +5,5 @@ export const messages = {
   incorrectCredentials: 'Incorrect email or password',
   authenticationRequired: 'Authentication required',
   accessDenied: 'Access denied',
+  invalidProfileInput: 'Invalid profile data',
 } as const

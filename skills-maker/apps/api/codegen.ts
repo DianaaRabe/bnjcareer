@@ -11,6 +11,8 @@ const config: CodegenConfig = {
         // Reuse Prisma enums as GraphQL enums — single source of truth.
         enumValues: {
           Role: '@prisma/client#Role',
+          ProfileSituation: '@prisma/client#ProfileSituation',
+          ProfileObjective: '@prisma/client#ProfileObjective',
         },
         useIndexSignature: true,
       },

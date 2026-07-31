@@ -48,6 +48,21 @@ enum TicketStatus {
   CLOSED
 }
 
+enum ProfileSituation {
+  EMPLOYED
+  JOB_SEARCH
+  RECONVERSION
+  STUDENT
+}
+
+enum ProfileObjective {
+  FIND_JOB
+  IMPROVE_CV
+  CAREER_CHANGE
+  DEVELOP_SKILLS
+  NETWORK
+}
+
 // ─────────────────────────────────────────────────────────────
 // Identity & profile
 // ─────────────────────────────────────────────────────────────
@@ -75,15 +90,24 @@ model User {
 }
 
 model Profile {
-  id        String   @id @default(uuid())
-  userId    String   @unique @map("user_id")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  firstName String?  @map("first_name")
-  lastName  String?  @map("last_name")
-  phone     String?
-  bio       String?
-  avatarUrl String?  @map("avatar_url")
-  createdAt DateTime @default(now()) @map("created_at")
+  id             String            @id @default(uuid())
+  userId         String            @unique @map("user_id")
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName      String?           @map("first_name")
+  lastName       String?           @map("last_name")
+  phone          String?
+  bio            String?
+  avatarUrl      String?           @map("avatar_url")
+  birthDate      DateTime?         @map("birth_date")
+  educationLevel String?           @map("education_level")
+  school         String?
+  sector         String?
+  situation      ProfileSituation?
+  strengths      String[]          @default([])
+  improvements   String[]          @default([])
+  skills         String[]          @default([])
+  objective      ProfileObjective?
+  createdAt      DateTime          @default(now()) @map("created_at")
 
   @@map("profiles")
 }
