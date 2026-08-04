@@ -13,6 +13,7 @@ const config: CodegenConfig = {
           Role: '@prisma/client#Role',
           ProfileSituation: '@prisma/client#ProfileSituation',
           ProfileObjective: '@prisma/client#ProfileObjective',
+          CvStatus: '@prisma/client#CvStatus',
         },
         useIndexSignature: true,
       },
