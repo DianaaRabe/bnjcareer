@@ -6,4 +6,9 @@ export const messages = {
   authenticationRequired: 'Authentication required',
   accessDenied: 'Access denied',
   invalidProfileInput: 'Invalid profile data',
+  cvNotFound: 'CV not found',
+  cvUploadInvalid: 'Invalid CV upload data',
+  cvExtractionFailed: 'Failed to extract CV content',
+  cvOptimizationRequiresExtraction: 'The CV must be extracted before it can be optimized',
+  cvOptimizationFailed: 'Failed to optimize CV',
 } as const

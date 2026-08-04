@@ -8,6 +8,15 @@ const schema = z.object({
   JWT_EXPIRES_IN: z.string().default('7d'),
   PORT: z.coerce.number().default(4100),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
+
+  // LLM providers — optional, callLLM() throws only when actually invoked without a key.
+  GROQ_API_KEY: z.string().optional().default(''),
+  GROQ_API_KEY_2: z.string().optional().default(''),
+  OPENROUTER_API_KEY: z.string().optional().default(''),
+  LLM_PROVIDER: z.string().optional().default(''),
+  LLM_MODEL: z.string().optional().default(''),
+
+  UPLOAD_DIR: z.string().default('./uploads'),
 })
 
 const parsed = schema.safeParse(process.env)

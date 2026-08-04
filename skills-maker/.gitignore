@@ -10,3 +10,6 @@ apps/api/src/gql/
 
 # prisma
 apps/api/prisma/*.db
+
+# uploaded files (local disk storage)
+apps/api/uploads/

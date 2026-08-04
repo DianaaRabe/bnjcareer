@@ -116,14 +116,30 @@ model Profile {
 // CV & job offers
 // ─────────────────────────────────────────────────────────────
 
+enum CvStatus {
+  UPLOADED
+  EXTRACTING
+  EXTRACTED
+  EXTRACTION_FAILED
+  OPTIMIZING
+  OPTIMIZED
+  OPTIMIZATION_FAILED
+}
+
 model Cv {
-  id        String   @id @default(uuid())
-  userId    String?  @map("user_id")
-  user      User?    @relation(fields: [userId], references: [id])
-  content   Json?
-  template  String?
-  pdfUrl    String?  @map("pdf_url")
-  createdAt DateTime @default(now()) @map("created_at")
+  id            String   @id @default(uuid())
+  userId        String?  @map("user_id")
+  user          User?    @relation(fields: [userId], references: [id])
+  pdfUrl        String?  @map("pdf_url")
+  fileName      String?  @map("file_name")
+  fileSizeBytes Int?     @map("file_size_bytes")
+  template      String?
+  extractedData Json?    @map("content")
+  optimizedHtml String?  @map("optimized_html")
+  improvements  Json?
+  status        CvStatus @default(UPLOADED)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
   @@map("cvs")
 }
