@@ -32,7 +32,7 @@ export const CvDetailsAccordion = ({
         <AccordionTrigger className="gap-4 px-4 hover:no-underline">
           <div className="flex items-center gap-3.5">
             <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-warning/15 text-warning">
-              <Pencil className="size-4" />
+              <Pencil className="size-[18px]" />
             </div>
             <div>
               <p className="text-sm font-semibold">
