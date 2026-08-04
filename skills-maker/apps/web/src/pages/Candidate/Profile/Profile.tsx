@@ -46,7 +46,9 @@ export const Profile = () => {
         }
       />
 
-      <ProfileNav active={p.activeSection} onChange={p.goToSection} />
+      <div className="mx-auto w-full max-w-[900px]">
+        <ProfileNav active={p.activeSection} onChange={p.goToSection} />
+      </div>
 
       <div className="mx-auto w-full max-w-[900px]">
         {p.activeSection === 'identite' && (
