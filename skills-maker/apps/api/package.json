@@ -12,7 +12,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
     "codegen": "graphql-codegen --config codegen.ts",
-    "test": "node --import tsx --test src/**/__tests__/*.test.ts",
+    "test": "find src -name '*.test.ts' -exec node --import tsx --test {} +",
     "lint": "eslint src"
   },
   "prisma": {

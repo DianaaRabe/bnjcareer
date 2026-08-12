@@ -11,4 +11,7 @@ export const messages = {
   cvExtractionFailed: 'Failed to extract CV content',
   cvOptimizationRequiresExtraction: 'The CV must be extracted before it can be optimized',
   cvOptimizationFailed: 'Failed to optimize CV',
+  invalidJobSearchInput: 'Invalid job search criteria',
+  jobSourceNotConfigured: 'This job source is not available',
+  jobSearchFailed: 'Unable to fetch job offers right now',
 } as const
