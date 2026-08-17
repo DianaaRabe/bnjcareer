@@ -12,6 +12,7 @@ import {
 import { ROUTES } from '@/constants/routes'
 import { PORTAL_ROLES } from '@/lib/rbac'
 import { Login } from '@/pages/Auth/Login'
+import { Coaching as CandidateCoaching } from '@/pages/Candidate/Coaching/Coaching'
 import { Dashboard as CandidateDashboard } from '@/pages/Candidate/Dashboard/Dashboard'
 import { Cv as CandidateCv } from '@/pages/Candidate/Cv/Cv'
 import { Jobs as CandidateJobs } from '@/pages/Candidate/Jobs/Jobs'
@@ -31,6 +32,7 @@ const CANDIDATE_PLACEHOLDERS = placeholdersOf(
     ROUTES.candidate.cv,
     ROUTES.candidate.jobs,
     ROUTES.candidate.matching,
+    ROUTES.candidate.coaching,
     ROUTES.candidate.profile,
   ],
 )
@@ -60,6 +62,7 @@ export function App() {
         <Route path={ROUTES.candidate.cv} element={<CandidateCv />} />
         <Route path={ROUTES.candidate.jobs} element={<CandidateJobs />} />
         <Route path={ROUTES.candidate.matching} element={<CandidateMatching />} />
+        <Route path={ROUTES.candidate.coaching} element={<CandidateCoaching />} />
         <Route path={ROUTES.candidate.profile} element={<CandidateProfile />} />
         {/* Reached from the dashboard, not from the nav. */}
         <Route
