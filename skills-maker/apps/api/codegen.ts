@@ -23,6 +23,7 @@ const config: CodegenConfig = {
           WorkTime: '../lib/jobs/types.js#WorkTime',
           PostedWithin: '../lib/jobs/types.js#PostedWithin',
           JobFilterKind: '../lib/jobs/types.js#JobFilterKind',
+          CoachingGoalKey: '../graphql/modules/coaching/coachingConstants.js#CoachingGoalKeyId',
         },
         useIndexSignature: true,
       },
