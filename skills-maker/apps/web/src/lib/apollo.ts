@@ -23,3 +23,13 @@ export const apolloClient = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 })
+
+/**
+ * `extensions.code` of the first GraphQL error, if any. Server messages are not localized:
+ * feature hooks map this code to a translation key rather than rendering `error.message`.
+ */
+export function getGraphQLErrorCode(err: unknown): string | undefined {
+  const graphQLErrors = (err as { graphQLErrors?: { extensions?: { code?: string } }[] } | undefined)
+    ?.graphQLErrors
+  return graphQLErrors?.[0]?.extensions?.code
+}

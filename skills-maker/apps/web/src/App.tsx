@@ -15,6 +15,7 @@ import { Login } from '@/pages/Auth/Login'
 import { Dashboard as CandidateDashboard } from '@/pages/Candidate/Dashboard/Dashboard'
 import { Cv as CandidateCv } from '@/pages/Candidate/Cv/Cv'
 import { Jobs as CandidateJobs } from '@/pages/Candidate/Jobs/Jobs'
+import { Matching as CandidateMatching } from '@/pages/Candidate/Matching/Matching'
 import { Profile as CandidateProfile } from '@/pages/Candidate/Profile/Profile'
 import { Dashboard as CoachDashboard } from '@/pages/Coach/Dashboard'
 import { ComingSoon } from '@/pages/ComingSoon/ComingSoon'
@@ -25,7 +26,13 @@ const placeholdersOf = (items: NavItem[][], excludedRoutes: string[]) =>
 
 const CANDIDATE_PLACEHOLDERS = placeholdersOf(
   [CANDIDATE_NAV_ITEMS, CANDIDATE_SECONDARY_NAV_ITEMS],
-  [ROUTES.candidate.dashboard, ROUTES.candidate.cv, ROUTES.candidate.jobs, ROUTES.candidate.profile],
+  [
+    ROUTES.candidate.dashboard,
+    ROUTES.candidate.cv,
+    ROUTES.candidate.jobs,
+    ROUTES.candidate.matching,
+    ROUTES.candidate.profile,
+  ],
 )
 const COACH_PLACEHOLDERS = placeholdersOf(
   [COACH_NAV_ITEMS, COACH_SECONDARY_NAV_ITEMS],
@@ -52,6 +59,7 @@ export function App() {
         <Route index element={<CandidateDashboard />} />
         <Route path={ROUTES.candidate.cv} element={<CandidateCv />} />
         <Route path={ROUTES.candidate.jobs} element={<CandidateJobs />} />
+        <Route path={ROUTES.candidate.matching} element={<CandidateMatching />} />
         <Route path={ROUTES.candidate.profile} element={<CandidateProfile />} />
         {/* Reached from the dashboard, not from the nav. */}
         <Route

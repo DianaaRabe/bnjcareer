@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { ApolloError } from '@apollo/client'
 import { toast } from 'sonner'
 
 import { useMyProfileQuery, useUpdateProfileMutation } from '@/graphql/hooks/profiles'
 import { ProfileObjective, ProfileSituation, type UpdateProfileInput } from '@/gql/graphql'
 import { useTranslate } from '@/hooks/useTranslate'
+import { getGraphQLErrorCode } from '@/lib/apollo'
 import { MAX_BIO_LENGTH, MAX_IMPROVEMENTS, MAX_SKILLS, MAX_STRENGTHS, type ProfileSectionId } from './constants'
 
 type SaveStatus = 'saved' | 'saving' | 'error'
@@ -86,7 +86,7 @@ export const useProfile = () => {
         setSaveStatus('saved')
       } catch (err) {
         setSaveStatus('error')
-        const code = err instanceof ApolloError ? err.graphQLErrors[0]?.extensions?.code : undefined
+        const code = getGraphQLErrorCode(err)
         toast.error(translate('candidate.profile.save.error.title'), {
           description: translate(
             code === 'BAD_USER_INPUT'

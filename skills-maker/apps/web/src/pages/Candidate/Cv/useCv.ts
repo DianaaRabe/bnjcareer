@@ -4,7 +4,7 @@ import { toast } from 'sonner'
 import { CvStatus } from '@/gql/graphql'
 import { useCreateCvMutation, useMyCvQuery, useOptimizeCvMutation, useUpdateCvDetailsMutation } from '@/graphql/hooks/cv'
 import { useTranslate } from '@/hooks/useTranslate'
-import { GRAPHQL_URL } from '@/lib/apollo'
+import { getGraphQLErrorCode, GRAPHQL_URL } from '@/lib/apollo'
 import { getToken } from '@/lib/auth'
 
 export const UPLOAD_STEP = {
@@ -58,12 +58,6 @@ export interface CvImprovement {
   category: string
   description: string
   impact: 'high' | 'medium' | 'low'
-}
-
-/** Extracts a GraphQL `extensions.code` from an Apollo mutation rejection, if any. */
-function getErrorCode(err: unknown): string | undefined {
-  const graphQLErrors = (err as { graphQLErrors?: { extensions?: { code?: string } }[] } | undefined)?.graphQLErrors
-  return graphQLErrors?.[0]?.extensions?.code
 }
 
 export const useCv = () => {
@@ -149,7 +143,7 @@ export const useCv = () => {
     } catch (err) {
       await refetch().catch(() => {})
       toast.dismiss(uploadingToast)
-      const code = getErrorCode(err)
+      const code = getGraphQLErrorCode(err)
       if (code === 'CV_EXTRACTION_FAILED') {
         toast.error(translate('candidate.cv.extraction.error.title'), {
           description: translate('candidate.cv.extraction.error.description'),

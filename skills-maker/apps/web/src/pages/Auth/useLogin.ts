@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "@/graphql/hooks/auth";
 import { useTranslate } from "@/hooks/useTranslate";
+import { getGraphQLErrorCode } from "@/lib/apollo";
 import { setToken } from "@/lib/auth";
 
 export function useLogin() {
@@ -15,7 +16,7 @@ export function useLogin() {
   // Server messages are not localized — map the error code to a translated string instead.
   const errorMessage = error
     ? translate(
-        error.graphQLErrors[0]?.extensions?.code === "BAD_USER_INPUT"
+        getGraphQLErrorCode(error) === "BAD_USER_INPUT"
           ? "auth.login.error.invalidCredentials"
           : "auth.login.error.unexpected",
       )
