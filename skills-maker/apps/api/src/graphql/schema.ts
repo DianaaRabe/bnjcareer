@@ -8,6 +8,8 @@ import { cvTypeDefs } from './modules/cv/typeDefs.js'
 import { cvResolvers } from './modules/cv/resolvers.js'
 import { jobsTypeDefs } from './modules/jobs/typeDefs.js'
 import { jobsResolvers } from './modules/jobs/resolvers.js'
+import { matchingTypeDefs } from './modules/matching/typeDefs.js'
+import { matchingResolvers } from './modules/matching/resolvers.js'
 
 // Merges all modules — each new domain adds its typeDefs + resolvers here.
 export const schema = makeExecutableSchema({
@@ -16,12 +18,14 @@ export const schema = makeExecutableSchema({
     profilesTypeDefs,
     cvTypeDefs,
     jobsTypeDefs,
+    matchingTypeDefs,
   ],
   resolvers: [
     authResolvers,
     profilesResolvers,
     cvResolvers,
     jobsResolvers,
+    matchingResolvers,
     { JSON: GraphQLJSON },
   ],
 })

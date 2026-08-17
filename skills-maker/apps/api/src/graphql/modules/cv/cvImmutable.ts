@@ -50,6 +50,14 @@ export function formatImmutableExperiences(extractedData: any): string {
     .join('\n')
 }
 
+export function formatImmutableSkills(extractedData: any): string {
+  const skills = extractedData?.skills
+  if (!Array.isArray(skills) || skills.length === 0) {
+    return '  (aucune compétence listée dans le CV original)'
+  }
+  return `  ${skills.filter((s: unknown) => typeof s === 'string').join(', ')}`
+}
+
 export function formatImmutableEducation(extractedData: any): string {
   const education = extractedData?.education
   if (!Array.isArray(education) || education.length === 0) {
