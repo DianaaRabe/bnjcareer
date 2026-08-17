@@ -1,6 +1,8 @@
-import { Loader2 } from 'lucide-react'
+import { SearchX } from 'lucide-react'
 import { FormattedMessage } from 'react-intl'
 
+import { EmptyState } from '@/components/common/EmptyState/EmptyState'
+import { LoadingState } from '@/components/common/LoadingState/LoadingState'
 import { ViewToggle } from '@/components/common/ViewToggle/ViewToggle'
 import { PageHeader } from '@/components/layout/PageHeader/PageHeader'
 import { Button } from '@/components/ui/button'
@@ -12,7 +14,6 @@ import { JobFiltersSheet } from './components/JobFiltersSheet'
 import { JobRow } from './components/JobRow'
 import { JobSearchBar } from './components/JobSearchBar'
 import { JobSourceTabs } from './components/JobSourceTabs'
-import { JobsEmptyState } from './components/JobsEmptyState'
 import { JobsPreviewNotice } from './components/JobsPreviewNotice'
 import { useJobs } from './useJobs'
 
@@ -22,7 +23,8 @@ export const Jobs = () => {
   const renderResults = () => {
     if (jobs.hasNoSource) {
       return (
-        <JobsEmptyState
+        <EmptyState
+          icon={SearchX}
           titleId="candidate.jobs.empty.noSource.title"
           descriptionId="candidate.jobs.empty.noSource.description"
         />
@@ -30,17 +32,13 @@ export const Jobs = () => {
     }
 
     if (jobs.isLoading) {
-      return (
-        <div className="flex items-center justify-center gap-2 rounded-xl border bg-card p-10 text-sm text-muted-foreground">
-          <Loader2 className="size-4 animate-spin" />
-          <FormattedMessage id="candidate.jobs.loading" />
-        </div>
-      )
+      return <LoadingState messageId="candidate.jobs.loading" />
     }
 
     if (jobs.hasError) {
       return (
-        <JobsEmptyState
+        <EmptyState
+          icon={SearchX}
           titleId="candidate.jobs.error.title"
           descriptionId="candidate.jobs.error.description"
           action={
@@ -54,7 +52,8 @@ export const Jobs = () => {
 
     if (jobs.visibleJobs.length === 0) {
       return (
-        <JobsEmptyState
+        <EmptyState
+          icon={SearchX}
           titleId="candidate.jobs.empty.noResults.title"
           descriptionId="candidate.jobs.empty.noResults.description"
           action={

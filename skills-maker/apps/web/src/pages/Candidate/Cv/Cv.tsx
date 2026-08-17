@@ -1,6 +1,7 @@
 import { FileText, Loader2, RefreshCw, Sparkles } from 'lucide-react'
 import { FormattedMessage, useIntl } from 'react-intl'
 
+import { LoadingState } from '@/components/common/LoadingState/LoadingState'
 import { PageHeader } from '@/components/layout/PageHeader/PageHeader'
 import { Button } from '@/components/ui/button'
 import { CvDetailsAccordion } from './CvDetailsAccordion'
@@ -39,10 +40,7 @@ export const Cv = () => {
       <PageHeader titleId="candidate.cv.title" descriptionId="candidate.cv.subtitle" />
 
       {cv.isLoading && !cv.hasCv ? (
-        <div className="flex items-center justify-center gap-2 rounded-lg border bg-card p-10 text-sm text-muted-foreground">
-          <Loader2 className="size-4 animate-spin" />
-          <FormattedMessage id="common.loading" />
-        </div>
+        <LoadingState />
       ) : cv.hasCv ? (
         <>
           <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border bg-card p-5 shadow-xs">

@@ -1,6 +1,7 @@
 import { Bell, Plus } from 'lucide-react'
 import { FormattedMessage, useIntl } from 'react-intl'
 
+import { EmptyState } from '@/components/common/EmptyState/EmptyState'
 import { PageHeader } from '@/components/layout/PageHeader/PageHeader'
 import { Button } from '@/components/ui/button'
 
@@ -31,9 +32,7 @@ export const Dashboard = () => {
         }
       />
 
-      <section className="rounded-xl border border-dashed border-border-strong bg-card p-10 text-center text-sm text-muted-foreground">
-        <FormattedMessage id="coach.dashboard.empty" />
-      </section>
+      <EmptyState descriptionId="coach.dashboard.empty" />
     </div>
   )
 }
