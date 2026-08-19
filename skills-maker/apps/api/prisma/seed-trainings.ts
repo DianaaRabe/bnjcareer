@@ -12,7 +12,6 @@ const trainings = [
     category: TrainingCategory.SOFT_SKILLS,
     level: TrainingLevel.BEGINNER,
     priceCents: null,
-    modules: 4,
     durationDays: 7,
     instructor: 'Camille Rousseau',
     certificate: true,
@@ -23,7 +22,6 @@ const trainings = [
     category: TrainingCategory.CAREER_CHANGE,
     level: TrainingLevel.ADVANCED,
     priceCents: 9900,
-    modules: 7,
     durationDays: 56,
     instructor: 'Karim Benali',
     certificate: true,
@@ -34,7 +32,6 @@ const trainings = [
     category: TrainingCategory.INTERVIEW,
     level: TrainingLevel.INTERMEDIATE,
     priceCents: 6900,
-    modules: 6,
     durationDays: 42,
     instructor: 'Camille Rousseau',
     certificate: true,
@@ -45,7 +42,6 @@ const trainings = [
     category: TrainingCategory.CV,
     level: TrainingLevel.BEGINNER,
     priceCents: null,
-    modules: 3,
     durationDays: 3,
     instructor: 'Léa Fontaine',
     certificate: false,
@@ -56,7 +52,6 @@ const trainings = [
     category: TrainingCategory.INTERVIEW,
     level: TrainingLevel.INTERMEDIATE,
     priceCents: null,
-    modules: 5,
     durationDays: 14,
     instructor: 'Karim Benali',
     certificate: true,
@@ -67,7 +62,6 @@ const trainings = [
     category: TrainingCategory.SOFT_SKILLS,
     level: TrainingLevel.ADVANCED,
     priceCents: 7900,
-    modules: 4,
     durationDays: 10,
     instructor: 'Léa Fontaine',
     certificate: false,
@@ -78,7 +72,6 @@ const trainings = [
     category: TrainingCategory.TECHNICAL,
     level: TrainingLevel.BEGINNER,
     priceCents: 4900,
-    modules: 8,
     durationDays: 28,
     instructor: 'Karim Benali',
     certificate: true,
@@ -89,12 +82,74 @@ const trainings = [
     category: TrainingCategory.LEADERSHIP,
     level: TrainingLevel.ADVANCED,
     priceCents: 8900,
-    modules: 6,
     durationDays: 35,
     instructor: 'Camille Rousseau',
     certificate: true,
   },
 ]
+
+/** Programme per training, in reading order — the module count derives from these rows. */
+const curriculum: Record<number, { title: string; summary?: string; durationMinutes?: number }[]> = {
+  1: [
+    { title: 'Auditer son profil actuel', summary: 'Repérer ce qui bloque les recruteurs.', durationMinutes: 45 },
+    { title: 'Réécrire titre et résumé', summary: 'Se rendre trouvable sur les bons mots-clés.', durationMinutes: 60 },
+    { title: 'Publier ses trois premiers posts', durationMinutes: 90 },
+    { title: 'Engager la conversation', summary: 'Passer du like au message qualifié.', durationMinutes: 60 },
+  ],
+  2: [
+    { title: 'Clarifier son point de départ', durationMinutes: 90 },
+    { title: 'Choisir un métier cible réaliste', durationMinutes: 120 },
+    { title: 'Tester avant de se lancer', summary: 'Valider la piste sans tout quitter.', durationMinutes: 120 },
+    { title: 'Combler les écarts de compétences', durationMinutes: 180 },
+    { title: 'Construire son offre', durationMinutes: 120 },
+    { title: 'Trouver ses premiers clients', durationMinutes: 150 },
+    { title: 'Gérer l\'administratif', durationMinutes: 90 },
+  ],
+  3: [
+    { title: 'Faire le bilan de son parcours', durationMinutes: 90 },
+    { title: 'Définir sa direction à trois ans', durationMinutes: 90 },
+    { title: 'Cartographier son marché', durationMinutes: 120 },
+    { title: 'Préparer ses entretiens', durationMinutes: 120 },
+    { title: 'Activer son réseau', durationMinutes: 90 },
+    { title: 'Négocier son évolution', durationMinutes: 90 },
+  ],
+  4: [
+    { title: 'Extraire ses réalisations', durationMinutes: 45 },
+    { title: 'Faire rédiger puis corriger par l\'IA', summary: 'Garder la main sur les faits.', durationMinutes: 60 },
+    { title: 'Adapter son CV à chaque offre', durationMinutes: 45 },
+  ],
+  5: [
+    { title: 'Décoder ce que teste le recruteur', durationMinutes: 60 },
+    { title: 'Répondre aux questions pièges', durationMinutes: 90 },
+    { title: 'Raconter ses échecs sans se desservir', durationMinutes: 60 },
+    { title: 'Poser les bonnes questions', durationMinutes: 45 },
+    { title: 'Négocier ses conditions', durationMinutes: 60 },
+  ],
+  6: [
+    { title: 'Connaître sa valeur de marché', durationMinutes: 60 },
+    { title: 'Choisir le bon moment', durationMinutes: 45 },
+    { title: 'Mener l\'échange', durationMinutes: 90 },
+    { title: 'Encaisser un refus et rebondir', durationMinutes: 45 },
+  ],
+  7: [
+    { title: 'Ce qu\'est vraiment un programme', durationMinutes: 60 },
+    { title: 'Variables et conditions', durationMinutes: 90 },
+    { title: 'Boucles et fonctions', durationMinutes: 90 },
+    { title: 'Données et API', durationMinutes: 90 },
+    { title: 'Front, back, base de données', durationMinutes: 90 },
+    { title: 'Git et travail en équipe', durationMinutes: 90 },
+    { title: 'Lire un ticket technique', durationMinutes: 60 },
+    { title: 'Dialoguer avec les développeurs', durationMinutes: 60 },
+  ],
+  8: [
+    { title: 'Autorité et influence', durationMinutes: 60 },
+    { title: 'Créer l\'adhésion sans lien hiérarchique', durationMinutes: 90 },
+    { title: 'Arbitrer les priorités', durationMinutes: 90 },
+    { title: 'Gérer les désaccords', durationMinutes: 90 },
+    { title: 'Faire des retours utiles', durationMinutes: 60 },
+    { title: 'Tenir dans la durée', durationMinutes: 60 },
+  ],
+}
 
 async function main() {
   for (const [index, training] of trainings.entries()) {
@@ -105,7 +160,23 @@ async function main() {
     })
   }
 
-  console.log(`✓ ${trainings.length} trainings seeded`)
+  // Replace rather than merge: positions are unique, a stale row would collide.
+  for (const [index] of trainings.entries()) {
+    const trainingId = id(index + 1)
+    await prisma.trainingModule.deleteMany({ where: { trainingId } })
+    await prisma.trainingModule.createMany({
+      data: (curriculum[index + 1] ?? []).map((module, position) => ({
+        trainingId,
+        title: module.title,
+        summary: module.summary ?? null,
+        position: position + 1,
+        durationMinutes: module.durationMinutes ?? null,
+      })),
+    })
+  }
+
+  const moduleCount = Object.values(curriculum).reduce((total, list) => total + list.length, 0)
+  console.log(`✓ ${trainings.length} trainings, ${moduleCount} modules seeded`)
 }
 
 main()

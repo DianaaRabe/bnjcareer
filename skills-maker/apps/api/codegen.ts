@@ -27,6 +27,11 @@ const config: CodegenConfig = {
           TrainingCategory: '@prisma/client#TrainingCategory',
           TrainingLevel: '@prisma/client#TrainingLevel',
         },
+        // The service returns its own shapes — resolvers see those, not the SDL types.
+        mappers: {
+          Training: '../graphql/modules/trainings/trainingsMappers.js#GraphQLTraining',
+          TrainingModule: '../graphql/modules/trainings/trainingsMappers.js#GraphQLTrainingModule',
+        },
         useIndexSignature: true,
       },
     },

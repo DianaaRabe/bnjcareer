@@ -301,7 +301,6 @@ model Training {
   level       TrainingLevel
   /// Price in cents. Null means free — the client formats it in its own locale.
   priceCents  Int?             @map("price_cents")
-  modules     Int              @default(0)
   /// Stored in days so the client can render weeks or days per locale.
   durationDays Int             @map("duration_days")
   instructor  String?
@@ -310,8 +309,24 @@ model Training {
   published   Boolean          @default(true)
   createdAt   DateTime         @default(now()) @map("created_at")
 
+  curriculum  TrainingModule[]
+
   @@index([published, category, level])
   @@map("trainings")
+}
+
+model TrainingModule {
+  id         String   @id @default(uuid())
+  trainingId String   @map("training_id")
+  training   Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  title      String
+  summary    String?
+  /// 1-based rank inside the training — the module count derives from these rows.
+  position   Int
+  durationMinutes Int? @map("duration_minutes")
+
+  @@unique([trainingId, position])
+  @@map("training_modules")
 }
 
 model UserSkill {
