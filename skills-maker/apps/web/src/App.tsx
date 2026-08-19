@@ -14,6 +14,7 @@ import { PORTAL_ROLES } from '@/lib/rbac'
 import { Login } from '@/pages/Auth/Login'
 import { Coaching as CandidateCoaching } from '@/pages/Candidate/Coaching/Coaching'
 import { Dashboard as CandidateDashboard } from '@/pages/Candidate/Dashboard/Dashboard'
+import { Formations as CandidateFormations } from '@/pages/Candidate/Formations/Formations'
 import { Cv as CandidateCv } from '@/pages/Candidate/Cv/Cv'
 import { Jobs as CandidateJobs } from '@/pages/Candidate/Jobs/Jobs'
 import { Matching as CandidateMatching } from '@/pages/Candidate/Matching/Matching'
@@ -33,6 +34,7 @@ const CANDIDATE_PLACEHOLDERS = placeholdersOf(
     ROUTES.candidate.jobs,
     ROUTES.candidate.matching,
     ROUTES.candidate.coaching,
+    ROUTES.candidate.formations,
     ROUTES.candidate.profile,
   ],
 )
@@ -63,6 +65,14 @@ export function App() {
         <Route path={ROUTES.candidate.jobs} element={<CandidateJobs />} />
         <Route path={ROUTES.candidate.matching} element={<CandidateMatching />} />
         <Route path={ROUTES.candidate.coaching} element={<CandidateCoaching />} />
+        <Route path={ROUTES.candidate.formations} element={<CandidateFormations />} />
+        {/* Linked from every training row — a placeholder until the detail page lands. */}
+        <Route
+          path={`${ROUTES.candidate.formations}/:trainingId`}
+          element={
+            <ComingSoon titleId="candidate.formations.title" eyebrowId="nav.candidate.portal" />
+          }
+        />
         <Route path={ROUTES.candidate.profile} element={<CandidateProfile />} />
         {/* Reached from the dashboard, not from the nav. */}
         <Route
