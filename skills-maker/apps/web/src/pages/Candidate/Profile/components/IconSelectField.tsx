@@ -2,7 +2,14 @@ import type { LucideIcon } from 'lucide-react'
 import { FormattedMessage, useIntl } from 'react-intl'
 
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type Option<T extends string> = { value: T; labelId: string; icon?: LucideIcon }
 
@@ -33,12 +40,15 @@ export const IconSelectField = <T extends string>({
           <SelectValue placeholder={intl.formatMessage({ id: placeholderId })} />
         </SelectTrigger>
         <SelectContent>
-          {options.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
-              {opt.icon && <opt.icon className="size-[15px] text-muted-foreground" />}
-              <FormattedMessage id={opt.labelId} />
-            </SelectItem>
-          ))}
+          {/* SelectGroup carries the popover padding — without it the hovered item bleeds to the edges. */}
+          <SelectGroup>
+            {options.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.icon && <opt.icon className="size-[15px] text-muted-foreground" />}
+                <FormattedMessage id={opt.labelId} />
+              </SelectItem>
+            ))}
+          </SelectGroup>
         </SelectContent>
       </Select>
     </div>
