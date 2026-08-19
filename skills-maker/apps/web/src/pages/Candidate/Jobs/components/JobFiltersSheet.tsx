@@ -1,5 +1,6 @@
 import { FormattedMessage, useIntl } from 'react-intl'
 
+import { FilterControl } from '@/components/common/FilterControl/FilterControl'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { JobFilterKind, type ContractType, type ExperienceLevel, type JobSource } from '@/gql/graphql'
@@ -10,7 +11,6 @@ import {
   WORK_TIME_OPTIONS,
   type JobFilters,
 } from '../constants'
-import { JobFilterGroup } from './JobFilterGroup'
 
 type JobFiltersSheetProps = {
   open: boolean
@@ -63,8 +63,8 @@ export const JobFiltersSheet = ({
           </p>
 
           {supports(JobFilterKind.ContractType) && (
-            <JobFilterGroup
-              titleId="candidate.jobs.filters.contract.title"
+            <FilterControl
+              labelId="candidate.jobs.filters.contract.title"
               options={CONTRACT_TYPE_OPTIONS}
               isSelected={(value) => filters.contractTypes.includes(value)}
               onSelect={toggleContract}
@@ -72,8 +72,8 @@ export const JobFiltersSheet = ({
           )}
 
           {supports(JobFilterKind.ExperienceLevel) && (
-            <JobFilterGroup
-              titleId="candidate.jobs.filters.experience.title"
+            <FilterControl
+              labelId="candidate.jobs.filters.experience.title"
               options={EXPERIENCE_LEVEL_OPTIONS}
               isSelected={(value) => filters.experienceLevel === value}
               onSelect={(value: ExperienceLevel) =>
@@ -83,8 +83,8 @@ export const JobFiltersSheet = ({
           )}
 
           {supports(JobFilterKind.WorkTime) && (
-            <JobFilterGroup
-              titleId="candidate.jobs.filters.workTime.title"
+            <FilterControl
+              labelId="candidate.jobs.filters.workTime.title"
               options={WORK_TIME_OPTIONS}
               isSelected={(value) => filters.workTime === value}
               onSelect={(value) =>
@@ -94,8 +94,8 @@ export const JobFiltersSheet = ({
           )}
 
           {supports(JobFilterKind.PostedWithin) && (
-            <JobFilterGroup
-              titleId="candidate.jobs.filters.posted.title"
+            <FilterControl
+              labelId="candidate.jobs.filters.posted.title"
               options={POSTED_WITHIN_OPTIONS}
               isSelected={(value) => filters.postedWithin === value}
               onSelect={(value) =>
