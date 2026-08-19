@@ -24,6 +24,8 @@ const config: CodegenConfig = {
           PostedWithin: '../lib/jobs/types.js#PostedWithin',
           JobFilterKind: '../lib/jobs/types.js#JobFilterKind',
           CoachingGoalKey: '../graphql/modules/coaching/coachingConstants.js#CoachingGoalKeyId',
+          TrainingCategory: '@prisma/client#TrainingCategory',
+          TrainingLevel: '@prisma/client#TrainingLevel',
         },
         useIndexSignature: true,
       },

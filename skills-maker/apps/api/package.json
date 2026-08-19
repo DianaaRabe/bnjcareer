@@ -11,6 +11,7 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
     "db:seed:coaching": "tsx prisma/seed-coaching.ts",
+    "db:seed:trainings": "tsx prisma/seed-trainings.ts",
     "db:studio": "prisma studio",
     "codegen": "graphql-codegen --config codegen.ts",
     "test": "find src -name '*.test.ts' -exec node --import tsx --test {} +",

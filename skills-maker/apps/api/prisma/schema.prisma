@@ -48,6 +48,21 @@ enum TicketStatus {
   CLOSED
 }
 
+enum TrainingCategory {
+  INTERVIEW
+  CV
+  CAREER_CHANGE
+  SOFT_SKILLS
+  TECHNICAL
+  LEADERSHIP
+}
+
+enum TrainingLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
 enum ProfileSituation {
   EMPLOYED
   JOB_SEARCH
@@ -276,6 +291,27 @@ model Skill {
   users UserSkill[]
 
   @@map("skills")
+}
+
+model Training {
+  id          String           @id @default(uuid())
+  title       String
+  description String?
+  category    TrainingCategory
+  level       TrainingLevel
+  /// Price in cents. Null means free — the client formats it in its own locale.
+  priceCents  Int?             @map("price_cents")
+  modules     Int              @default(0)
+  /// Stored in days so the client can render weeks or days per locale.
+  durationDays Int             @map("duration_days")
+  instructor  String?
+  certificate Boolean          @default(false)
+  /// Drafts stay hidden from candidates until published.
+  published   Boolean          @default(true)
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  @@index([published, category, level])
+  @@map("trainings")
 }
 
 model UserSkill {
