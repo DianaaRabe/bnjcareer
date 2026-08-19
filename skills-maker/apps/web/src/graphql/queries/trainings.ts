@@ -16,3 +16,27 @@ export const TRAININGS_QUERY = graphql(`
     }
   }
 `)
+
+export const TRAINING_QUERY = graphql(`
+  query Training($id: ID!) {
+    training(id: $id) {
+      id
+      title
+      description
+      category
+      level
+      priceCents
+      modules
+      durationDays
+      instructor
+      certificate
+      curriculum {
+        id
+        position
+        title
+        summary
+        durationMinutes
+      }
+    }
+  }
+`)
