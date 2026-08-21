@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button'
 import { ROUTES } from '@/constants/routes'
 import { cn } from '@/lib/utils'
 import {
-  CATEGORY_ICONS,
   CATEGORY_LABEL_IDS,
   LEVEL_LABEL_IDS,
   LEVEL_STYLES,
@@ -58,8 +57,6 @@ export const TrainingDetail = () => {
     )
   }
 
-  const CategoryIcon = CATEGORY_ICONS[training.category]
-
   return (
     <div className="flex min-h-full flex-col gap-5">
       {backLink}
@@ -68,24 +65,19 @@ export const TrainingDetail = () => {
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.7fr_1fr] lg:gap-12">
         <div className="flex min-w-0 flex-col gap-6">
-          <header className="flex items-start gap-4">
-            <div className="flex size-12 flex-none items-center justify-center rounded-lg bg-accent">
-              <CategoryIcon className="size-[21px] text-primary" />
+          <header className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="secondary" className="text-[11.5px] font-semibold text-muted-foreground">
+                <FormattedMessage id={CATEGORY_LABEL_IDS[training.category]} />
+              </Badge>
+              <Badge className={cn('text-[11.5px] font-semibold', LEVEL_STYLES[training.level])}>
+                <FormattedMessage id={LEVEL_LABEL_IDS[training.level]} />
+              </Badge>
             </div>
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary" className="text-[11.5px] font-semibold text-muted-foreground">
-                  <FormattedMessage id={CATEGORY_LABEL_IDS[training.category]} />
-                </Badge>
-                <Badge className={cn('text-[11.5px] font-semibold', LEVEL_STYLES[training.level])}>
-                  <FormattedMessage id={LEVEL_LABEL_IDS[training.level]} />
-                </Badge>
-              </div>
-              <h2 className="mt-1.5 text-xl font-bold tracking-tight sm:text-2xl">{training.title}</h2>
-              {training.description && (
-                <p className="mt-1.5 text-sm text-muted-foreground">{training.description}</p>
-              )}
-            </div>
+            <h2 className="mt-1.5 text-xl font-bold tracking-tight sm:text-2xl">{training.title}</h2>
+            {training.description && (
+              <p className="mt-1.5 text-sm text-muted-foreground">{training.description}</p>
+            )}
           </header>
 
           <CurriculumList modules={training.curriculum} />
