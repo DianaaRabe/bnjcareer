@@ -17,6 +17,7 @@ const coaches = [
     certifications: ['Coach Professionnel RNCP', 'Assesseur DISC', 'Praticien MBTI'],
     expertise: [CoachExpertise.LEADERSHIP, CoachExpertise.NEGOTIATION, CoachExpertise.INTERVIEW],
     rating: 4.9,
+    acceptingClients: true,
   },
   {
     email: 'harena.rabenandrasana@bnj.dev',
@@ -28,6 +29,7 @@ const coaches = [
     certifications: ['Coach Certifiée RNCP'],
     expertise: [CoachExpertise.CAREER_CHANGE, CoachExpertise.INTERVIEW, CoachExpertise.CV_STRATEGY],
     rating: 4.9,
+    acceptingClients: true,
   },
   {
     email: 'benjamin.parienty@bnj.dev',
@@ -39,6 +41,7 @@ const coaches = [
     certifications: ['Coach Professionnel ICF', 'Expert Bilan de Compétences', 'Formateur certifié'],
     expertise: [CoachExpertise.CAREER_CHANGE, CoachExpertise.LINKEDIN, CoachExpertise.LEADERSHIP],
     rating: 4.9,
+    acceptingClients: true,
   },
   {
     email: 'camille.lerouge@bnj.dev',
@@ -50,6 +53,7 @@ const coaches = [
     certifications: ['Consultante RH certifiée', 'Formatrice AFEST'],
     expertise: [CoachExpertise.CV_STRATEGY, CoachExpertise.INTERVIEW, CoachExpertise.LINKEDIN],
     rating: 4.9,
+    acceptingClients: true,
   },
 ]
 
