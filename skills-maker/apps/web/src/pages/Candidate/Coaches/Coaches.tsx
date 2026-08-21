@@ -4,11 +4,14 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { EmptyState } from '@/components/common/EmptyState/EmptyState'
 import { FILTER_DISPLAY, FilterControl } from '@/components/common/FilterControl/FilterControl'
 import { LoadingState } from '@/components/common/LoadingState/LoadingState'
+import { ViewToggle } from '@/components/common/ViewToggle/ViewToggle'
 import { PageHeader } from '@/components/layout/PageHeader/PageHeader'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { VIEW_MODE, VIEW_MODE_OPTIONS } from '@/constants/viewModes'
 import { CoachCard } from './components/CoachCard'
+import { CoachRow } from './components/CoachRow'
 import { EXPERTISE_OPTIONS } from './constants'
 import { useCoaches } from './useCoaches'
 
@@ -53,6 +56,16 @@ export const Coaches = () => {
       )
     }
 
+    if (coaches.viewMode === VIEW_MODE.list) {
+      return (
+        <ul className="overflow-hidden rounded-xl border border-border bg-card">
+          {coaches.coaches.map((coach) => (
+            <CoachRow key={coach.id} coach={coach} />
+          ))}
+        </ul>
+      )
+    }
+
     return (
       <ul className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
         {coaches.coaches.map((coach) => (
@@ -94,14 +107,21 @@ export const Coaches = () => {
           />
         </div>
 
-        <FilterControl
-          display={FILTER_DISPLAY.select}
-          icon={Sparkles}
-          labelId="candidate.coaches.filter.expertise"
-          options={EXPERTISE_OPTIONS}
-          isSelected={(value) => value === coaches.expertise}
-          onSelect={coaches.setExpertise}
-        />
+        <div className="flex items-center gap-2.5">
+          <FilterControl
+            display={FILTER_DISPLAY.select}
+            icon={Sparkles}
+            labelId="candidate.coaches.filter.expertise"
+            options={EXPERTISE_OPTIONS}
+            isSelected={(value) => value === coaches.expertise}
+            onSelect={coaches.setExpertise}
+          />
+          <ViewToggle
+            options={VIEW_MODE_OPTIONS}
+            value={coaches.viewMode}
+            onChange={coaches.setViewMode}
+          />
+        </div>
       </div>
 
       {renderDirectory()}

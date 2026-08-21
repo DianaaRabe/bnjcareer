@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
 
+import { VIEW_MODE, type ViewMode } from '@/constants/viewModes'
 import { useCoachesQuery } from '@/graphql/hooks/coaches'
 import type { CoachesQuery } from '@/gql/graphql'
 import { EXPERTISE_LABEL_IDS, FILTER_ALL, type ExpertiseFilter } from './constants'
@@ -13,6 +14,7 @@ export const useCoaches = () => {
 
   const [search, setSearch] = useState('')
   const [expertise, setExpertise] = useState<ExpertiseFilter>(FILTER_ALL)
+  const [viewMode, setViewMode] = useState<ViewMode>(VIEW_MODE.grid)
 
   const all = useMemo(() => data?.coaches ?? [], [data])
 
@@ -45,6 +47,8 @@ export const useCoaches = () => {
     setSearch,
     expertise,
     setExpertise,
+    viewMode,
+    setViewMode,
     coaches,
     total: all.length,
     hasFilters: Boolean(search) || expertise !== FILTER_ALL,
