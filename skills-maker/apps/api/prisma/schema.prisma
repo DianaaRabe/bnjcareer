@@ -57,6 +57,15 @@ enum TrainingCategory {
   LEADERSHIP
 }
 
+enum CoachExpertise {
+  CV_STRATEGY
+  INTERVIEW
+  LINKEDIN
+  NEGOTIATION
+  CAREER_CHANGE
+  LEADERSHIP
+}
+
 enum TrainingLevel {
   BEGINNER
   INTERMEDIATE
@@ -91,6 +100,7 @@ model User {
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   profile        Profile?
+  coachProfile   CoachProfile?
   cvs            Cv[]
   applications   Application[]
   bookings       Booking[]
@@ -125,6 +135,28 @@ model Profile {
   createdAt      DateTime          @default(now()) @map("created_at")
 
   @@map("profiles")
+}
+
+/// Coach-specific data — candidates never have a row here.
+model CoachProfile {
+  id              String           @id @default(uuid())
+  userId          String           @unique @map("user_id")
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Headline shown under the name, e.g. "Leadership & Négociation".
+  specialty       String?
+  yearsExperience Int?             @map("years_experience")
+  certifications  String[]         @default([])
+  expertise       CoachExpertise[] @default([])
+  /// Average rating out of 5. Null until enough sessions were reviewed.
+  rating          Float?
+  /// Coaches who stopped taking new candidates stay listed but cannot be booked.
+  acceptingClients Boolean         @default(true) @map("accepting_clients")
+  /// Drafts stay hidden from the directory until published.
+  published       Boolean          @default(true)
+  createdAt       DateTime         @default(now()) @map("created_at")
+
+  @@index([published, acceptingClients])
+  @@map("coach_profiles")
 }
 
 // ─────────────────────────────────────────────────────────────

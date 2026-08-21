@@ -14,6 +14,8 @@ import { coachingTypeDefs } from './modules/coaching/typeDefs.js'
 import { coachingResolvers } from './modules/coaching/resolvers.js'
 import { trainingsTypeDefs } from './modules/trainings/typeDefs.js'
 import { trainingsResolvers } from './modules/trainings/resolvers.js'
+import { coachesTypeDefs } from './modules/coaches/typeDefs.js'
+import { coachesResolvers } from './modules/coaches/resolvers.js'
 
 // Merges all modules — each new domain adds its typeDefs + resolvers here.
 export const schema = makeExecutableSchema({
@@ -25,6 +27,7 @@ export const schema = makeExecutableSchema({
     matchingTypeDefs,
     coachingTypeDefs,
     trainingsTypeDefs,
+    coachesTypeDefs,
   ],
   resolvers: [
     authResolvers,
@@ -34,6 +37,7 @@ export const schema = makeExecutableSchema({
     matchingResolvers,
     coachingResolvers,
     trainingsResolvers,
+    coachesResolvers,
     { JSON: GraphQLJSON },
   ],
 })

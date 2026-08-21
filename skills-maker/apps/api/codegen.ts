@@ -26,11 +26,13 @@ const config: CodegenConfig = {
           CoachingGoalKey: '../graphql/modules/coaching/coachingConstants.js#CoachingGoalKeyId',
           TrainingCategory: '@prisma/client#TrainingCategory',
           TrainingLevel: '@prisma/client#TrainingLevel',
+          CoachExpertise: '@prisma/client#CoachExpertise',
         },
         // The service returns its own shapes — resolvers see those, not the SDL types.
         mappers: {
           Training: '../graphql/modules/trainings/trainingsMappers.js#GraphQLTraining',
           TrainingModule: '../graphql/modules/trainings/trainingsMappers.js#GraphQLTrainingModule',
+          Coach: '../graphql/modules/coaches/coachesMappers.js#GraphQLCoach',
         },
         useIndexSignature: true,
       },
