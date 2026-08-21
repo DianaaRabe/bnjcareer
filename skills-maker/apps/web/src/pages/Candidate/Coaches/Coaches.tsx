@@ -1,4 +1,4 @@
-import { Search, TriangleAlert, Users } from 'lucide-react'
+import { Search, Sparkles, TriangleAlert, Users } from 'lucide-react'
 import { FormattedMessage, useIntl } from 'react-intl'
 
 import { EmptyState } from '@/components/common/EmptyState/EmptyState'
@@ -82,7 +82,7 @@ export const Coaches = () => {
         }
       />
 
-      <div className="flex flex-col gap-4 border-b border-border pb-5">
+      <div className="flex flex-col gap-3 border-b border-border pb-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex items-center sm:w-[380px]">
           <Search className="pointer-events-none absolute left-3.5 size-4 text-muted-foreground" />
           <Input
@@ -95,7 +95,8 @@ export const Coaches = () => {
         </div>
 
         <FilterControl
-          display={FILTER_DISPLAY.chips}
+          display={FILTER_DISPLAY.select}
+          icon={Sparkles}
           labelId="candidate.coaches.filter.expertise"
           options={EXPERTISE_OPTIONS}
           isSelected={(value) => value === coaches.expertise}

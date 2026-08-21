@@ -367,7 +367,7 @@
   "candidate.coaches.search.placeholder": "Nom, spécialisation, expertise…",
   "candidate.coaches.search.label": "Rechercher un coach",
   "candidate.coaches.filter.expertise": "Expertise",
-  "candidate.coaches.filter.all": "Toutes",
+  "candidate.coaches.filter.all": "Toutes les expertises",
   "candidate.coaches.expertise.cvStrategy": "Stratégie CV",
   "candidate.coaches.expertise.interview": "Entretiens",
   "candidate.coaches.expertise.linkedin": "LinkedIn",
