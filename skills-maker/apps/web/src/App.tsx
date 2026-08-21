@@ -12,6 +12,7 @@ import {
 import { ROUTES } from '@/constants/routes'
 import { PORTAL_ROLES } from '@/lib/rbac'
 import { Login } from '@/pages/Auth/Login'
+import { Coaches as CandidateCoaches } from '@/pages/Candidate/Coaches/Coaches'
 import { Coaching as CandidateCoaching } from '@/pages/Candidate/Coaching/Coaching'
 import { Dashboard as CandidateDashboard } from '@/pages/Candidate/Dashboard/Dashboard'
 import { Formations as CandidateFormations } from '@/pages/Candidate/Formations/Formations'
@@ -36,6 +37,7 @@ const CANDIDATE_PLACEHOLDERS = placeholdersOf(
     ROUTES.candidate.matching,
     ROUTES.candidate.coaching,
     ROUTES.candidate.formations,
+    ROUTES.candidate.coaches,
     ROUTES.candidate.profile,
   ],
 )
@@ -71,6 +73,7 @@ export function App() {
           path={`${ROUTES.candidate.formations}/:trainingId`}
           element={<CandidateTrainingDetail />}
         />
+        <Route path={ROUTES.candidate.coaches} element={<CandidateCoaches />} />
         <Route path={ROUTES.candidate.profile} element={<CandidateProfile />} />
         {/* Reached from the dashboard, not from the nav. */}
         <Route
