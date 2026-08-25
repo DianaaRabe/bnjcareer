@@ -66,7 +66,8 @@ const PROVIDERS: Record<string, ProviderConfig> = {
     endpoint: 'https://api.groq.com/openai/v1/chat/completions',
     getApiKeys: () => collectKeys([env.GROQ_API_KEY, env.GROQ_API_KEY_2]),
     supportsJsonMode: true,
-    models: ['llama-3.3-70b-versatile', 'deepseek-r1-distill-llama-70b', 'llama-3.1-8b-instant'],
+    // Checked against GET /v1/models — the previous llama/deepseek entries were decommissioned.
+    models: ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'qwen/qwen3.6-27b'],
   },
   openrouter: {
     name: 'openrouter',
@@ -194,5 +195,82 @@ export function parseLLMJson<T = unknown>(raw: string): T {
       }
     }
     throw new Error('Could not parse JSON from LLM response')
+  }
+}
+
+/**
+ * Same fallback strategy as callLLM, but yields the answer as it is produced.
+ * Providers speak the OpenAI SSE dialect: `data: {json}` lines, `data: [DONE]` to close.
+ */
+export async function* streamLLM(opts: Omit<LLMOptions, 'jsonMode'>): AsyncGenerator<string> {
+  const provider = selectProvider()
+  const allKeys = provider.getApiKeys()
+  if (allKeys.length === 0) {
+    throw new LLMError(`No API key configured for ${provider.name.toUpperCase()}`, [])
+  }
+
+  const models = env.LLM_MODEL ? [env.LLM_MODEL] : provider.models
+  const attempts: { model: string; error: string }[] = []
+
+  for (const model of models) {
+    for (const apiKey of shuffle(allKeys)) {
+      const response = await fetch(provider.endpoint, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          ...(provider.extraHeaders?.(opts.referer) ?? {}),
+        },
+        body: JSON.stringify({
+          model,
+          messages: opts.messages,
+          temperature: opts.temperature ?? 0.3,
+          max_tokens: opts.maxTokens ?? 4000,
+          stream: true,
+        }),
+      })
+
+      if (!response.ok || !response.body) {
+        attempts.push({ model, error: `HTTP ${response.status}` })
+        continue
+      }
+
+      yield* readSseDeltas(response.body)
+      return
+    }
+  }
+
+  throw new LLMError('All models and keys failed', attempts)
+}
+
+/** Turns a provider SSE body into the successive text deltas it carries. */
+async function* readSseDeltas(body: ReadableStream<Uint8Array>): AsyncGenerator<string> {
+  const reader = body.getReader()
+  const decoder = new TextDecoder('utf-8')
+  // A chunk can cut a line in half — hold the tail until its newline arrives.
+  let buffer = ''
+
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+
+    buffer += decoder.decode(value, { stream: true })
+    const lines = buffer.split('\n')
+    buffer = lines.pop() ?? ''
+
+    for (const line of lines) {
+      const trimmed = line.trim()
+      if (!trimmed.startsWith('data:')) continue
+
+      const payload = trimmed.slice(5).trim()
+      if (payload === '[DONE]') return
+
+      try {
+        const delta = JSON.parse(payload)?.choices?.[0]?.delta?.content
+        if (delta) yield delta as string
+      } catch {
+        // A malformed chunk is not worth aborting the answer for.
+      }
+    }
   }
 }
