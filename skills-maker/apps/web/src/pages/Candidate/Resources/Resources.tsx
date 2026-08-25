@@ -1,6 +1,7 @@
 import { BookOpen, Search, TriangleAlert } from 'lucide-react'
 import { FormattedMessage, useIntl } from 'react-intl'
 
+import { AssistantPanel } from '@/components/common/AssistantPanel/AssistantPanel'
 import { EmptyState } from '@/components/common/EmptyState/EmptyState'
 import { FILTER_DISPLAY, FilterControl } from '@/components/common/FilterControl/FilterControl'
 import { LoadingState } from '@/components/common/LoadingState/LoadingState'
@@ -75,18 +76,21 @@ export const Resources = () => {
         titleId="candidate.resources.title"
         descriptionId="candidate.resources.subtitle"
         actions={
-          !resources.isLoading && !resources.hasError ? (
-            <Badge
-              variant="secondary"
-              className="h-[34px] gap-2 px-4 text-[12.5px] font-semibold text-accent-foreground"
-            >
-              <BookOpen className="size-3.5" />
-              <FormattedMessage
-                id="candidate.resources.count"
-                values={{ count: resources.total }}
-              />
-            </Badge>
-          ) : null
+          <>
+            <AssistantPanel />
+            {!resources.isLoading && !resources.hasError ? (
+                <Badge
+                variant="secondary"
+                className="h-[34px] gap-2 px-4 text-[12.5px] font-semibold text-accent-foreground"
+              >
+                <BookOpen className="size-3.5" />
+                <FormattedMessage
+                  id="candidate.resources.count"
+                  values={{ count: resources.total }}
+                />
+              </Badge>
+            ) : null}
+          </>
         }
       />
 
