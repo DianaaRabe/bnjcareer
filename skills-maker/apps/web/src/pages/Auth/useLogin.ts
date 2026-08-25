@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { useApolloClient } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "@/graphql/hooks/auth";
 import { useTranslate } from "@/hooks/useTranslate";
@@ -11,6 +12,7 @@ export function useLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [login, { loading, error }] = useLoginMutation();
   const navigate = useNavigate();
+  const apolloClient = useApolloClient();
   const { translate } = useTranslate();
 
   // Server messages are not localized — map the error code to a translated string instead.
@@ -32,6 +34,9 @@ export function useLogin() {
       });
       if (data?.login.token) {
         setToken(data.login.token);
+        // Drop what was cached while signed out — `me` was resolved as null then, and a
+        // cache-first read would serve that null instead of fetching the new session.
+        await apolloClient.clearStore();
         navigate("/");
       }
     } catch {

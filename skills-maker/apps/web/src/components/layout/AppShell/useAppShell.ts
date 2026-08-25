@@ -26,12 +26,16 @@ export function useAppShell({ rolesAuthorized }: UseAppShellArgs) {
   const { data, error, loading } = useMeQuery({ skip: !hasToken })
   const { isAuthorized } = useProtectedAction({ rolesAuthorized })
 
-  // A rejected `me` means the stored token is stale — drop it so the login page starts clean.
+  // A token whose `me` resolves to nothing is stale — the account was removed, or the
+  // database was reset under it. The server answers null rather than erroring, so checking
+  // `error` alone would leave the dead token in place and bounce the user forever.
+  const isStaleSession = hasToken && !loading && (Boolean(error) || !data?.me)
+
   useEffect(() => {
-    if (error) {
+    if (isStaleSession) {
       clearToken()
     }
-  }, [error])
+  }, [isStaleSession])
 
   const closeNav = () => setNavOpen(false)
 
@@ -48,7 +52,7 @@ export function useAppShell({ rolesAuthorized }: UseAppShellArgs) {
   }
 
   return {
-    isAuthenticated: hasToken && !error,
+    isAuthenticated: hasToken && !isStaleSession,
     // The role is unknown until `me` resolves — gates must not decide before that.
     isLoading: hasToken && loading,
     isAuthorized,
