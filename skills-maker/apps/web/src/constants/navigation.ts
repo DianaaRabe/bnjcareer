@@ -31,7 +31,6 @@ export const CANDIDATE_NAV_ITEMS: NavItem[] = [
   { to: ROUTES.candidate.coaching, labelId: 'nav.candidate.coaching', icon: Calendar },
   { to: ROUTES.candidate.formations, labelId: 'nav.candidate.formations', icon: GraduationCap },
   { to: ROUTES.candidate.coaches, labelId: 'nav.candidate.coaches', icon: Users },
-  { to: ROUTES.candidate.messages, labelId: 'nav.candidate.messages', icon: MessageSquare },
   { to: ROUTES.candidate.resources, labelId: 'nav.candidate.resources', icon: BookOpen },
   { to: ROUTES.candidate.subscriptions, labelId: 'nav.candidate.subscriptions', icon: CreditCard },
 ]

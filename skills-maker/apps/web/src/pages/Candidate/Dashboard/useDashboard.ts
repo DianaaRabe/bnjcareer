@@ -56,11 +56,6 @@ const QUICK_LINKS: QuickLink[] = [
     descriptionId: 'candidate.dashboard.quickAccess.coaches.description',
   },
   {
-    to: ROUTES.candidate.messages,
-    labelId: 'nav.candidate.messages',
-    descriptionId: 'candidate.dashboard.quickAccess.messages.description',
-  },
-  {
     to: ROUTES.candidate.formations,
     labelId: 'nav.candidate.formations',
     descriptionId: 'candidate.dashboard.quickAccess.formations.description',
