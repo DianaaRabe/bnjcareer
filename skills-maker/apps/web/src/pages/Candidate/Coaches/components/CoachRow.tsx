@@ -12,7 +12,7 @@ type CoachRowProps = {
 }
 
 export const CoachRow = ({ coach }: CoachRowProps) => (
-  <li className="flex flex-col gap-3.5 border-b border-border p-4 last:border-b-0 hover:bg-accent lg:flex-row lg:items-center lg:gap-5">
+  <li className="flex flex-col gap-4 border-b border-border p-4 last:border-b-0 hover:bg-accent lg:flex-row lg:items-center lg:gap-4">
     <div className="min-w-0 lg:w-[300px] lg:flex-none">
       <CoachIdentity coach={coach} />
     </div>
@@ -26,7 +26,7 @@ export const CoachRow = ({ coach }: CoachRowProps) => (
       <CoachCertifications certifications={coach.certifications} />
     </div>
 
-    <div className="flex flex-none items-center gap-3">
+    <div className="flex flex-none items-center gap-2">
       {!coach.acceptingClients && (
         <Badge variant="secondary" className="text-[11px] font-semibold text-muted-foreground">
           <FormattedMessage id="candidate.coaches.closed" />

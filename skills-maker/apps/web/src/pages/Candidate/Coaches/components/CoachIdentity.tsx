@@ -13,7 +13,7 @@ export const CoachIdentity = ({ coach }: CoachIdentityProps) => {
   const fullName = [coach.firstName, coach.lastName].filter(Boolean).join(' ')
 
   return (
-    <div className="flex items-start gap-3.5">
+    <div className="flex items-start gap-4">
       <Avatar className="size-12">
         {coach.avatarUrl && <AvatarImage src={coach.avatarUrl} alt="" />}
         <AvatarFallback className="bg-accent text-sm font-bold text-primary">

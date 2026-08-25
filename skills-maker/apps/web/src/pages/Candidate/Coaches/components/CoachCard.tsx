@@ -13,10 +13,10 @@ type CoachCardProps = {
 }
 
 export const CoachCard = ({ coach }: CoachCardProps) => (
-  <Card className="flex h-full flex-col gap-4 p-5">
+  <Card className="flex h-full flex-col gap-4 p-4">
     <CoachIdentity coach={coach} />
 
-    <CardContent className="flex flex-1 flex-col gap-3.5 p-0">
+    <CardContent className="flex flex-1 flex-col gap-4 p-0">
       {coach.bio && (
         // Clamped rather than truncated server-side: the full text stays available to a detail page.
         <p className="line-clamp-4 text-[13px] leading-relaxed text-muted-foreground">
@@ -24,7 +24,7 @@ export const CoachCard = ({ coach }: CoachCardProps) => (
         </p>
       )}
 
-      <div className="mt-auto flex flex-col gap-3.5">
+      <div className="mt-auto flex flex-col gap-4">
         <CoachCertifications certifications={coach.certifications} />
 
         {!coach.acceptingClients && (

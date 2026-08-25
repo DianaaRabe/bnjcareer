@@ -67,7 +67,7 @@ export const Coaches = () => {
     }
 
     return (
-      <ul className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {coaches.coaches.map((coach) => (
           <li key={coach.id} className="flex">
             <CoachCard coach={coach} />
@@ -78,7 +78,7 @@ export const Coaches = () => {
   }
 
   return (
-    <div className="flex min-h-full flex-col gap-5">
+    <div className="flex min-h-full flex-col gap-4">
       <PageHeader
         titleId="candidate.coaches.title"
         descriptionId="candidate.coaches.subtitle"
@@ -95,7 +95,7 @@ export const Coaches = () => {
         }
       />
 
-      <div className="flex flex-col gap-3 border-b border-border pb-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 border-b border-border pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex items-center sm:w-[380px]">
           <Search className="pointer-events-none absolute left-3.5 size-4 text-muted-foreground" />
           <Input
@@ -107,7 +107,7 @@ export const Coaches = () => {
           />
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           <FilterControl
             display={FILTER_DISPLAY.select}
             icon={Sparkles}
