@@ -39,7 +39,25 @@ enum EventType {
 
 enum ResourceType {
   PDF
+  DOC
+  ARTICLE
   VIDEO
+  REPLAY
+}
+
+enum ResourceCategory {
+  APPLICATION
+  INTERVIEW
+  NETWORK
+  ORGANIZATION
+  COACHING
+  TOOLS
+}
+
+enum ResourceAccess {
+  FREE
+  PAID
+  PREMIUM
 }
 
 enum TicketStatus {
@@ -309,11 +327,24 @@ model Goal {
 }
 
 model Resource {
-  id    String        @id @default(uuid())
-  title String?
-  type  ResourceType?
-  url   String?
+  id              String           @id @default(uuid())
+  title           String
+  description     String?
+  type            ResourceType
+  category        ResourceCategory
+  url             String?
+  /// Bytes — documents only, null for videos and articles.
+  sizeBytes       Int?             @map("size_bytes")
+  /// Minutes — videos and replays only, null for documents.
+  durationMinutes Int?             @map("duration_minutes")
+  access          ResourceAccess   @default(FREE)
+  /// Price in cents. Only meaningful when access is PAID.
+  priceCents      Int?             @map("price_cents")
+  /// Drafts stay hidden from the library until published.
+  published       Boolean          @default(true)
+  createdAt       DateTime         @default(now()) @map("created_at")
 
+  @@index([published, category])
   @@map("resources")
 }
 

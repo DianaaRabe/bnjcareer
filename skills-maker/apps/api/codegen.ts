@@ -27,6 +27,9 @@ const config: CodegenConfig = {
           TrainingCategory: '@prisma/client#TrainingCategory',
           TrainingLevel: '@prisma/client#TrainingLevel',
           CoachExpertise: '@prisma/client#CoachExpertise',
+          ResourceType: '@prisma/client#ResourceType',
+          ResourceCategory: '@prisma/client#ResourceCategory',
+          ResourceAccess: '@prisma/client#ResourceAccess',
         },
         // The service returns its own shapes — resolvers see those, not the SDL types.
         mappers: {
