@@ -21,6 +21,7 @@ import { Cv as CandidateCv } from '@/pages/Candidate/Cv/Cv'
 import { Jobs as CandidateJobs } from '@/pages/Candidate/Jobs/Jobs'
 import { Matching as CandidateMatching } from '@/pages/Candidate/Matching/Matching'
 import { Profile as CandidateProfile } from '@/pages/Candidate/Profile/Profile'
+import { Resources as CandidateResources } from '@/pages/Candidate/Resources/Resources'
 import { Dashboard as CoachDashboard } from '@/pages/Coach/Dashboard'
 import { ComingSoon } from '@/pages/ComingSoon/ComingSoon'
 
@@ -38,6 +39,7 @@ const CANDIDATE_PLACEHOLDERS = placeholdersOf(
     ROUTES.candidate.coaching,
     ROUTES.candidate.formations,
     ROUTES.candidate.coaches,
+    ROUTES.candidate.resources,
     ROUTES.candidate.profile,
   ],
 )
@@ -74,6 +76,7 @@ export function App() {
           element={<CandidateTrainingDetail />}
         />
         <Route path={ROUTES.candidate.coaches} element={<CandidateCoaches />} />
+        <Route path={ROUTES.candidate.resources} element={<CandidateResources />} />
         <Route path={ROUTES.candidate.profile} element={<CandidateProfile />} />
         {/* Reached from the dashboard, not from the nav. */}
         <Route
