@@ -17,6 +17,8 @@ export const messages = {
   matchingFailed: 'Unable to analyze this job offer right now',
   invalidJobSearchInput: 'Invalid job search criteria',
   jobSourceNotConfigured: 'This job source is not available',
+  assistantInputInvalid: 'Invalid conversation',
+  assistantFailed: 'The assistant is unavailable right now',
   trainingNotFound: 'Training not found',
   jobSearchFailed: 'Unable to fetch job offers right now',
 } as const
