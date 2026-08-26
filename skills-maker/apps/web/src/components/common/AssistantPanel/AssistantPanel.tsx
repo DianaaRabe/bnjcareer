@@ -34,7 +34,7 @@ export const AssistantPanel = () => {
         </Button>
       </SheetTrigger>
 
-      <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-[420px]">
+      <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-[560px]">
         <SheetHeader className="border-b border-border px-4 py-4">
           <SheetTitle className="flex items-center gap-2 text-[15px]">
             <Sparkles className="size-4 text-primary" />
