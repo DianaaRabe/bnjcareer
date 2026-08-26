@@ -56,6 +56,8 @@
   "assistant.send": "Envoyer",
   "assistant.stop": "Arrêter la réponse",
   "assistant.error": "L'assistant n'est pas disponible pour le moment. Réessayez dans un instant.",
+  "assistant.retry": "Réessayer",
+  "assistant.reset": "Nouvelle conversation",
   "assistant.suggestion.cv": "Comment améliorer mon CV ?",
   "assistant.suggestion.interview": "Comment préparer un entretien ?",
   "assistant.suggestion.salary": "Comment négocier mon salaire ?",

@@ -1,5 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
-import { useIntl } from 'react-intl'
+import { useCallback, useRef, useState } from 'react'
 
 import { AssistantRole, type AssistantMessageInput } from '@/gql/graphql'
 import { useAssistantStream } from '@/graphql/hooks/assistant'
@@ -10,16 +9,20 @@ export type ChatMessage = {
   content: string
 }
 
-/** Server history only — the greeting is local, it must not be sent back as context. */
+export const SUGGESTION_IDS = [
+  'assistant.suggestion.cv',
+  'assistant.suggestion.interview',
+  'assistant.suggestion.salary',
+]
+
 const toHistory = (messages: ChatMessage[]): AssistantMessageInput[] =>
   messages.map(({ role, content }) => ({ role, content }))
 
 export const useAssistantPanel = () => {
-  const intl = useIntl()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [draft, setDraft] = useState('')
   const [hasError, setHasError] = useState(false)
-  const replyIdRef = useState(() => ({ current: '' }))[0]
+  const replyIdRef = useRef('')
 
   const replaceReply = useCallback(
     (content: string) =>
@@ -28,57 +31,82 @@ export const useAssistantPanel = () => {
           message.id === replyIdRef.current ? { ...message, content } : message,
         ),
       ),
-    [replyIdRef],
+    [],
+  )
+
+  /**
+   * A failed turn leaves no trace in the history: its empty bubble is dropped, so the next
+   * question is not sent with a blank — or worse, an error message — as the assistant's turn.
+   */
+  const dropPendingReply = useCallback(
+    () =>
+      setMessages((current) => current.filter((message) => message.id !== replyIdRef.current)),
+    [],
   )
 
   const { ask, stop, isStreaming } = useAssistantStream({
     onDelta: replaceReply,
     onDone: () => undefined,
     onError: () => {
+      dropPendingReply()
       setHasError(true)
-      replaceReply(intl.formatMessage({ id: 'assistant.error' }))
     },
   })
+
+  const askQuestion = useCallback(
+    (question: string, history: ChatMessage[]) => {
+      const askedAt = Date.now()
+      const userMessage: ChatMessage = {
+        id: `user-${askedAt}`,
+        role: AssistantRole.User,
+        content: question,
+      }
+      const replyId = `assistant-${askedAt}`
+      replyIdRef.current = replyId
+
+      const asked = [...history, userMessage]
+      setMessages([...asked, { id: replyId, role: AssistantRole.Assistant, content: '' }])
+      setHasError(false)
+
+      ask(toHistory(asked))
+    },
+    [ask],
+  )
 
   const send = useCallback(() => {
     const question = draft.trim()
     if (!question || isStreaming) return
 
-    const askedAt = Date.now()
-    const userMessage: ChatMessage = {
-      id: `user-${askedAt}`,
-      role: AssistantRole.User,
-      content: question,
-    }
-    const replyId = `assistant-${askedAt}`
-    replyIdRef.current = replyId
+    setDraft('')
+    askQuestion(question, messages)
+  }, [askQuestion, draft, isStreaming, messages])
 
-    const history = [...messages, userMessage]
-    setMessages([...history, { id: replyId, role: AssistantRole.Assistant, content: '' }])
+  /** Re-sends the last question, which is still the final entry once its reply was dropped. */
+  const retry = useCallback(() => {
+    const lastQuestion = messages[messages.length - 1]
+    if (!lastQuestion || lastQuestion.role !== AssistantRole.User) return
+
+    askQuestion(lastQuestion.content, messages.slice(0, -1))
+  }, [askQuestion, messages])
+
+  const reset = useCallback(() => {
+    stop()
+    setMessages([])
     setDraft('')
     setHasError(false)
-
-    ask(toHistory(history))
-  }, [ask, draft, isStreaming, messages, replyIdRef])
-
-  const suggestions = useMemo(
-    () => [
-      'assistant.suggestion.cv',
-      'assistant.suggestion.interview',
-      'assistant.suggestion.salary',
-    ],
-    [],
-  )
+  }, [stop])
 
   return {
     messages,
     draft,
     setDraft,
     send,
+    retry,
+    reset,
     stop,
     isStreaming,
     hasError,
-    suggestions,
-    pickSuggestion: (labelId: string) => setDraft(intl.formatMessage({ id: labelId })),
+    canRetry: messages[messages.length - 1]?.role === AssistantRole.User,
+    suggestions: SUGGESTION_IDS,
   }
 }

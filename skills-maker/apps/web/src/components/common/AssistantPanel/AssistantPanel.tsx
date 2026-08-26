@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react'
-import { Send, Sparkles, Square } from 'lucide-react'
+import { RotateCcw, Send, Sparkles, Square, TriangleAlert } from 'lucide-react'
 import { FormattedMessage, useIntl } from 'react-intl'
 
 import { Button } from '@/components/ui/button'
@@ -43,9 +43,34 @@ export const AssistantPanel = () => {
           <SheetDescription className="text-[12.5px]">
             <FormattedMessage id="assistant.subtitle" />
           </SheetDescription>
+          {assistant.messages.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={assistant.reset}
+              className="w-fit gap-2 text-muted-foreground"
+            >
+              <RotateCcw className="size-3.5" />
+              <FormattedMessage id="assistant.reset" />
+            </Button>
+          )}
         </SheetHeader>
 
         <AssistantMessages messages={assistant.messages} isStreaming={assistant.isStreaming} />
+
+        {assistant.hasError && (
+          <div className="mx-4 mb-2 flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-2">
+            <TriangleAlert className="size-4 flex-none text-destructive" />
+            <p className="flex-1 text-[12.5px] text-destructive">
+              <FormattedMessage id="assistant.error" />
+            </p>
+            {assistant.canRetry && (
+              <Button size="sm" variant="outline" onClick={assistant.retry}>
+                <FormattedMessage id="assistant.retry" />
+              </Button>
+            )}
+          </div>
+        )}
 
         <div className="flex flex-col gap-2 border-t border-border px-4 py-4">
           {assistant.messages.length === 0 && (
@@ -54,7 +79,7 @@ export const AssistantPanel = () => {
                 <button
                   key={labelId}
                   type="button"
-                  onClick={() => assistant.pickSuggestion(labelId)}
+                  onClick={() => assistant.setDraft(intl.formatMessage({ id: labelId }))}
                   className="cursor-pointer rounded-full border border-border px-4 py-2 text-[12px] font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 >
                   <FormattedMessage id={labelId} />

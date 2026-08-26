@@ -56,6 +56,8 @@
   "assistant.send": "Send",
   "assistant.stop": "Stop the answer",
   "assistant.error": "The assistant is unavailable right now. Please try again in a moment.",
+  "assistant.retry": "Retry",
+  "assistant.reset": "New conversation",
   "assistant.suggestion.cv": "How can I improve my resume?",
   "assistant.suggestion.interview": "How do I prepare for an interview?",
   "assistant.suggestion.salary": "How do I negotiate my salary?",
