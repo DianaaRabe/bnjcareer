@@ -5,11 +5,14 @@ import { AssistantPanel } from '@/components/common/AssistantPanel/AssistantPane
 import { EmptyState } from '@/components/common/EmptyState/EmptyState'
 import { FILTER_DISPLAY, FilterControl } from '@/components/common/FilterControl/FilterControl'
 import { LoadingState } from '@/components/common/LoadingState/LoadingState'
+import { ViewToggle } from '@/components/common/ViewToggle/ViewToggle'
 import { PageHeader } from '@/components/layout/PageHeader/PageHeader'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { VIEW_MODE, VIEW_MODE_OPTIONS } from '@/constants/viewModes'
 import { ResourceCard } from './components/ResourceCard'
+import { ResourceRow } from './components/ResourceRow'
 import { CATEGORY_OPTIONS } from './constants'
 import { useResources } from './useResources'
 
@@ -59,6 +62,18 @@ export const Resources = () => {
       )
     }
 
+    if (resources.viewMode === VIEW_MODE.list) {
+      return (
+        <ul className="overflow-hidden rounded-xl border border-border bg-card">
+          {resources.resources.map((resource) => (
+            <li key={resource.id}>
+              <ResourceRow resource={resource} />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
     return (
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {resources.resources.map((resource) => (
@@ -77,9 +92,8 @@ export const Resources = () => {
         descriptionId="candidate.resources.subtitle"
         actions={
           <>
-            <AssistantPanel />
             {!resources.isLoading && !resources.hasError ? (
-                <Badge
+              <Badge
                 variant="secondary"
                 className="h-[34px] gap-2 px-4 text-[12.5px] font-semibold text-accent-foreground"
               >
@@ -90,6 +104,7 @@ export const Resources = () => {
                 />
               </Badge>
             ) : null}
+            <AssistantPanel />
           </>
         }
       />
@@ -106,14 +121,21 @@ export const Resources = () => {
           />
         </div>
 
-        <FilterControl
-          display={FILTER_DISPLAY.select}
-          icon={BookOpen}
-          labelId="candidate.resources.filter.category"
-          options={CATEGORY_OPTIONS}
-          isSelected={(value) => value === resources.category}
-          onSelect={resources.setCategory}
-        />
+        <div className="flex items-center gap-2">
+          <FilterControl
+            display={FILTER_DISPLAY.select}
+            icon={BookOpen}
+            labelId="candidate.resources.filter.category"
+            options={CATEGORY_OPTIONS}
+            isSelected={(value) => value === resources.category}
+            onSelect={resources.setCategory}
+          />
+          <ViewToggle
+            options={VIEW_MODE_OPTIONS}
+            value={resources.viewMode}
+            onChange={resources.setViewMode}
+          />
+        </div>
       </div>
 
       {renderLibrary()}

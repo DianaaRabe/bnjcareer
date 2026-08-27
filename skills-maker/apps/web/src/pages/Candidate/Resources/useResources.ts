@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useIntl } from 'react-intl'
 
+import { VIEW_MODE, type ViewMode } from '@/constants/viewModes'
 import { useResourcesQuery } from '@/graphql/hooks/resources'
 import type { ResourcesQuery } from '@/gql/graphql'
 import { CATEGORY_LABEL_IDS, FILTER_ALL, type CategoryFilter } from './constants'
@@ -13,6 +14,7 @@ export const useResources = () => {
 
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState<CategoryFilter>(FILTER_ALL)
+  const [viewMode, setViewMode] = useState<ViewMode>(VIEW_MODE.grid)
 
   const all = useMemo(() => data?.resources ?? [], [data])
 
@@ -42,6 +44,8 @@ export const useResources = () => {
     setSearch,
     category,
     setCategory,
+    viewMode,
+    setViewMode,
     resources,
     total: all.length,
     hasFilters: Boolean(search) || category !== FILTER_ALL,
