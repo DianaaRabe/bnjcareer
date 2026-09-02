@@ -1,0 +1,441 @@
+// Ported from schema.sql (Supabase). `profiles` was split into User (auth) + Profile (personal data);
+// FKs that referenced profiles(id) now reference User. @@map/@map keep original names for data migration.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Enums (from SQL CHECK constraints)
+// ─────────────────────────────────────────────────────────────
+
+enum Role {
+  CANDIDATE
+  COACH
+  ADMIN
+}
+
+enum ApplicationStatus {
+  SENT
+  PENDING
+  REJECTED
+  INTERVIEW
+}
+
+enum BookingStatus {
+  BOOKED
+  CANCELED
+}
+
+enum EventType {
+  ONE_ON_ONE // '1v1'
+  GROUP      // 'group'
+}
+
+enum ResourceType {
+  PDF
+  DOC
+  ARTICLE
+  VIDEO
+  REPLAY
+}
+
+enum ResourceCategory {
+  APPLICATION
+  INTERVIEW
+  NETWORK
+  ORGANIZATION
+  COACHING
+  TOOLS
+}
+
+enum ResourceAccess {
+  FREE
+  PAID
+  PREMIUM
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+enum TrainingCategory {
+  INTERVIEW
+  CV
+  CAREER_CHANGE
+  SOFT_SKILLS
+  TECHNICAL
+  LEADERSHIP
+}
+
+enum CoachExpertise {
+  CV_STRATEGY
+  INTERVIEW
+  LINKEDIN
+  NEGOTIATION
+  CAREER_CHANGE
+  LEADERSHIP
+}
+
+enum TrainingLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum ProfileSituation {
+  EMPLOYED
+  JOB_SEARCH
+  RECONVERSION
+  STUDENT
+}
+
+enum ProfileObjective {
+  FIND_JOB
+  IMPROVE_CV
+  CAREER_CHANGE
+  DEVELOP_SKILLS
+  NETWORK
+}
+
+// ─────────────────────────────────────────────────────────────
+// Identity & profile
+// ─────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         Role     @default(CANDIDATE)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  profile         Profile?
+  coachProfile    CoachProfile?
+  coachAgreements CoachAgreement[]
+  cvs            Cv[]
+  applications   Application[]
+  bookings       Booking[]
+  goals          Goal[]
+  tickets        Ticket[]
+  messages       Message[]                  @relation("SentMessages")
+  calendarEvents CalendarEvent[]            @relation("CoachEvents")
+  conversations  ConversationParticipant[]
+  skills         UserSkill[]
+
+  @@map("users")
+}
+
+model Profile {
+  id             String            @id @default(uuid())
+  userId         String            @unique @map("user_id")
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName      String?           @map("first_name")
+  lastName       String?           @map("last_name")
+  phone          String?
+  bio            String?
+  avatarUrl      String?           @map("avatar_url")
+  birthDate      DateTime?         @map("birth_date")
+  educationLevel String?           @map("education_level")
+  school         String?
+  sector         String?
+  situation      ProfileSituation?
+  strengths      String[]          @default([])
+  improvements   String[]          @default([])
+  skills         String[]          @default([])
+  objective      ProfileObjective?
+  createdAt      DateTime          @default(now()) @map("created_at")
+
+  @@map("profiles")
+}
+
+/// Coach-specific data — candidates never have a row here.
+model CoachProfile {
+  id              String           @id @default(uuid())
+  userId          String           @unique @map("user_id")
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Headline shown under the name, e.g. "Leadership & Négociation".
+  specialty       String?
+  yearsExperience Int?             @map("years_experience")
+  certifications  String[]         @default([])
+  expertise       CoachExpertise[] @default([])
+  /// Average rating out of 5. Null until enough sessions were reviewed.
+  rating          Float?
+  /// Coaches who stopped taking new candidates stay listed but cannot be booked.
+  acceptingClients Boolean         @default(true) @map("accepting_clients")
+  /// Drafts stay hidden from the directory until published.
+  published       Boolean          @default(true)
+  createdAt       DateTime         @default(now()) @map("created_at")
+
+  @@index([published, acceptingClients])
+  @@map("coach_profiles")
+}
+
+/// Signature of the coach collaboration agreement — an audit record, never updated in place.
+/// Ported from prisma/migrations/20260601_coach_agreements.sql. Deliberately not unique on
+/// (coachId, contractVersion): a revoked signature must be re-signable for the same version,
+/// so idempotence is enforced in the service rather than by the database.
+model CoachAgreement {
+  id              String    @id @default(uuid())
+  coachId         String    @map("coach_id")
+  coach           User      @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  /// Bumped when the contract text changes; past signatures stay valid for their version.
+  contractVersion String    @map("contract_version")
+  /// Typed by the coach and kept verbatim — this is the electronic signature.
+  signedName      String    @map("signed_name")
+  /// Revenue split frozen at signature time, so revising the terms cannot rewrite the past.
+  subscriptionShareCoachPct Int @default(25) @map("subscription_share_coach_pct")
+  formationSharePlatformPct Int @default(25) @map("formation_share_platform_pct")
+  acceptedAt      DateTime  @default(now()) @map("accepted_at")
+  ipAddress       String?   @map("ip_address") @db.Inet
+  userAgent       String?   @map("user_agent")
+  /// Non-null means the signature no longer holds; the row stays for the audit trail.
+  revokedAt       DateTime? @map("revoked_at")
+
+  @@index([coachId, revokedAt])
+  @@map("coach_agreements")
+}
+
+// ─────────────────────────────────────────────────────────────
+// CV & job offers
+// ─────────────────────────────────────────────────────────────
+
+enum CvStatus {
+  UPLOADED
+  EXTRACTING
+  EXTRACTED
+  EXTRACTION_FAILED
+  OPTIMIZING
+  OPTIMIZED
+  OPTIMIZATION_FAILED
+}
+
+model Cv {
+  id            String   @id @default(uuid())
+  userId        String?  @map("user_id")
+  user          User?    @relation(fields: [userId], references: [id])
+  pdfUrl        String?  @map("pdf_url")
+  fileName      String?  @map("file_name")
+  fileSizeBytes Int?     @map("file_size_bytes")
+  template      String?
+  extractedData Json?    @map("content")
+  optimizedHtml String?  @map("optimized_html")
+  improvements  Json?
+  status        CvStatus @default(UPLOADED)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("cvs")
+}
+
+model JobOffer {
+  id          String        @id @default(uuid())
+  title       String
+  company     String?
+  description String?
+  source      String?
+  url         String?
+  createdAt   DateTime      @default(now()) @map("created_at")
+  application Application[]
+
+  @@map("job_offers")
+}
+
+model Application {
+  id         String            @id @default(uuid())
+  userId     String?           @map("user_id")
+  user       User?             @relation(fields: [userId], references: [id])
+  jobOfferId String?           @map("job_offer_id")
+  jobOffer   JobOffer?         @relation(fields: [jobOfferId], references: [id])
+  status     ApplicationStatus @default(PENDING)
+  matchScore Float?            @map("match_score")
+  createdAt  DateTime          @default(now()) @map("created_at")
+
+  matchAnalysis MatchAnalysis?
+
+  @@map("applications")
+}
+
+model MatchAnalysis {
+  id            String      @id @default(uuid())
+  applicationId String      @unique @map("application_id")
+  application   Application @relation(fields: [applicationId], references: [id])
+  score         Float?
+  gaps          Json?
+  suggestions   Json?
+
+  @@map("match_analyses")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Coaching (calendar & bookings)
+// ─────────────────────────────────────────────────────────────
+
+model CalendarEvent {
+  id        String    @id @default(uuid())
+  coachId   String?   @map("coach_id")
+  coach     User?     @relation("CoachEvents", fields: [coachId], references: [id])
+  title     String?
+  type      EventType?
+  startTime DateTime? @map("start_time")
+  endTime   DateTime? @map("end_time")
+  bookings  Booking[]
+
+  @@map("calendar_events")
+}
+
+model Booking {
+  id      String        @id @default(uuid())
+  eventId String?       @map("event_id")
+  event   CalendarEvent? @relation(fields: [eventId], references: [id])
+  userId  String?       @map("user_id")
+  user    User?         @relation(fields: [userId], references: [id])
+  status  BookingStatus @default(BOOKED)
+
+  @@map("bookings")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Messaging
+// ─────────────────────────────────────────────────────────────
+
+model Conversation {
+  id           String                    @id @default(uuid())
+  createdAt    DateTime                  @default(now()) @map("created_at")
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  conversationId String       @map("conversation_id")
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  userId         String       @map("user_id")
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@id([conversationId, userId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String        @id @default(uuid())
+  conversationId String?       @map("conversation_id")
+  conversation   Conversation? @relation(fields: [conversationId], references: [id])
+  senderId       String?       @map("sender_id")
+  sender         User?         @relation("SentMessages", fields: [senderId], references: [id])
+  content        String?
+  createdAt      DateTime      @default(now()) @map("created_at")
+
+  @@map("messages")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Goals, resources, skills, support
+// ─────────────────────────────────────────────────────────────
+
+model Goal {
+  id       String  @id @default(uuid())
+  userId   String? @map("user_id")
+  user     User?   @relation(fields: [userId], references: [id])
+  title    String?
+  progress Int     @default(0)
+  target   Int?
+
+  @@map("goals")
+}
+
+model Resource {
+  id              String           @id @default(uuid())
+  title           String
+  description     String?
+  type            ResourceType
+  category        ResourceCategory
+  url             String?
+  /// Bytes — documents only, null for videos and articles.
+  sizeBytes       Int?             @map("size_bytes")
+  /// Minutes — videos and replays only, null for documents.
+  durationMinutes Int?             @map("duration_minutes")
+  access          ResourceAccess   @default(FREE)
+  /// Price in cents. Only meaningful when access is PAID.
+  priceCents      Int?             @map("price_cents")
+  /// Drafts stay hidden from the library until published.
+  published       Boolean          @default(true)
+  createdAt       DateTime         @default(now()) @map("created_at")
+
+  @@index([published, category])
+  @@map("resources")
+}
+
+model Skill {
+  id    String      @id @default(uuid())
+  name  String      @unique
+  users UserSkill[]
+
+  @@map("skills")
+}
+
+model Training {
+  id          String           @id @default(uuid())
+  title       String
+  description String?
+  category    TrainingCategory
+  level       TrainingLevel
+  /// Price in cents. Null means free — the client formats it in its own locale.
+  priceCents  Int?             @map("price_cents")
+  /// Stored in days so the client can render weeks or days per locale.
+  durationDays Int             @map("duration_days")
+  instructor  String?
+  certificate Boolean          @default(false)
+  /// Drafts stay hidden from candidates until published.
+  published   Boolean          @default(true)
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  curriculum  TrainingModule[]
+
+  @@index([published, category, level])
+  @@map("trainings")
+}
+
+model TrainingModule {
+  id         String   @id @default(uuid())
+  trainingId String   @map("training_id")
+  training   Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  title      String
+  summary    String?
+  /// 1-based rank inside the training — the module count derives from these rows.
+  position   Int
+  durationMinutes Int? @map("duration_minutes")
+
+  @@unique([trainingId, position])
+  @@map("training_modules")
+}
+
+model UserSkill {
+  userId  String @map("user_id")
+  user    User   @relation(fields: [userId], references: [id])
+  skillId String @map("skill_id")
+  skill   Skill  @relation(fields: [skillId], references: [id])
+
+  @@id([userId, skillId])
+  @@map("user_skills")
+}
+
+model Ticket {
+  id        String       @id @default(uuid())
+  userId    String?      @map("user_id")
+  user      User?        @relation(fields: [userId], references: [id])
+  status    TicketStatus @default(OPEN)
+  priority  String?
+  message   String?
+  createdAt DateTime     @default(now()) @map("created_at")
+
+  @@map("tickets")
+}

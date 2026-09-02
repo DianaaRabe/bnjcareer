@@ -1,0 +1,38 @@
+import { Bell, Plus } from 'lucide-react'
+import { FormattedMessage, useIntl } from 'react-intl'
+
+import { EmptyState } from '@/components/common/EmptyState/EmptyState'
+import { PageHeader } from '@/components/layout/PageHeader/PageHeader'
+import { Button } from '@/components/ui/button'
+
+export const Dashboard = () => {
+  const intl = useIntl()
+
+  return (
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        eyebrowId="coach.dashboard.eyebrow"
+        titleId="coach.dashboard.title"
+        descriptionId="coach.dashboard.subtitle"
+        actions={
+          <>
+            <Button
+              variant="ghost"
+              size="icon-lg"
+              aria-label={intl.formatMessage({ id: 'common.notifications' })}
+              className="rounded-full text-muted-foreground"
+            >
+              <Bell />
+            </Button>
+            <Button size="lg" className="gap-2 rounded-xl">
+              <Plus />
+              <FormattedMessage id="coach.dashboard.newSession" />
+            </Button>
+          </>
+        }
+      />
+
+      <EmptyState descriptionId="coach.dashboard.empty" />
+    </div>
+  )
+}
