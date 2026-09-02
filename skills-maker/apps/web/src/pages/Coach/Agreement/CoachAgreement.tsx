@@ -58,7 +58,7 @@ export const CoachAgreement = () => {
   return (
     <div className="flex min-h-screen flex-col bg-muted">
       <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-4 px-4 py-4">
+        <div className="mx-auto flex w-full max-w-4xl items-center justify-between gap-4 px-4 py-4">
           <div className="flex items-center gap-2">
             <div className="flex size-8 flex-none items-center justify-center rounded-lg bg-accent">
               <Shield className="size-4 text-primary" />
@@ -84,7 +84,7 @@ export const CoachAgreement = () => {
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
+      <main className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8">
         <div className="flex flex-col gap-2 text-center">
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
             <FormattedMessage id="coach.agreement.title" />
