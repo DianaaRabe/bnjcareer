@@ -7,6 +7,7 @@ function buildContext(cv: Partial<Context['prisma']['cv']>, userId = 'u1'): Cont
   return {
     prisma: { cv } as unknown as Context['prisma'],
     user: { id: userId } as Context['user'],
+    audit: { ipAddress: null, userAgent: null },
   }
 }
 
@@ -42,7 +43,11 @@ describe('cvService', () => {
 
   it('getMyCv returns null when unauthenticated', async () => {
     const findFirst = mock.fn()
-    const ctx = { prisma: { cv: { findFirst } } as unknown as Context['prisma'], user: null }
+    const ctx = {
+      prisma: { cv: { findFirst } } as unknown as Context['prisma'],
+      user: null,
+      audit: { ipAddress: null, userAgent: null },
+    }
 
     const result = await getMyCv(ctx)
 

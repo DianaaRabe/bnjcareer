@@ -117,8 +117,9 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  profile        Profile?
-  coachProfile   CoachProfile?
+  profile         Profile?
+  coachProfile    CoachProfile?
+  coachAgreements CoachAgreement[]
   cvs            Cv[]
   applications   Application[]
   bookings       Booking[]
@@ -175,6 +176,31 @@ model CoachProfile {
 
   @@index([published, acceptingClients])
   @@map("coach_profiles")
+}
+
+/// Signature of the coach collaboration agreement — an audit record, never updated in place.
+/// Ported from prisma/migrations/20260601_coach_agreements.sql. Deliberately not unique on
+/// (coachId, contractVersion): a revoked signature must be re-signable for the same version,
+/// so idempotence is enforced in the service rather than by the database.
+model CoachAgreement {
+  id              String    @id @default(uuid())
+  coachId         String    @map("coach_id")
+  coach           User      @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  /// Bumped when the contract text changes; past signatures stay valid for their version.
+  contractVersion String    @map("contract_version")
+  /// Typed by the coach and kept verbatim — this is the electronic signature.
+  signedName      String    @map("signed_name")
+  /// Revenue split frozen at signature time, so revising the terms cannot rewrite the past.
+  subscriptionShareCoachPct Int @default(25) @map("subscription_share_coach_pct")
+  formationSharePlatformPct Int @default(25) @map("formation_share_platform_pct")
+  acceptedAt      DateTime  @default(now()) @map("accepted_at")
+  ipAddress       String?   @map("ip_address") @db.Inet
+  userAgent       String?   @map("user_agent")
+  /// Non-null means the signature no longer holds; the row stays for the audit trail.
+  revokedAt       DateTime? @map("revoked_at")
+
+  @@index([coachId, revokedAt])
+  @@map("coach_agreements")
 }
 
 // ─────────────────────────────────────────────────────────────

@@ -4,7 +4,11 @@ import type { Context } from '@/context.js'
 import { getProfileByUserId, updateProfile } from '../profileService.js'
 
 function buildContext(profile: Partial<Context['prisma']['profile']>): Context {
-  return { prisma: { profile } as unknown as Context['prisma'], user: null }
+  return {
+    prisma: { profile } as unknown as Context['prisma'],
+    user: null,
+    audit: { ipAddress: null, userAgent: null },
+  }
 }
 
 const baseProfile = {

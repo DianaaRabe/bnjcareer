@@ -17,6 +17,8 @@ export const messages = {
   matchingFailed: 'Unable to analyze this job offer right now',
   invalidJobSearchInput: 'Invalid job search criteria',
   jobSourceNotConfigured: 'This job source is not available',
+  coachAgreementInvalid: 'Invalid signature data',
+  coachAgreementOutdated: 'This contract version is no longer in force',
   assistantInputInvalid: 'Invalid conversation',
   assistantFailed: 'The assistant is unavailable right now',
   trainingNotFound: 'Training not found',
