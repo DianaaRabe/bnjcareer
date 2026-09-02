@@ -22,6 +22,8 @@ import { Jobs as CandidateJobs } from '@/pages/Candidate/Jobs/Jobs'
 import { Matching as CandidateMatching } from '@/pages/Candidate/Matching/Matching'
 import { Profile as CandidateProfile } from '@/pages/Candidate/Profile/Profile'
 import { Resources as CandidateResources } from '@/pages/Candidate/Resources/Resources'
+import { CoachAgreement } from '@/pages/Coach/Agreement/CoachAgreement'
+import { CoachShell } from '@/pages/Coach/CoachShell'
 import { Dashboard as CoachDashboard } from '@/pages/Coach/Dashboard'
 import { ComingSoon } from '@/pages/ComingSoon/ComingSoon'
 
@@ -94,17 +96,10 @@ export function App() {
         ))}
       </Route>
 
-      <Route
-        path={ROUTES.coach.root}
-        element={
-          <AppShell
-            portalLabelId="nav.coach.portal"
-            navItems={COACH_NAV_ITEMS}
-            secondaryNavItems={COACH_SECONDARY_NAV_ITEMS}
-            rolesAuthorized={PORTAL_ROLES.coach}
-          />
-        }
-      >
+      {/* Outside the coach shell on purpose — it is the gate to it. */}
+      <Route path={ROUTES.coach.agreement} element={<CoachAgreement />} />
+
+      <Route path={ROUTES.coach.root} element={<CoachShell />}>
         <Route index element={<CoachDashboard />} />
         {COACH_PLACEHOLDERS.map(({ to, labelId }) => (
           <Route

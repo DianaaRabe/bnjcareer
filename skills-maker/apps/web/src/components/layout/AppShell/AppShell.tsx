@@ -18,6 +18,8 @@ type AppShellProps = {
   secondaryNavItems?: NavItem[]
   /** Roles allowed in this portal. */
   rolesAuthorized: Role[]
+  /** Route to send the user to when a prerequisite — signing the agreement — is unmet. */
+  gate?: { isBlocked: boolean; isResolving: boolean; redirectTo: string }
 }
 
 export const AppShell = ({
@@ -25,6 +27,7 @@ export const AppShell = ({
   navItems,
   secondaryNavItems,
   rolesAuthorized,
+  gate,
 }: AppShellProps) => {
   const {
     isAuthenticated,
@@ -52,6 +55,15 @@ export const AppShell = ({
 
   if (!isAuthorized) {
     return <Navigate to={homeRoute} replace />
+  }
+
+  // Hold the render until the gate resolved, otherwise it would bounce an eligible user.
+  if (gate?.isResolving) {
+    return <LoadingScreen />
+  }
+
+  if (gate?.isBlocked) {
+    return <Navigate to={gate.redirectTo} replace />
   }
 
   const sidebarProps = {

@@ -17,6 +17,7 @@ export const ROUTES = {
   },
   coach: {
     root: '/coach',
+    agreement: '/coach-agreement',
     dashboard: '/coach',
     candidates: '/coach/candidates',
     formations: '/coach/formations',
