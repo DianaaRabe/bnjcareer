@@ -1,9 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
 import { FormattedMessage } from 'react-intl'
 
-import { Card } from '@/components/ui/card'
-
-type RevenueTermCardProps = {
+type RevenueTermProps = {
   icon: LucideIcon
   titleId: string
   descriptionId: string
@@ -13,25 +11,21 @@ type RevenueTermCardProps = {
   remainderPct: number
 }
 
-export const RevenueTermCard = ({
+export const RevenueTerm = ({
   icon: Icon,
   titleId,
   descriptionId,
   footnoteId,
   sharePct,
   remainderPct,
-}: RevenueTermCardProps) => (
-  <Card className="flex flex-col gap-4 p-4">
-    <div className="flex items-center gap-2">
-      <div className="flex size-8 flex-none items-center justify-center rounded-lg bg-accent">
-        <Icon className="size-4 text-primary" />
-      </div>
-      <h2 className="text-[14.5px] font-semibold">
-        <FormattedMessage id={titleId} />
-      </h2>
-    </div>
+}: RevenueTermProps) => (
+  <section className="flex flex-col gap-2">
+    <h2 className="flex items-center gap-2 text-[14.5px] font-semibold">
+      <Icon className="size-4 flex-none text-primary" strokeWidth={2} />
+      <FormattedMessage id={titleId} />
+    </h2>
 
-    <p className="text-[13px] leading-relaxed text-muted-foreground">
+    <p className="text-[13.5px] leading-relaxed text-muted-foreground">
       <FormattedMessage
         id={descriptionId}
         values={{
@@ -44,7 +38,7 @@ export const RevenueTermCard = ({
       />
     </p>
 
-    <p className="text-[12px] text-muted-foreground">
+    <p className="text-[12.5px] text-muted-foreground">
       <FormattedMessage
         id={footnoteId}
         values={{
@@ -56,5 +50,5 @@ export const RevenueTermCard = ({
         }}
       />
     </p>
-  </Card>
+  </section>
 )

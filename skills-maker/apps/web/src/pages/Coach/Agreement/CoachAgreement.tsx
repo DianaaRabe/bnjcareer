@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import { EmptyState } from '@/components/common/EmptyState/EmptyState'
 import { LoadingState } from '@/components/common/LoadingState/LoadingState'
 import { ContractText } from './components/ContractText'
-import { RevenueTermCard } from './components/RevenueTermCard'
+import { RevenueTerm } from './components/RevenueTerm'
 import { SignatureForm } from './components/SignatureForm'
 import { useCoachAgreement } from './useCoachAgreement'
 
@@ -29,8 +29,8 @@ export const CoachAgreement = () => {
 
     return (
       <>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <RevenueTermCard
+        <div className="grid grid-cols-1 gap-8 border-t border-border pt-8 md:grid-cols-2">
+          <RevenueTerm
             icon={Coins}
             titleId="coach.agreement.terms.subscriptions.title"
             descriptionId="coach.agreement.terms.subscriptions.description"
@@ -38,7 +38,7 @@ export const CoachAgreement = () => {
             sharePct={terms.subscriptionShareCoachPct}
             remainderPct={100 - terms.subscriptionShareCoachPct}
           />
-          <RevenueTermCard
+          <RevenueTerm
             icon={CalendarCheck}
             titleId="coach.agreement.terms.trainings.title"
             descriptionId="coach.agreement.terms.trainings.description"
@@ -56,7 +56,7 @@ export const CoachAgreement = () => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-muted">
+    <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between gap-4 px-4 py-4">
           <div className="flex items-center gap-2">

@@ -3,7 +3,6 @@ import { CheckCircle2, Loader2, PenLine, TriangleAlert } from 'lucide-react'
 import { FormattedMessage, useIntl } from 'react-intl'
 
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import type { useCoachAgreement } from '../useCoachAgreement'
@@ -42,16 +41,11 @@ export const SignatureForm = ({ agreement, contractVersion }: SignatureFormProps
   }
 
   return (
-    <Card className="p-4 sm:p-8">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="flex items-center gap-2">
-          <div className="flex size-8 flex-none items-center justify-center rounded-lg bg-accent">
-            <PenLine className="size-4 text-primary" />
-          </div>
-          <h2 className="text-[14.5px] font-semibold">
-            <FormattedMessage id="coach.agreement.sign.title" />
-          </h2>
-        </div>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 border-t border-border pt-8">
+        <h2 className="flex items-center gap-2 text-[14.5px] font-semibold">
+          <PenLine className="size-4 flex-none text-primary" strokeWidth={2} />
+          <FormattedMessage id="coach.agreement.sign.title" />
+        </h2>
 
         <Consent
           checked={agreement.confirmsIdentity}
@@ -133,7 +127,6 @@ export const SignatureForm = ({ agreement, contractVersion }: SignatureFormProps
             id={agreement.isSigning ? 'coach.agreement.sign.submitting' : 'coach.agreement.sign.submit'}
           />
         </Button>
-      </form>
-    </Card>
+    </form>
   )
 }

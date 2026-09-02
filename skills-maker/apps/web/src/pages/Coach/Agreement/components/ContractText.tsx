@@ -1,11 +1,10 @@
 import { ScrollText } from 'lucide-react'
 import { FormattedMessage } from 'react-intl'
 
-import { Card } from '@/components/ui/card'
 import { CONTRACT_ARTICLES, CONTRACT_TITLE } from '../contract'
 
 export const ContractText = () => (
-  <Card className="flex flex-col gap-4 p-4 sm:p-8">
+  <div className="flex flex-col gap-4 border-t border-border pt-8">
     <p className="flex items-center gap-2 text-[11px] font-bold tracking-widest text-muted-foreground uppercase">
       <ScrollText className="size-4" />
       <FormattedMessage id="coach.agreement.contract.eyebrow" />
@@ -40,5 +39,5 @@ export const ContractText = () => (
         )}
       </section>
     ))}
-  </Card>
+  </div>
 )
