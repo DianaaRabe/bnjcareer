@@ -23,6 +23,7 @@ import { Matching as CandidateMatching } from '@/pages/Candidate/Matching/Matchi
 import { Profile as CandidateProfile } from '@/pages/Candidate/Profile/Profile'
 import { Resources as CandidateResources } from '@/pages/Candidate/Resources/Resources'
 import { CoachAgreement } from '@/pages/Coach/Agreement/CoachAgreement'
+import { CandidateDetail as CoachCandidateDetail } from '@/pages/Coach/CandidateDetail/CandidateDetail'
 import { Candidates as CoachCandidates } from '@/pages/Coach/Candidates/Candidates'
 import { CoachShell } from '@/pages/Coach/CoachShell'
 import { Dashboard as CoachDashboard } from '@/pages/Coach/Dashboard/Dashboard'
@@ -103,6 +104,7 @@ export function App() {
       <Route path={ROUTES.coach.root} element={<CoachShell />}>
         <Route index element={<CoachDashboard />} />
         <Route path={ROUTES.coach.candidates} element={<CoachCandidates />} />
+        <Route path={`${ROUTES.coach.candidates}/:candidateId`} element={<CoachCandidateDetail />} />
         {COACH_PLACEHOLDERS.map(({ to, labelId }) => (
           <Route
             key={to}
