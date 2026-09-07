@@ -1,9 +1,17 @@
+import { GraphQLError } from 'graphql'
 import type { Context } from '@/context.js'
-import { RECENT_CANDIDATES_LIMIT, UPCOMING_SESSIONS_LIMIT } from './coachDashboardConstants.js'
+import { messages } from '@/constants/messages.js'
+import {
+  CANDIDATE_APPLICATIONS_LIMIT,
+  RECENT_CANDIDATES_LIMIT,
+  UPCOMING_SESSIONS_LIMIT,
+} from './coachDashboardConstants.js'
 import {
   toCoachCandidates,
   toCoachUpcomingSession,
+  toGraphQLCoachCandidateDetail,
   type GraphQLCoachCandidate,
+  type GraphQLCoachCandidateDetail,
   type GraphQLCoachUpcomingSession,
 } from './coachDashboardMappers.js'
 
@@ -60,4 +68,33 @@ export async function getCoachDashboard(ctx: Context, coachId: string) {
     upcomingSessions,
     recentCandidates: candidates.slice(0, RECENT_CANDIDATES_LIMIT),
   }
+}
+
+export async function getCoachCandidate(
+  ctx: Context,
+  coachId: string,
+  candidateId: string,
+): Promise<GraphQLCoachCandidateDetail> {
+  const [bookings, user, applications, goals, cv] = await Promise.all([
+    ctx.prisma.booking.findMany({
+      where: { userId: candidateId, status: 'BOOKED', event: { coachId } },
+      include: { event: true },
+    }),
+    ctx.prisma.user.findUnique({ where: { id: candidateId }, include: { profile: true } }),
+    ctx.prisma.application.findMany({
+      where: { userId: candidateId },
+      orderBy: { createdAt: 'desc' },
+      take: CANDIDATE_APPLICATIONS_LIMIT,
+      include: { jobOffer: true },
+    }),
+    ctx.prisma.goal.findMany({ where: { userId: candidateId } }),
+    ctx.prisma.cv.findFirst({ where: { userId: candidateId }, orderBy: { createdAt: 'desc' } }),
+  ])
+
+  // No booking with this coach — reported as missing, not forbidden, so an id doesn't confirm a match exists.
+  if (bookings.length === 0 || !user) {
+    throw new GraphQLError(messages.candidateNotFound, { extensions: { code: 'CANDIDATE_NOT_FOUND' } })
+  }
+
+  return toGraphQLCoachCandidateDetail({ user, bookings, applications, goals, cv, now: new Date() })
 }

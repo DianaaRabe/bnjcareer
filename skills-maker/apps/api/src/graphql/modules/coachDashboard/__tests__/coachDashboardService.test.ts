@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import type { Context } from '@/context.js'
 import { RECENT_CANDIDATES_LIMIT, UPCOMING_SESSIONS_LIMIT } from '../coachDashboardConstants.js'
-import { getCoachDashboard, listMyCandidates } from '../coachDashboardService.js'
+import { getCoachCandidate, getCoachDashboard, listMyCandidates } from '../coachDashboardService.js'
 
 type BookingRow = {
   id: string
@@ -191,5 +191,121 @@ describe('getCoachDashboard', () => {
 
     assert.deepEqual(getFindManyArgs()?.orderBy, { startTime: 'asc' })
     assert.equal(getFindManyArgs()?.take, UPCOMING_SESSIONS_LIMIT)
+  })
+})
+
+const contextForCandidate = (options: {
+  bookings?: { event: { startTime: Date } | null }[]
+  user?: Record<string, unknown> | null
+  applications?: Record<string, unknown>[]
+  goals?: Record<string, unknown>[]
+  cv?: Record<string, unknown> | null
+}) => {
+  const prisma = {
+    booking: { findMany: async () => options.bookings ?? [] },
+    // 'user' in options: a caller passing `user: null` on purpose must not fall back to the default.
+    user: { findUnique: async () => ('user' in options ? options.user : candidate('user-1')) },
+    application: { findMany: async () => options.applications ?? [] },
+    goal: { findMany: async () => options.goals ?? [] },
+    cv: { findFirst: async () => options.cv ?? null },
+  }
+
+  return { ctx: { prisma, user: null, audit: {} } as unknown as Context }
+}
+
+describe('getCoachCandidate', () => {
+  it('reports the candidate as missing when there is no booking with this coach', async () => {
+    const { ctx } = contextForCandidate({ bookings: [] })
+
+    await assert.rejects(
+      () => getCoachCandidate(ctx, 'coach-1', 'user-1'),
+      /Candidate not found/,
+    )
+  })
+
+  it('reports the candidate as missing when the user record is gone', async () => {
+    const { ctx } = contextForCandidate({
+      bookings: [{ event: { startTime: new Date('2026-08-01T10:00:00.000Z') } }],
+      user: null,
+    })
+
+    await assert.rejects(
+      () => getCoachCandidate(ctx, 'coach-1', 'user-1'),
+      /Candidate not found/,
+    )
+  })
+
+  it('splits sessions into the last one behind us and the next one ahead', async () => {
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
+    const oneDayAhead = new Date(Date.now() + 24 * 60 * 60 * 1000)
+    const { ctx } = contextForCandidate({
+      bookings: [{ event: { startTime: oneDayAgo } }, { event: { startTime: oneDayAhead } }],
+    })
+
+    const detail = await getCoachCandidate(ctx, 'coach-1', 'user-1')
+
+    assert.equal(detail.sessionsCount, 2)
+    assert.equal(detail.lastSessionAt, oneDayAgo.toISOString())
+    assert.equal(detail.nextSessionAt, oneDayAhead.toISOString())
+  })
+
+  it('reports no next session when every session is behind us', async () => {
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
+    const { ctx } = contextForCandidate({ bookings: [{ event: { startTime: oneDayAgo } }] })
+
+    const detail = await getCoachCandidate(ctx, 'coach-1', 'user-1')
+
+    assert.equal(detail.nextSessionAt, null)
+  })
+
+  it('maps an application through its linked job offer', async () => {
+    const { ctx } = contextForCandidate({
+      bookings: [{ event: { startTime: new Date() } }],
+      applications: [
+        {
+          id: 'app-1',
+          status: 'INTERVIEW',
+          matchScore: 88,
+          createdAt: new Date('2026-08-01T10:00:00.000Z'),
+          jobOffer: { title: 'Développeur React', company: 'Acme' },
+        },
+      ],
+    })
+
+    const detail = await getCoachCandidate(ctx, 'coach-1', 'user-1')
+
+    assert.deepEqual(detail.applications[0], {
+      id: 'app-1',
+      jobTitle: 'Développeur React',
+      company: 'Acme',
+      status: 'INTERVIEW',
+      matchScore: 88,
+      createdAt: '2026-08-01T10:00:00.000Z',
+    })
+  })
+
+  it('falls back to null job title and company when the offer was deleted', async () => {
+    const { ctx } = contextForCandidate({
+      bookings: [{ event: { startTime: new Date() } }],
+      applications: [
+        { id: 'app-1', status: 'SENT', matchScore: null, createdAt: new Date(), jobOffer: null },
+      ],
+    })
+
+    const detail = await getCoachCandidate(ctx, 'coach-1', 'user-1')
+
+    assert.equal(detail.applications[0]?.jobTitle, null)
+    assert.equal(detail.applications[0]?.company, null)
+  })
+
+  it('reports no CV status when the candidate never uploaded one', async () => {
+    const { ctx } = contextForCandidate({
+      bookings: [{ event: { startTime: new Date() } }],
+      cv: null,
+    })
+
+    const detail = await getCoachCandidate(ctx, 'coach-1', 'user-1')
+
+    assert.equal(detail.cvStatus, null)
   })
 })
