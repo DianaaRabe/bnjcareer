@@ -14,6 +14,7 @@
     "db:seed:trainings": "tsx prisma/seed-trainings.ts",
     "db:seed:coaches": "tsx prisma/seed-coaches.ts",
     "db:seed:resources": "tsx prisma/seed-resources.ts",
+    "db:seed:coach-candidates": "tsx prisma/seed-coach-candidates.ts",
     "db:studio": "prisma studio",
     "codegen": "graphql-codegen --config codegen.ts",
     "test": "find src -name '*.test.ts' -exec node --import tsx --test {} +",
