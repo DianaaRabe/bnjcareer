@@ -23,8 +23,9 @@ import { Matching as CandidateMatching } from '@/pages/Candidate/Matching/Matchi
 import { Profile as CandidateProfile } from '@/pages/Candidate/Profile/Profile'
 import { Resources as CandidateResources } from '@/pages/Candidate/Resources/Resources'
 import { CoachAgreement } from '@/pages/Coach/Agreement/CoachAgreement'
+import { Candidates as CoachCandidates } from '@/pages/Coach/Candidates/Candidates'
 import { CoachShell } from '@/pages/Coach/CoachShell'
-import { Dashboard as CoachDashboard } from '@/pages/Coach/Dashboard'
+import { Dashboard as CoachDashboard } from '@/pages/Coach/Dashboard/Dashboard'
 import { ComingSoon } from '@/pages/ComingSoon/ComingSoon'
 
 // Every nav entry needs a route — real pages replace these placeholders one by one.
@@ -47,7 +48,7 @@ const CANDIDATE_PLACEHOLDERS = placeholdersOf(
 )
 const COACH_PLACEHOLDERS = placeholdersOf(
   [COACH_NAV_ITEMS, COACH_SECONDARY_NAV_ITEMS],
-  [ROUTES.coach.dashboard],
+  [ROUTES.coach.dashboard, ROUTES.coach.candidates],
 )
 
 // Routing skeleton — each area will point to its pages in src/pages/.
@@ -101,6 +102,7 @@ export function App() {
 
       <Route path={ROUTES.coach.root} element={<CoachShell />}>
         <Route index element={<CoachDashboard />} />
+        <Route path={ROUTES.coach.candidates} element={<CoachCandidates />} />
         {COACH_PLACEHOLDERS.map(({ to, labelId }) => (
           <Route
             key={to}
