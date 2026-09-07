@@ -30,6 +30,7 @@ const config: CodegenConfig = {
           ResourceType: '@prisma/client#ResourceType',
           ResourceCategory: '@prisma/client#ResourceCategory',
           ResourceAccess: '@prisma/client#ResourceAccess',
+          EventType: '@prisma/client#EventType',
         },
         // The service returns its own shapes — resolvers see those, not the SDL types.
         mappers: {

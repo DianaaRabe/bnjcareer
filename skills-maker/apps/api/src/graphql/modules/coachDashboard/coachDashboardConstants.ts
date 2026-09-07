@@ -1,0 +1,2 @@
+export const RECENT_CANDIDATES_LIMIT = 6
+export const UPCOMING_SESSIONS_LIMIT = 4
