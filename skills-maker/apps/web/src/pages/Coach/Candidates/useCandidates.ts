@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 
+import { VIEW_MODE, type ViewMode } from '@/constants/viewModes'
 import { useMyCandidatesQuery } from '@/graphql/hooks/candidates'
 import type { MyCandidatesQuery } from '@/gql/graphql'
 import { FILTER_ALL, type SituationFilter } from './constants'
@@ -11,6 +12,7 @@ export const useCandidates = () => {
 
   const [search, setSearch] = useState('')
   const [situation, setSituation] = useState<SituationFilter>(FILTER_ALL)
+  const [viewMode, setViewMode] = useState<ViewMode>(VIEW_MODE.grid)
 
   const all = useMemo(() => data?.myCandidates ?? [], [data])
 
@@ -36,6 +38,8 @@ export const useCandidates = () => {
     setSearch,
     situation,
     setSituation,
+    viewMode,
+    setViewMode,
     candidates,
     total: all.length,
     hasFilters: Boolean(search) || situation !== FILTER_ALL,
