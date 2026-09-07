@@ -2,7 +2,12 @@ import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 
 import { Card, CardContent } from '@/components/ui/card'
-import type { QuickLink } from './useDashboard'
+
+export type QuickLink = {
+  to: string
+  labelId: string
+  descriptionId: string
+}
 
 export const QuickAccessCard = ({ to, labelId, descriptionId }: QuickLink) => (
   <Link

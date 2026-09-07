@@ -1,32 +1,11 @@
+import type { QuickLink } from '@/components/common/QuickAccessCard/QuickAccessCard'
+import { STAT_FORMAT, type StatItem } from '@/components/common/StatCard/StatCard'
 import { ROUTES } from '@/constants/routes'
-
-/** How a stat value is rendered — maps to a `common.format.*` message. */
-export const STAT_FORMAT = {
-  count: 'count',
-  percent: 'percent',
-  ratio: 'ratio',
-} as const
-
-export type StatFormat = (typeof STAT_FORMAT)[keyof typeof STAT_FORMAT]
-
-export type StatItem = {
-  labelId: string
-  value: number
-  /** Denominator, only meaningful for the `ratio` format. */
-  total?: number
-  format: StatFormat
-}
 
 export type GoalItem = {
   labelId: string
   /** Completion, 0–100. */
   progress: number
-}
-
-export type QuickLink = {
-  to: string
-  labelId: string
-  descriptionId: string
 }
 
 const QUICK_LINKS: QuickLink[] = [

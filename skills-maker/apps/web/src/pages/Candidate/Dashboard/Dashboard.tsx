@@ -1,12 +1,12 @@
 import { Sparkles } from 'lucide-react'
 import { FormattedMessage } from 'react-intl'
 
+import { QuickAccessCard } from '@/components/common/QuickAccessCard/QuickAccessCard'
+import { StatCard } from '@/components/common/StatCard/StatCard'
 import { PageHeader } from '@/components/layout/PageHeader/PageHeader'
 import { Badge } from '@/components/ui/badge'
 import { GoalsPanel } from './GoalsPanel'
-import { QuickAccessCard } from './QuickAccessCard'
 import { RecentApplicationsCard } from './RecentApplicationsCard'
-import { StatCard } from './StatCard'
 import { useDashboard } from './useDashboard'
 
 export const Dashboard = () => {

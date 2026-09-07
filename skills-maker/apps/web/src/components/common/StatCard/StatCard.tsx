@@ -1,7 +1,23 @@
 import { FormattedMessage } from 'react-intl'
 
 import { Card, CardContent } from '@/components/ui/card'
-import { STAT_FORMAT, type StatFormat, type StatItem } from './useDashboard'
+
+/** How a stat value is rendered — maps to a `common.format.*` message. */
+export const STAT_FORMAT = {
+  count: 'count',
+  percent: 'percent',
+  ratio: 'ratio',
+} as const
+
+export type StatFormat = (typeof STAT_FORMAT)[keyof typeof STAT_FORMAT]
+
+export type StatItem = {
+  labelId: string
+  value: number
+  /** Denominator, only meaningful for the `ratio` format. */
+  total?: number
+  format: StatFormat
+}
 
 const VALUE_MESSAGE_IDS: Record<StatFormat, string> = {
   [STAT_FORMAT.count]: 'common.format.count',
