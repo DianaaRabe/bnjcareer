@@ -1,7 +1,8 @@
-import { ArrowUpRight, MessageSquare } from 'lucide-react'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { ArrowUpRight } from 'lucide-react'
+import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 
+import { PersonRow } from '@/components/common/PersonRow/PersonRow'
 import { RelativeTime } from '@/components/common/RelativeTime/RelativeTime'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -15,16 +16,12 @@ type CandidateRowProps = {
   candidate: Candidate
 }
 
-export const CandidateRow = ({ candidate }: CandidateRowProps) => {
-  const intl = useIntl()
-
-  return (
-    <li className="flex flex-col gap-4 border-b border-border p-4 last:border-b-0 hover:bg-accent lg:flex-row lg:items-center lg:gap-4">
-      <div className="min-w-0 lg:w-[320px] lg:flex-none">
-        <CandidateIdentity candidate={candidate} />
-      </div>
-
-      <div className="flex flex-1 flex-wrap items-center gap-2">
+export const CandidateRow = ({ candidate }: CandidateRowProps) => (
+  <PersonRow
+    identity={<CandidateIdentity candidate={candidate} />}
+    bio={candidate.bio}
+    meta={
+      <div className="flex flex-wrap items-center gap-2">
         {candidate.needsFollowUp && <FollowUpBadge />}
         {candidate.situation && (
           <Badge variant="secondary" className="text-[11px] font-semibold text-muted-foreground">
@@ -36,30 +33,14 @@ export const CandidateRow = ({ candidate }: CandidateRowProps) => {
           <RelativeTime value={candidate.lastSessionAt} />
         </span>
       </div>
-
-      <div className="flex flex-none items-center gap-1.5">
-        {/* No messaging flow yet — the button states the intent rather than faking it. */}
-        <Button
-          variant="outline"
-          size="icon-lg"
-          title={intl.formatMessage({ id: 'coach.candidates.message' })}
-          aria-label={intl.formatMessage({ id: 'coach.candidates.message' })}
-          disabled
-        >
-          <MessageSquare className="size-3.5" />
-        </Button>
-        <Button
-          size="icon-lg"
-          className="bg-accent text-primary hover:bg-accent/70"
-          title={intl.formatMessage({ id: 'coach.candidates.manage' })}
-          aria-label={intl.formatMessage({ id: 'coach.candidates.manage' })}
-          asChild
-        >
-          <Link to={`${ROUTES.coach.candidates}/${candidate.id}`}>
-            <ArrowUpRight className="size-3.5" />
-          </Link>
-        </Button>
-      </div>
-    </li>
-  )
-}
+    }
+    action={
+      <Button asChild size="lg" className="w-full gap-2 lg:w-auto">
+        <Link to={`${ROUTES.coach.candidates}/${candidate.id}`}>
+          <ArrowUpRight className="size-4" />
+          <FormattedMessage id="coach.candidates.manage" />
+        </Link>
+      </Button>
+    }
+  />
+)

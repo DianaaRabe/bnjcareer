@@ -11,9 +11,3 @@ export const SITUATION_LABEL_IDS: Record<ProfileSituation, string> = {
   [ProfileSituation.Reconversion]: 'coach.candidates.situation.reconversion',
   [ProfileSituation.Student]: 'coach.candidates.situation.student',
 }
-
-export const initialsOf = (firstName?: string | null, lastName?: string | null) =>
-  [firstName, lastName]
-    .map((part) => part?.trim()?.[0] ?? '')
-    .join('')
-    .toUpperCase()

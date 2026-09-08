@@ -67,7 +67,7 @@ export const Candidates = () => {
     }
 
     return (
-      <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <ul className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3">
         {candidates.candidates.map((candidate) => (
           <li key={candidate.id} className="flex">
             <CandidateCard candidate={candidate} />

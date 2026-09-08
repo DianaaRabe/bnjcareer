@@ -2,10 +2,10 @@ import { ArrowUpRight } from 'lucide-react'
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 
+import { PersonCard } from '@/components/common/PersonCard/PersonCard'
 import { RelativeTime } from '@/components/common/RelativeTime/RelativeTime'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { ROUTES } from '@/constants/routes'
 import { CandidateIdentity } from '../../components/CandidateIdentity'
 import { FollowUpBadge } from '../../components/FollowUpBadge'
@@ -17,16 +17,11 @@ type CandidateCardProps = {
 }
 
 export const CandidateCard = ({ candidate }: CandidateCardProps) => (
-  <Card className="flex h-full flex-col gap-4 p-4">
-    <CandidateIdentity candidate={candidate} />
-
-    <CardContent className="flex flex-1 flex-col gap-4 p-0">
-      {candidate.bio && (
-        // Clamped rather than truncated: the full text stays available on the candidate's own profile.
-        <p className="line-clamp-4 text-[13px] leading-relaxed text-muted-foreground">{candidate.bio}</p>
-      )}
-
-      <div className="mt-auto flex flex-col gap-3">
+  <PersonCard
+    identity={<CandidateIdentity candidate={candidate} />}
+    bio={candidate.bio}
+    footer={
+      <>
         <div className="flex flex-wrap items-center gap-2">
           {candidate.needsFollowUp && <FollowUpBadge />}
           {candidate.situation && (
@@ -46,7 +41,7 @@ export const CandidateCard = ({ candidate }: CandidateCardProps) => (
             <FormattedMessage id="coach.candidates.manage" />
           </Link>
         </Button>
-      </div>
-    </CardContent>
-  </Card>
+      </>
+    }
+  />
 )

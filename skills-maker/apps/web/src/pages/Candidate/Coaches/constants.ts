@@ -32,9 +32,3 @@ export const EXPERTISE_OPTIONS: FilterOption<ExpertiseFilter>[] = [
 
 /** Certifications shown on a card before the rest collapse into a counter. */
 export const VISIBLE_CERTIFICATIONS = 2
-
-export const initialsOf = (firstName?: string | null, lastName?: string | null) =>
-  [firstName, lastName]
-    .map((part) => part?.trim()?.[0] ?? '')
-    .join('')
-    .toUpperCase()

@@ -1,9 +1,9 @@
 import { CalendarPlus } from 'lucide-react'
 import { FormattedMessage } from 'react-intl'
 
+import { PersonCard } from '@/components/common/PersonCard/PersonCard'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { CoachCertifications } from './CoachCertifications'
 import { CoachIdentity } from './CoachIdentity'
 import type { Coach } from '../useCoaches'
@@ -13,18 +13,11 @@ type CoachCardProps = {
 }
 
 export const CoachCard = ({ coach }: CoachCardProps) => (
-  <Card className="flex h-full flex-col gap-4 p-4">
-    <CoachIdentity coach={coach} />
-
-    <CardContent className="flex flex-1 flex-col gap-4 p-0">
-      {coach.bio && (
-        // Clamped rather than truncated server-side: the full text stays available to a detail page.
-        <p className="line-clamp-4 text-[13px] leading-relaxed text-muted-foreground">
-          {coach.bio}
-        </p>
-      )}
-
-      <div className="mt-auto flex flex-col gap-4">
+  <PersonCard
+    identity={<CoachIdentity coach={coach} />}
+    bio={coach.bio}
+    footer={
+      <>
         <CoachCertifications certifications={coach.certifications} />
 
         {!coach.acceptingClients && (
@@ -38,7 +31,7 @@ export const CoachCard = ({ coach }: CoachCardProps) => (
           <CalendarPlus className="size-4" />
           <FormattedMessage id="candidate.coaches.book" />
         </Button>
-      </div>
-    </CardContent>
-  </Card>
+      </>
+    }
+  />
 )

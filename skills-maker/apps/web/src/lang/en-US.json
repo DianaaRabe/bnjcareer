@@ -535,7 +535,6 @@
   "coach.candidateDetail.cvStatus.optimized": "CV optimized",
   "coach.candidateDetail.cvStatus.optimizationFailed": "Optimization failed",
   "coach.candidates.lastSession": "Last session:",
-  "coach.candidates.message": "Message",
   "coach.candidates.unnamed": "Candidate",
 
   "auth.login.title": "Welcome",
