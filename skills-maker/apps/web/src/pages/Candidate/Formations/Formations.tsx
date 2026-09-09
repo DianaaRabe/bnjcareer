@@ -3,10 +3,10 @@ import { FormattedMessage } from 'react-intl'
 
 import { EmptyState } from '@/components/common/EmptyState/EmptyState'
 import { LoadingState } from '@/components/common/LoadingState/LoadingState'
+import { TrainingFilters } from '@/components/common/TrainingFilters/TrainingFilters'
 import { PageHeader } from '@/components/layout/PageHeader/PageHeader'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { TrainingFilters } from './components/TrainingFilters'
 import { TrainingRow } from './components/TrainingRow'
 import { useFormations } from './useFormations'
 

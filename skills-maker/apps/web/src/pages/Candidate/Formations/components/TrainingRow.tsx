@@ -2,11 +2,11 @@ import { ChevronRight, Lock } from 'lucide-react'
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 
+import { TrainingMeta } from '@/components/common/TrainingMeta/TrainingMeta'
 import { Badge } from '@/components/ui/badge'
 import { ROUTES } from '@/constants/routes'
 import { cn } from '@/lib/utils'
 import { CATEGORY_ICONS, CATEGORY_LABEL_IDS, LEVEL_LABEL_IDS, LEVEL_STYLES } from '../constants'
-import { TrainingMeta } from './TrainingMeta'
 import { TrainingPrice } from './TrainingPrice'
 import type { Training } from '../useFormations'
 

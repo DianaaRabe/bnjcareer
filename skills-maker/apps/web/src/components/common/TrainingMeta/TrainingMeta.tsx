@@ -1,7 +1,7 @@
 import { BookOpen, Clock, Star } from 'lucide-react'
 import { FormattedMessage } from 'react-intl'
 
-import { durationMessage } from '../constants'
+import { durationMessage } from '@/constants/trainings'
 
 type TrainingMetaProps = {
   modules: number

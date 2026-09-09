@@ -3,12 +3,7 @@ import { useIntl } from 'react-intl'
 
 import { FILTER_DISPLAY, FilterControl } from '@/components/common/FilterControl/FilterControl'
 import { Input } from '@/components/ui/input'
-import {
-  CATEGORY_OPTIONS,
-  LEVEL_OPTIONS,
-  type CategoryFilter,
-  type LevelFilter,
-} from '../constants'
+import { CATEGORY_OPTIONS, LEVEL_OPTIONS, type CategoryFilter, type LevelFilter } from '@/constants/trainings'
 
 type TrainingFiltersProps = {
   search: string
