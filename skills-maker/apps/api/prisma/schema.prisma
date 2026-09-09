@@ -37,6 +37,11 @@ enum EventType {
   GROUP      // 'group'
 }
 
+enum EventStatus {
+  SCHEDULED
+  CANCELED
+}
+
 enum ResourceType {
   PDF
   DOC
@@ -285,6 +290,7 @@ model CalendarEvent {
   coach     User?     @relation("CoachEvents", fields: [coachId], references: [id])
   title     String?
   type      EventType?
+  status    EventStatus @default(SCHEDULED)
   startTime DateTime? @map("start_time")
   endTime   DateTime? @map("end_time")
   bookings  Booking[]

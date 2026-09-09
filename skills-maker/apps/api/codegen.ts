@@ -31,6 +31,8 @@ const config: CodegenConfig = {
           ResourceCategory: '@prisma/client#ResourceCategory',
           ResourceAccess: '@prisma/client#ResourceAccess',
           EventType: '@prisma/client#EventType',
+          EventStatus: '@prisma/client#EventStatus',
+          BookingStatus: '@prisma/client#BookingStatus',
           ApplicationStatus: '@prisma/client#ApplicationStatus',
         },
         // The service returns its own shapes — resolvers see those, not the SDL types.
@@ -39,6 +41,8 @@ const config: CodegenConfig = {
           CoachTraining: '../graphql/modules/trainings/trainingsMappers.js#GraphQLCoachTraining',
           TrainingModule: '../graphql/modules/trainings/trainingsMappers.js#GraphQLTrainingModule',
           Coach: '../graphql/modules/coaches/coachesMappers.js#GraphQLCoach',
+          CoachSession: '../graphql/modules/sessions/sessionsMappers.js#GraphQLCoachSession',
+          SessionAttendee: '../graphql/modules/sessions/sessionsMappers.js#GraphQLSessionAttendee',
         },
         useIndexSignature: true,
       },

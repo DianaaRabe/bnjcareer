@@ -27,4 +27,7 @@ export const messages = {
   trainingModuleInvalid: 'Invalid module data',
   candidateNotFound: 'Candidate not found',
   jobSearchFailed: 'Unable to fetch job offers right now',
+  sessionNotFound: 'Session not found',
+  sessionInvalid: 'Invalid session data',
+  bookingNotFound: 'Booking not found',
 } as const
