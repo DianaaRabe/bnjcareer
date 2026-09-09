@@ -23,7 +23,7 @@ export const CurriculumEditor = ({ trainingId, curriculum }: CurriculumEditorPro
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
+    <div className="flex flex-col gap-4">
       <h2 className="text-[15px] font-semibold">
         <FormattedMessage id="coach.formationDetail.curriculum.title" />
       </h2>

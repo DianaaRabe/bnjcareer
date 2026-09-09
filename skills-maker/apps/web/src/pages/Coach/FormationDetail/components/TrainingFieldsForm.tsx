@@ -24,7 +24,7 @@ export const TrainingFieldsForm = ({ detail }: TrainingFieldsFormProps) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5 rounded-2xl border border-border bg-card p-5">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div className="flex items-center justify-between gap-4 rounded-xl bg-muted p-3.5">
         <div>
           <p className="text-[13.5px] font-semibold">

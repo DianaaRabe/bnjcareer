@@ -2,12 +2,12 @@ import { ArrowLeft, TriangleAlert } from 'lucide-react'
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
 
+import { DangerZone } from '@/components/common/DangerZone/DangerZone'
 import { EmptyState } from '@/components/common/EmptyState/EmptyState'
 import { LoadingState } from '@/components/common/LoadingState/LoadingState'
 import { Button } from '@/components/ui/button'
 import { ROUTES } from '@/constants/routes'
 import { CurriculumEditor } from './components/CurriculumEditor'
-import { DeleteTrainingButton } from './components/DeleteTrainingButton'
 import { TrainingFieldsForm } from './components/TrainingFieldsForm'
 import { useFormationDetail } from './useFormationDetail'
 
@@ -61,12 +61,19 @@ export const FormationDetail = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.5fr_1fr]">
+      <div className="grid grid-cols-1 gap-8 border-t border-border pt-8 lg:grid-cols-[1.5fr_1fr]">
         <TrainingFieldsForm detail={detail} />
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8 lg:border-l lg:border-border lg:pl-8">
           <CurriculumEditor trainingId={detail.training.id} curriculum={detail.training.curriculum ?? []} />
-          <DeleteTrainingButton isDeleting={detail.isDeleting} onConfirm={detail.remove} />
+          <DangerZone
+            titleId="coach.formationDetail.danger.title"
+            descriptionId="coach.formationDetail.danger.description"
+            triggerId="coach.formationDetail.danger.trigger"
+            confirmId="coach.formationDetail.danger.confirm"
+            isLoading={detail.isDeleting}
+            onConfirm={detail.remove}
+          />
         </div>
       </div>
     </div>
