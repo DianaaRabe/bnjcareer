@@ -22,6 +22,9 @@ export const messages = {
   assistantInputInvalid: 'Invalid conversation',
   assistantFailed: 'The assistant is unavailable right now',
   trainingNotFound: 'Training not found',
+  trainingInvalid: 'Invalid training data',
+  trainingModuleNotFound: 'Training module not found',
+  trainingModuleInvalid: 'Invalid module data',
   candidateNotFound: 'Candidate not found',
   jobSearchFailed: 'Unable to fetch job offers right now',
 } as const

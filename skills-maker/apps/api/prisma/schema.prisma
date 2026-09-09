@@ -129,6 +129,7 @@ model User {
   calendarEvents CalendarEvent[]            @relation("CoachEvents")
   conversations  ConversationParticipant[]
   skills         UserSkill[]
+  coachTrainings Training[]                 @relation("CoachTrainings")
 
   @@map("users")
 }
@@ -384,6 +385,9 @@ model Skill {
 
 model Training {
   id          String           @id @default(uuid())
+  /// Null for the pre-existing catalog seeded before coaches could author their own.
+  coachId     String?          @map("coach_id")
+  coach       User?            @relation("CoachTrainings", fields: [coachId], references: [id])
   title       String
   description String?
   category    TrainingCategory
@@ -396,11 +400,14 @@ model Training {
   certificate Boolean          @default(false)
   /// Drafts stay hidden from candidates until published.
   published   Boolean          @default(true)
+  /// Soft-deleted trainings stay in the database (audit, in-flight enrollments) but never load.
+  removed     Boolean          @default(false)
   createdAt   DateTime         @default(now()) @map("created_at")
 
   curriculum  TrainingModule[]
 
   @@index([published, category, level])
+  @@index([coachId])
   @@map("trainings")
 }
 

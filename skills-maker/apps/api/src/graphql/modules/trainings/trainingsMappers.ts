@@ -58,3 +58,14 @@ export function toGraphQLTrainingDetail(training: TrainingWithCurriculum): Graph
     curriculum: training.curriculum.map(toGraphQLTrainingModule),
   }
 }
+
+/** The coach's own view of a training — same shape, plus the draft/published state candidates never see. */
+export type GraphQLCoachTraining = GraphQLTraining & { published: boolean }
+
+export function toGraphQLCoachTraining(training: TrainingWithCount): GraphQLCoachTraining {
+  return { ...toGraphQLTraining(training), published: training.published }
+}
+
+export function toGraphQLCoachTrainingDetail(training: TrainingWithCurriculum): GraphQLCoachTraining {
+  return { ...toGraphQLTrainingDetail(training), published: training.published }
+}

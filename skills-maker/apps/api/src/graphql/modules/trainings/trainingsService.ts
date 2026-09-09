@@ -12,7 +12,7 @@ const withModuleCount = { _count: { select: { curriculum: true } } }
 
 export async function listTrainings(ctx: Context): Promise<GraphQLTraining[]> {
   const trainings = await ctx.prisma.training.findMany({
-    where: { published: true },
+    where: { published: true, removed: false },
     orderBy: { createdAt: 'desc' },
     include: withModuleCount,
   })
@@ -22,11 +22,11 @@ export async function listTrainings(ctx: Context): Promise<GraphQLTraining[]> {
 
 export async function getTraining(ctx: Context, id: string): Promise<GraphQLTraining> {
   const training = await ctx.prisma.training.findFirst({
-    where: { id, published: true },
+    where: { id, published: true, removed: false },
     include: { ...withModuleCount, curriculum: { orderBy: { position: 'asc' } } },
   })
 
-  // Unpublished drafts are reported as missing — their existence is not the candidate's business.
+  // Unpublished drafts and removed trainings are reported as missing — not the candidate's business.
   if (!training) {
     throw new GraphQLError(messages.trainingNotFound, { extensions: { code: 'TRAINING_NOT_FOUND' } })
   }

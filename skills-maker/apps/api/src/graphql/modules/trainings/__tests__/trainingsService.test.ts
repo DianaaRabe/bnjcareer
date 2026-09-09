@@ -65,7 +65,7 @@ describe('listTrainings', () => {
 
     await listTrainings(ctx)
 
-    assert.deepEqual(calls.findMany[0].where, { published: true })
+    assert.deepEqual(calls.findMany[0].where, { published: true, removed: false })
     assert.deepEqual(calls.findMany[0].orderBy, { createdAt: 'desc' })
   })
 
@@ -104,7 +104,7 @@ describe('getTraining', () => {
 
     await assert.rejects(() => getTraining(ctx, 'draft'))
 
-    assert.deepEqual(calls.findFirst[0].where, { id: 'draft', published: true })
+    assert.deepEqual(calls.findFirst[0].where, { id: 'draft', published: true, removed: false })
   })
 
   it('returns the training with its programme in order', async () => {

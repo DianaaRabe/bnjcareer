@@ -36,6 +36,7 @@ const config: CodegenConfig = {
         // The service returns its own shapes — resolvers see those, not the SDL types.
         mappers: {
           Training: '../graphql/modules/trainings/trainingsMappers.js#GraphQLTraining',
+          CoachTraining: '../graphql/modules/trainings/trainingsMappers.js#GraphQLCoachTraining',
           TrainingModule: '../graphql/modules/trainings/trainingsMappers.js#GraphQLTrainingModule',
           Coach: '../graphql/modules/coaches/coachesMappers.js#GraphQLCoach',
         },
