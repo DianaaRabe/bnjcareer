@@ -29,6 +29,8 @@ import { CoachShell } from '@/pages/Coach/CoachShell'
 import { Dashboard as CoachDashboard } from '@/pages/Coach/Dashboard/Dashboard'
 import { FormationDetail as CoachFormationDetail } from '@/pages/Coach/FormationDetail/FormationDetail'
 import { Formations as CoachFormations } from '@/pages/Coach/Formations/Formations'
+import { SessionDetail as CoachSessionDetail } from '@/pages/Coach/SessionDetail/SessionDetail'
+import { Sessions as CoachSessions } from '@/pages/Coach/Sessions/Sessions'
 import { ComingSoon } from '@/pages/ComingSoon/ComingSoon'
 
 // Every nav entry needs a route — real pages replace these placeholders one by one.
@@ -51,7 +53,7 @@ const CANDIDATE_PLACEHOLDERS = placeholdersOf(
 )
 const COACH_PLACEHOLDERS = placeholdersOf(
   [COACH_NAV_ITEMS, COACH_SECONDARY_NAV_ITEMS],
-  [ROUTES.coach.dashboard, ROUTES.coach.candidates, ROUTES.coach.formations],
+  [ROUTES.coach.dashboard, ROUTES.coach.candidates, ROUTES.coach.formations, ROUTES.coach.sessions],
 )
 
 // Routing skeleton — each area will point to its pages in src/pages/.
@@ -109,6 +111,8 @@ export function App() {
         <Route path={`${ROUTES.coach.candidates}/:candidateId`} element={<CoachCandidateDetail />} />
         <Route path={ROUTES.coach.formations} element={<CoachFormations />} />
         <Route path={`${ROUTES.coach.formations}/:trainingId`} element={<CoachFormationDetail />} />
+        <Route path={ROUTES.coach.sessions} element={<CoachSessions />} />
+        <Route path={`${ROUTES.coach.sessions}/:sessionId`} element={<CoachSessionDetail />} />
         {COACH_PLACEHOLDERS.map(({ to, labelId }) => (
           <Route
             key={to}
