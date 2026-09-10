@@ -6,7 +6,6 @@ import {
   FileText,
   GraduationCap,
   LayoutGrid,
-  MessageSquare,
   Target,
   User,
   Users,
@@ -40,7 +39,6 @@ export const COACH_NAV_ITEMS: NavItem[] = [
   { to: ROUTES.coach.candidates, labelId: 'nav.coach.candidates', icon: Users },
   { to: ROUTES.coach.formations, labelId: 'nav.coach.formations', icon: GraduationCap },
   { to: ROUTES.coach.sessions, labelId: 'nav.coach.sessions', icon: Calendar },
-  { to: ROUTES.coach.messages, labelId: 'nav.coach.messages', icon: MessageSquare },
   { to: ROUTES.coach.resources, labelId: 'nav.coach.resources', icon: BookOpen },
 ]
 

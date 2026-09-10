@@ -22,7 +22,6 @@ export const ROUTES = {
     candidates: '/coach/candidates',
     formations: '/coach/formations',
     sessions: '/coach/sessions',
-    messages: '/coach/messages',
     resources: '/coach/resources',
     profile: '/coach/profile',
   },
