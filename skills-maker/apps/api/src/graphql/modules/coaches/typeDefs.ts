@@ -27,8 +27,36 @@ export const coachesTypeDefs = gql`
     acceptingClients: Boolean!
   }
 
+  "The authenticated coach's own directory settings — same data, plus the publish state."
+  type MyCoachProfile {
+    specialty: String
+    yearsExperience: Int
+    certifications: [String!]!
+    expertise: [CoachExpertise!]!
+    rating: Float
+    acceptingClients: Boolean!
+    "Hidden from the candidate-facing directory until true."
+    published: Boolean!
+  }
+
+  input UpdateCoachProfileInput {
+    specialty: String
+    yearsExperience: Int
+    certifications: [String!]
+    expertise: [CoachExpertise!]
+    acceptingClients: Boolean
+    published: Boolean
+  }
+
   type Query {
     "Published coach directory, most experienced first. Filtering happens client-side."
     coaches: [Coach!]!
+    "The authenticated coach's own directory settings."
+    myCoachProfile: MyCoachProfile!
+  }
+
+  type Mutation {
+    "Updates the authenticated coach's own directory settings — omitted fields are left untouched."
+    updateCoachProfile(input: UpdateCoachProfileInput!): MyCoachProfile!
   }
 `

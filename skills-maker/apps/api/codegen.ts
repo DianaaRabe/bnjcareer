@@ -41,6 +41,7 @@ const config: CodegenConfig = {
           CoachTraining: '../graphql/modules/trainings/trainingsMappers.js#GraphQLCoachTraining',
           TrainingModule: '../graphql/modules/trainings/trainingsMappers.js#GraphQLTrainingModule',
           Coach: '../graphql/modules/coaches/coachesMappers.js#GraphQLCoach',
+          MyCoachProfile: '../graphql/modules/coaches/coachesMappers.js#GraphQLMyCoachProfile',
           CoachSession: '../graphql/modules/sessions/sessionsMappers.js#GraphQLCoachSession',
           SessionAttendee: '../graphql/modules/sessions/sessionsMappers.js#GraphQLSessionAttendee',
           Resource: '../graphql/modules/resources/resourcesMappers.js#GraphQLResource',

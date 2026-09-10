@@ -39,3 +39,30 @@ export function toGraphQLCoach(coach: CoachRecord): GraphQLCoach {
     acceptingClients: coach.acceptingClients,
   }
 }
+
+export type GraphQLMyCoachProfile = {
+  specialty: string | null
+  yearsExperience: number | null
+  certifications: string[]
+  expertise: CoachProfile['expertise']
+  rating: number | null
+  acceptingClients: boolean
+  published: boolean
+}
+
+/** No row yet (never saved) reads as the same defaults the model itself would apply. */
+export function toGraphQLMyCoachProfile(profile: CoachProfile | null): GraphQLMyCoachProfile {
+  if (!profile) {
+    return { specialty: null, yearsExperience: null, certifications: [], expertise: [], rating: null, acceptingClients: true, published: true }
+  }
+
+  return {
+    specialty: profile.specialty,
+    yearsExperience: profile.yearsExperience,
+    certifications: profile.certifications,
+    expertise: profile.expertise,
+    rating: profile.rating,
+    acceptingClients: profile.acceptingClients,
+    published: profile.published,
+  }
+}

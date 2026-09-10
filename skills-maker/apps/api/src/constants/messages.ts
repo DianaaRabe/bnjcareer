@@ -32,4 +32,5 @@ export const messages = {
   bookingNotFound: 'Booking not found',
   resourceNotFound: 'Resource not found',
   resourceInvalid: 'Invalid resource data',
+  coachProfileInvalid: 'Invalid coach profile data',
 } as const
