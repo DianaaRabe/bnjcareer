@@ -17,3 +17,17 @@ export const COACHES_QUERY = graphql(`
     }
   }
 `)
+
+export const MY_COACH_PROFILE_QUERY = graphql(`
+  query MyCoachProfile {
+    myCoachProfile {
+      specialty
+      yearsExperience
+      certifications
+      expertise
+      rating
+      acceptingClients
+      published
+    }
+  }
+`)

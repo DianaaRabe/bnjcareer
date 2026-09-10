@@ -29,6 +29,7 @@ import { CoachShell } from '@/pages/Coach/CoachShell'
 import { Dashboard as CoachDashboard } from '@/pages/Coach/Dashboard/Dashboard'
 import { FormationDetail as CoachFormationDetail } from '@/pages/Coach/FormationDetail/FormationDetail'
 import { Formations as CoachFormations } from '@/pages/Coach/Formations/Formations'
+import { Profile as CoachProfile } from '@/pages/Coach/Profile/Profile'
 import { ResourceDetail as CoachResourceDetail } from '@/pages/Coach/ResourceDetail/ResourceDetail'
 import { Resources as CoachResources } from '@/pages/Coach/Resources/Resources'
 import { SessionDetail as CoachSessionDetail } from '@/pages/Coach/SessionDetail/SessionDetail'
@@ -61,6 +62,7 @@ const COACH_PLACEHOLDERS = placeholdersOf(
     ROUTES.coach.formations,
     ROUTES.coach.sessions,
     ROUTES.coach.resources,
+    ROUTES.coach.profile,
   ],
 )
 
@@ -123,6 +125,7 @@ export function App() {
         <Route path={`${ROUTES.coach.sessions}/:sessionId`} element={<CoachSessionDetail />} />
         <Route path={ROUTES.coach.resources} element={<CoachResources />} />
         <Route path={`${ROUTES.coach.resources}/:resourceId`} element={<CoachResourceDetail />} />
+        <Route path={ROUTES.coach.profile} element={<CoachProfile />} />
         {COACH_PLACEHOLDERS.map(({ to, labelId }) => (
           <Route
             key={to}
