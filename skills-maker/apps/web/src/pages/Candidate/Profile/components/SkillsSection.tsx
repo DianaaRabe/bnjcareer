@@ -1,4 +1,4 @@
-import { ChipInput } from './ChipInput'
+import { ChipInput } from '@/components/common/ChipInput/ChipInput'
 import { MAX_IMPROVEMENTS, MAX_SKILLS, MAX_STRENGTHS } from '../constants'
 
 type SkillsSectionProps = {

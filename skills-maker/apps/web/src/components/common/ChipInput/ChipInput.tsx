@@ -15,6 +15,7 @@ type ChipInputProps = {
   onRemove: (index: number) => void
 }
 
+/** Free-text tag list — type, press Enter, get a removable chip. */
 export const ChipInput = ({ labelId, hintId, values, max, placeholderId, onAdd, onRemove }: ChipInputProps) => {
   const intl = useIntl()
   const [input, setInput] = useState('')
@@ -39,7 +40,7 @@ export const ChipInput = ({ labelId, hintId, values, max, placeholderId, onAdd, 
             <button
               type="button"
               onClick={() => onRemove(i)}
-              aria-label={intl.formatMessage({ id: 'candidate.profile.chip.remove' }, { value: v })}
+              aria-label={intl.formatMessage({ id: 'common.chip.remove' }, { value: v })}
             >
               <X className="size-3" />
             </button>
@@ -50,7 +51,7 @@ export const ChipInput = ({ labelId, hintId, values, max, placeholderId, onAdd, 
           disabled={maxed}
           placeholder={
             maxed
-              ? intl.formatMessage({ id: 'candidate.profile.chip.max' })
+              ? intl.formatMessage({ id: 'common.chip.max' })
               : placeholderId
                 ? intl.formatMessage({ id: placeholderId })
                 : undefined

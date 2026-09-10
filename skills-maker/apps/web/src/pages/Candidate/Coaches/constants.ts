@@ -1,29 +1,13 @@
 import type { FilterOption } from '@/components/common/FilterControl/FilterControl'
+import { EXPERTISE_LABEL_IDS, EXPERTISE_ORDER } from '@/constants/coaches'
 import { CoachExpertise } from '@/gql/graphql'
+
+export { EXPERTISE_LABEL_IDS }
 
 /** Sentinel for the "no filter" option — never sent to the API. */
 export const FILTER_ALL = 'ALL'
 
 export type ExpertiseFilter = CoachExpertise | typeof FILTER_ALL
-
-export const EXPERTISE_LABEL_IDS: Record<CoachExpertise, string> = {
-  [CoachExpertise.CvStrategy]: 'candidate.coaches.expertise.cvStrategy',
-  [CoachExpertise.Interview]: 'candidate.coaches.expertise.interview',
-  [CoachExpertise.Linkedin]: 'candidate.coaches.expertise.linkedin',
-  [CoachExpertise.Negotiation]: 'candidate.coaches.expertise.negotiation',
-  [CoachExpertise.CareerChange]: 'candidate.coaches.expertise.careerChange',
-  [CoachExpertise.Leadership]: 'candidate.coaches.expertise.leadership',
-}
-
-// Explicit order — the generated enum is alphabetical, which is not the reading order.
-const EXPERTISE_ORDER = [
-  CoachExpertise.CvStrategy,
-  CoachExpertise.Interview,
-  CoachExpertise.Linkedin,
-  CoachExpertise.Negotiation,
-  CoachExpertise.CareerChange,
-  CoachExpertise.Leadership,
-]
 
 export const EXPERTISE_OPTIONS: FilterOption<ExpertiseFilter>[] = [
   { value: FILTER_ALL, labelId: 'candidate.coaches.filter.all' },
