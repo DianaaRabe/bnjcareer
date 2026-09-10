@@ -43,6 +43,8 @@ const config: CodegenConfig = {
           Coach: '../graphql/modules/coaches/coachesMappers.js#GraphQLCoach',
           CoachSession: '../graphql/modules/sessions/sessionsMappers.js#GraphQLCoachSession',
           SessionAttendee: '../graphql/modules/sessions/sessionsMappers.js#GraphQLSessionAttendee',
+          Resource: '../graphql/modules/resources/resourcesMappers.js#GraphQLResource',
+          CoachResource: '../graphql/modules/resources/resourcesMappers.js#GraphQLCoachResource',
         },
         useIndexSignature: true,
       },

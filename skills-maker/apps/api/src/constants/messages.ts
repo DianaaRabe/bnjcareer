@@ -30,4 +30,6 @@ export const messages = {
   sessionNotFound: 'Session not found',
   sessionInvalid: 'Invalid session data',
   bookingNotFound: 'Booking not found',
+  resourceNotFound: 'Resource not found',
+  resourceInvalid: 'Invalid resource data',
 } as const

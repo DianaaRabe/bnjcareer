@@ -33,3 +33,22 @@ export function toGraphQLResource(resource: Resource): GraphQLResource {
     priceCents: resource.access === 'PAID' ? resource.priceCents : null,
   }
 }
+
+/** The coach's own view of a resource — unredacted (real url and price) plus the publish state. */
+export type GraphQLCoachResource = GraphQLResource & { published: boolean }
+
+export function toGraphQLCoachResource(resource: Resource): GraphQLCoachResource {
+  return {
+    id: resource.id,
+    title: resource.title,
+    description: resource.description,
+    type: resource.type,
+    category: resource.category,
+    url: resource.url,
+    sizeBytes: resource.sizeBytes,
+    durationMinutes: resource.durationMinutes,
+    access: resource.access,
+    priceCents: resource.priceCents,
+    published: resource.published,
+  }
+}
