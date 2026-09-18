@@ -188,3 +188,5 @@ export function Sidebar({ fullName, email, avatarUrl }: SidebarProps) {
     </aside>
   );
 }
+
+

@@ -233,6 +233,7 @@ model Cv {
   template      String?
   extractedData Json?    @map("content")
   optimizedHtml String?  @map("optimized_html")
+  optimizedData Json?    @map("optimized_data")
   improvements  Json?
   status        CvStatus @default(UPLOADED)
   createdAt     DateTime @default(now()) @map("created_at")

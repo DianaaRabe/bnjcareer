@@ -1,4 +1,5 @@
 import type { Cv } from '@prisma/client'
+import { CvTemplate } from '@gql/resolvers-types.js'
 
 export function toGraphQLCv(cv: Cv) {
   return {
@@ -7,8 +8,9 @@ export function toGraphQLCv(cv: Cv) {
     fileName: cv.fileName,
     fileSizeBytes: cv.fileSizeBytes,
     status: cv.status,
+    template: (cv.template as CvTemplate | null) ?? null,
     extractedData: cv.extractedData,
-    optimizedHtml: cv.optimizedHtml,
+    optimizedData: cv.optimizedData,
     improvements: cv.improvements,
     createdAt: cv.createdAt.toISOString(),
     updatedAt: cv.updatedAt.toISOString(),

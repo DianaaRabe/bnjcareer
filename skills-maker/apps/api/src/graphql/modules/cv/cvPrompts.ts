@@ -51,7 +51,20 @@ const SITUATION_LABELS: Record<string, string> = {
   STUDENT: 'Étudiant',
 }
 
-/** Rewrites the CV for ATS compatibility while forbidding invention of facts (contact, experiences, education). */
+/**
+ * The three CV layouts the candidate can pick. The layout is applied client-side
+ * (React templates), so the optimizer only produces structured CONTENT — never HTML.
+ * Stored verbatim on `cv.template` to remember the candidate's last choice.
+ */
+export type CvTemplateKey = 'ATS' | 'PROFESSIONAL' | 'CREATIVE'
+
+/**
+ * Rewrites the CV content (summary, titles, bullets, skills) for ATS compatibility,
+ * while forbidding invention of facts (contact, experiences, education).
+ *
+ * Output is STRUCTURED JSON — the visual layout is rendered client-side from this
+ * data into whichever template the candidate selects, so no HTML is produced here.
+ */
 export function buildOptimizationPrompt(profile: Profile | null, extractedData: any): string {
   const immutable = extractImmutableContact(extractedData, profile)
   const immutableExperiences = formatImmutableExperiences(extractedData)
@@ -62,22 +75,22 @@ Tu as 15 ans d'expérience en recrutement et tu connais parfaitement les algorit
 
 ## ⚠️⚠️⚠️ RÈGLES INVIOLABLES — LIS ET RESPECTE CETTE SECTION AVANT TOUT ⚠️⚠️⚠️
 
-Ton rôle est de **reformuler** et **réorganiser** le CV pour mieux passer les filtres ATS.
+Ton rôle est de **reformuler** et **réorganiser** le CONTENU du CV pour mieux passer les filtres ATS.
 Tu n'es PAS rédacteur fiction. Tu NE peux PAS inventer, embellir ou fabriquer des faits.
 
 ### A. INFORMATIONS DE CONTACT — RECOPIE-LES VERBATIM, NE LES MODIFIE JAMAIS
-- Nom complet  : "${immutable.name ?? "(NON RENSEIGNÉ — écris 'Non renseigné' et N'INVENTE PAS)"}"
-- Email        : "${immutable.email ?? "(NON RENSEIGNÉ — écris 'Non renseigné' et NE FABRIQUE PAS d'email)"}"
-- Téléphone    : "${immutable.phone ?? "(NON RENSEIGNÉ — écris 'Non renseigné' et NE FABRIQUE PAS de numéro)"}"
-- Localisation : "${immutable.location ?? "(NON RENSEIGNÉ — écris 'Non renseigné' et NE FABRIQUE PAS de ville)"}"
-- LinkedIn     : "${immutable.linkedin ?? '(NON RENSEIGNÉ — laisse vide)'}"
+- Nom complet  : "${immutable.name ?? '(NON RENSEIGNÉ — laisse null)'}"
+- Email        : "${immutable.email ?? '(NON RENSEIGNÉ — laisse null)'}"
+- Téléphone    : "${immutable.phone ?? '(NON RENSEIGNÉ — laisse null)'}"
+- Localisation : "${immutable.location ?? '(NON RENSEIGNÉ — laisse null)'}"
+- LinkedIn     : "${immutable.linkedin ?? '(NON RENSEIGNÉ — laisse null)'}"
 
 ### B. EXPÉRIENCES PROFESSIONNELLES — LISTE FIXE
 ${immutableExperiences}
 
 Pour chaque expérience tu peux :
-  ✅ Réécrire la description / les bullets
-  ✅ Réordonner les expériences
+  ✅ Réécrire la description sous forme de bullets (verbes d'action, quantification)
+  ✅ Réordonner les expériences par pertinence
 
 Tu NE peux PAS :
   ❌ Changer le nom de l'entreprise, l'intitulé du poste, ou les dates
@@ -89,22 +102,19 @@ ${immutableEducation}
 Tu NE peux RIEN modifier dans les formations : ni le diplôme, ni l'établissement, ni les dates.
 
 ### D. CE QUE TU PEUX RÉELLEMENT FAIRE
-  ✅ Réécrire le **résumé / profil professionnel**
-  ✅ Réécrire le **titre du poste visé** affiché sous le nom
-  ✅ Réécrire les **bullets d'expérience** avec verbes d'action + quantification
+  ✅ Réécrire le **résumé / profil professionnel** (2-3 phrases percutantes)
+  ✅ Réécrire le **titre du poste visé**
+  ✅ Transformer chaque description d'expérience en **bullets** avec verbes d'action + quantification
   ✅ **Réordonner** par pertinence
-  ✅ **Ajouter des compétences techniques** UNIQUEMENT si plausibles vu son parcours
+  ✅ **Ajouter des compétences** UNIQUEMENT si plausibles vu son parcours
+  ✅ Déduire les **langues** et **centres d'intérêt** UNIQUEMENT s'ils apparaissent dans le CV
 
 ### E. INTERDICTIONS ABSOLUES (= MENSONGE)
   ❌ Inventer un poste, employeur, mission, diplôme, école, certification, langue
   ❌ Modifier nom, email, téléphone ou ville
   ❌ Ajouter des compétences sans lien avec le parcours réel
 
-Si une info manque dans le CV original, OMETS-LA ou écris "Non renseigné". N'INVENTE JAMAIS.
-
-## MISSION
-Optimise le CV ci-dessous pour maximiser les chances de passer les filtres ATS et impressionner les recruteurs humains,
-en respectant strictement les règles A-E ci-dessus.
+Si une info manque dans le CV original, OMETS-LA (null ou tableau vide). N'INVENTE JAMAIS.
 
 ## PROFIL DU CANDIDAT
 - Nom : ${profile?.firstName || 'Non renseigné'} ${profile?.lastName || ''}
@@ -113,29 +123,43 @@ en respectant strictement les règles A-E ci-dessus.
 - Statut actuel : ${(profile?.situation && SITUATION_LABELS[profile.situation]) || 'Non renseigné'}
 - Objectif principal : ${(profile?.objective && OBJECTIVE_LABELS[profile.objective]) || 'Non défini'}
 - Forces : ${JSON.stringify(profile?.strengths || [])}
-- Points à travailler : ${JSON.stringify(profile?.improvements || [])}
 - Compétences : ${JSON.stringify(profile?.skills || [])}
-- Bio : ${profile?.bio || 'Non renseignée'}
 
 ## DONNÉES CV EXTRAITES
 ${JSON.stringify(extractedData, null, 2)}
 
-## RÈGLES D'OPTIMISATION ATS
-1. **Structure ATS-compatible** : titres de section standards (Profil Professionnel, Expérience Professionnelle, Formation, Compétences Techniques, Langues, Centres d'intérêt)
-2. **Mots-clés sectoriels** : mots-clés pertinents pour le secteur "${profile?.sector || 'général'}"
-3. **Bullet points actionnables** : 3-5 bullets par expérience, verbe d'action au passé (Développé, Géré, Optimisé, Coordonné, Mis en place...)
-4. **Quantification des résultats** : métriques plausibles (+X%, X projets, X personnes managées...)
-5. **Résumé professionnel** : 2-3 lignes percutantes, alignées avec l'objectif "${(profile?.objective && OBJECTIVE_LABELS[profile.objective]) || 'professionnel'}"
-6. **Compétences organisées** : catégories claires (Techniques, Soft Skills, Outils & Logiciels)
-7. **Formatage ATS-safe** : AUCUN tableau HTML, AUCUNE image, AUCUN SVG. Le seul "display:flex" autorisé est celui du template (titre/dates d'expérience).
-8. **Longueur** : 1-2 pages imprimables
-9. **Dates** : Format standard français (Janvier 2023 - Présent)
-10. **Contact** : Inclure email, téléphone, ville si disponibles
+## RÈGLES D'OPTIMISATION
+1. **Titre** : adapte le titre du poste à l'objectif réel du candidat.
+2. **Résumé** : 2-3 phrases percutantes, alignées avec l'objectif "${(profile?.objective && OBJECTIVE_LABELS[profile.objective]) || 'professionnel'}".
+3. **Bullets** : 3-5 bullets par expérience, chacun commençant par un verbe d'action au passé (Développé, Géré, Optimisé, Coordonné, Mis en place…).
+4. **Quantification** : métriques plausibles (+X%, X projets, X personnes managées…) uniquement si crédibles.
+5. **Mots-clés** : mots-clés pertinents pour le secteur "${profile?.sector || 'général'}".
+6. **Compétences** : 8-20 compétences max, les plus pertinentes en premier.
+7. **Dates** : recopie le format d'origine (ex. "Janvier 2023 — Présent").
 
 ## FORMAT DE SORTIE
-Réponds UNIQUEMENT avec un objet JSON valide (pas de markdown, pas de backticks, pas de commentaires) :
+Réponds UNIQUEMENT avec un objet JSON valide (pas de markdown, pas de backticks, pas de commentaires).
+N'émets AUCUN HTML. La mise en page est gérée ailleurs : tu ne produis QUE du contenu structuré.
+
 {
-  "optimized_html": "<div style='...'>... HTML complet du CV optimisé ...</div>",
+  "professionalTitle": "Titre du poste visé (string ou null)",
+  "summary": "Résumé professionnel 2-3 phrases (string ou null)",
+  "experiences": [
+    {
+      "title": "Intitulé EXACT du poste (non modifiable)",
+      "company": "Nom EXACT de l'entreprise (non modifiable)",
+      "location": "Ville ou null",
+      "startDate": "Date de début EXACTE",
+      "endDate": "Date de fin EXACTE ou 'Présent'",
+      "bullets": ["Verbe d'action + réalisation quantifiée", "…"]
+    }
+  ],
+  "education": [
+    { "degree": "Diplôme EXACT", "school": "Établissement EXACT", "location": "Ville ou null", "startDate": "…", "endDate": "…" }
+  ],
+  "skills": ["compétence", "…"],
+  "languages": [ { "name": "Français", "level": "Natif" } ],
+  "interests": ["centre d'intérêt", "…"],
   "improvements": [
     { "category": "structure", "description": "Description de l'amélioration", "impact": "high" },
     { "category": "keywords", "description": "Description", "impact": "high" },
@@ -144,76 +168,8 @@ Réponds UNIQUEMENT avec un objet JSON valide (pas de markdown, pas de backticks
 }
 
 ## CATÉGORIES D'AMÉLIORATIONS POSSIBLES
-"structure" (réorganisation), "keywords" (mots-clés ATS), "content" (réécriture), "formatting" (mise en forme), "skills" (compétences), "profile" (résumé professionnel)
+"structure" (réorganisation), "keywords" (mots-clés ATS), "content" (réécriture), "skills" (compétences), "profile" (résumé professionnel)
 
 ## IMPACT LEVELS
-"high" (critique pour le passage ATS), "medium" (amélioration significative), "low" (ajustement mineur)
-
-## RÈGLES HTML — CRITIQUES POUR LE PARSING JSON
-- **OBLIGATOIRE** : Utilise UNIQUEMENT des single quotes (') pour TOUS les attributs HTML (le HTML est embarqué dans une string JSON en double quotes)
-- Pas de retour à la ligne dans les valeurs JSON (un seul long HTML sur une ligne logique)
-
-## TEMPLATE HTML À SUIVRE STRICTEMENT (ATS-OPTIMISÉ)
-Reproduis EXACTEMENT cette structure, en remplaçant uniquement les contenus textuels. Ne modifie pas les styles, couleurs, balises ou hiérarchie.
-
-\`\`\`html
-<div style='max-width:820px;margin:0 auto;padding:48px 56px;background:#ffffff;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;color:#1e293b;font-size:13px;line-height:1.6'>
-  <header style='border-bottom:3px solid #590293;padding-bottom:18px;margin-bottom:28px'>
-    <h1 style='margin:0;font-size:32px;font-weight:700;color:#0f172a;letter-spacing:-0.5px'>PRÉNOM NOM</h1>
-    <p style='margin:6px 0 10px;font-size:15px;color:#590293;font-weight:600'>Titre du poste visé</p>
-    <p style='margin:0;font-size:12px;color:#475569'>email@exemple.com · +33 X XX XX XX XX · Ville, Pays · linkedin.com/in/profil</p>
-  </header>
-  <section style='margin-bottom:28px'>
-    <h2 style='margin:0 0 10px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Profil professionnel</h2>
-    <p style='margin:0;color:#334155'>2-3 phrases percutantes qui résument l'expertise, l'objectif et la valeur ajoutée du candidat.</p>
-  </section>
-  <section style='margin-bottom:28px'>
-    <h2 style='margin:0 0 14px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Expérience professionnelle</h2>
-    <div style='margin-bottom:18px'>
-      <div style='display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px'>
-        <span style='font-size:14px;font-weight:700;color:#0f172a'>Intitulé du poste</span>
-        <span style='font-size:12px;color:#64748b;font-weight:500'>Janvier 2023 — Présent</span>
-      </div>
-      <div style='font-size:13px;color:#590293;font-weight:600;margin-bottom:8px'>Nom de l'entreprise · Ville</div>
-      <ul style='margin:0;padding-left:18px;color:#334155'>
-        <li style='margin-bottom:4px'>Verbe d'action au passé + description quantifiée (+X%, X projets)…</li>
-      </ul>
-    </div>
-    <!-- Répéter le bloc ci-dessus pour chaque expérience -->
-  </section>
-  <section style='margin-bottom:28px'>
-    <h2 style='margin:0 0 14px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Formation</h2>
-    <div style='margin-bottom:12px'>
-      <div style='display:flex;justify-content:space-between;align-items:baseline'>
-        <span style='font-size:14px;font-weight:700;color:#0f172a'>Diplôme</span>
-        <span style='font-size:12px;color:#64748b;font-weight:500'>2020 — 2023</span>
-      </div>
-      <div style='font-size:13px;color:#475569;margin-top:2px'>Établissement · Ville</div>
-    </div>
-  </section>
-  <section style='margin-bottom:28px'>
-    <h2 style='margin:0 0 12px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Compétences techniques</h2>
-    <div>
-      <span style='display:inline-block;background:#f3e8ff;color:#590293;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;margin:0 4px 6px 0'>React</span>
-      <!-- Répéter pour chaque compétence -->
-    </div>
-  </section>
-  <section style='margin-bottom:28px'>
-    <h2 style='margin:0 0 10px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Langues</h2>
-    <p style='margin:0;color:#334155'><strong style='color:#0f172a'>Français</strong> — Natif</p>
-  </section>
-  <section>
-    <h2 style='margin:0 0 10px;font-size:11px;font-weight:700;color:#590293;text-transform:uppercase;letter-spacing:2px'>Centres d'intérêt</h2>
-    <p style='margin:0;color:#334155'>Liste ou phrase courte séparée par " · ", 3-5 items max.</p>
-  </section>
-</div>
-\`\`\`
-
-## RÈGLES DE REMPLISSAGE
-- Si une section n'a pas de données pertinentes, OMETS-LA entièrement.
-- Adapte le titre sous le nom à l'objectif réel du candidat.
-- 8-20 pills max pour les compétences, les plus pertinentes en premier.
-- Les bullets d'expérience commencent TOUJOURS par un verbe d'action au passé.
-- Le résumé professionnel doit faire 2-3 phrases, pas plus.
-- Le HTML retourné doit être SUR UNE SEULE LIGNE LOGIQUE.`
+"high" (critique pour le passage ATS), "medium" (amélioration significative), "low" (ajustement mineur)`
 }

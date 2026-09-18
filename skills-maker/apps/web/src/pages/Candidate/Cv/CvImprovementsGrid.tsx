@@ -28,7 +28,7 @@ type CvImprovementsGridProps = {
 }
 
 export const CvImprovementsGrid = ({ improvements }: CvImprovementsGridProps) => (
-  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+  <div className="grid grid-cols-1 gap-2.5">
     {improvements.map((improvement, i) => {
       const categoryLabelId = CATEGORY_LABEL_IDS[improvement.category]
       const impactLabelId = IMPACT_LABEL_IDS[improvement.impact] ?? IMPACT_LABEL_IDS.low

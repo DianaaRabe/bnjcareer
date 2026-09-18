@@ -52,47 +52,87 @@ export interface CvImprovement {
   impact: 'high' | 'medium' | 'low'
 }
 
+export interface CvOptimizedExperience {
+  title: string | null
+  company: string | null
+  location: string | null
+  startDate: string | null
+  endDate: string | null
+  bullets: string[]
+}
+
+export interface CvLanguage {
+  name: string | null
+  level: string | null
+}
+
+/** Structured, layout-agnostic optimized CV content. Rendered client-side into the chosen template. */
+export interface CvOptimizedData {
+  professionalTitle: string | null
+  summary: string | null
+  experiences: CvOptimizedExperience[]
+  education: CvEducation[]
+  skills: string[]
+  languages: CvLanguage[]
+  interests: string[]
+}
+
 export interface CvOptimizationResult {
-  optimizedHtml: string
+  optimizedData: CvOptimizedData
   improvements: CvImprovement[]
 }
 
-/** Parses the optimization LLM response, salvaging the HTML via regex if strict JSON parsing fails. */
+function asString(v: unknown): string | null {
+  return typeof v === 'string' && v.trim() !== '' ? v : null
+}
+
+function asStringArray(v: unknown): string[] {
+  return Array.isArray(v) ? v.filter((s): s is string => typeof s === 'string' && s.trim() !== '') : []
+}
+
+function normalizeExperience(x: any): CvOptimizedExperience {
+  // Tolerate the LLM returning `description` (string) instead of `bullets` (array).
+  let bullets = asStringArray(x?.bullets)
+  if (bullets.length === 0 && typeof x?.description === 'string') {
+    bullets = x.description
+      .split(/\n|•|;/)
+      .map((s: string) => s.trim())
+      .filter(Boolean)
+  }
+  return {
+    title: asString(x?.title),
+    company: asString(x?.company),
+    location: asString(x?.location),
+    startDate: asString(x?.startDate),
+    endDate: asString(x?.endDate),
+    bullets,
+  }
+}
+
+/** Parses the optimization LLM response into structured, layout-agnostic content. */
 export function parseOptimizationResult(raw: string): CvOptimizationResult {
-  try {
-    const parsed = parseLLMJson<any>(raw)
-    return {
-      optimizedHtml: parsed.optimized_html || '',
-      improvements: Array.isArray(parsed.improvements) ? parsed.improvements : [],
-    }
-  } catch {
-    // Fall through to schema-specific salvage below.
+  const parsed = parseLLMJson<any>(raw)
+
+  const optimizedData: CvOptimizedData = {
+    professionalTitle: asString(parsed?.professionalTitle),
+    summary: asString(parsed?.summary),
+    experiences: Array.isArray(parsed?.experiences) ? parsed.experiences.map(normalizeExperience) : [],
+    education: Array.isArray(parsed?.education)
+      ? parsed.education.map((e: any) => ({
+          degree: asString(e?.degree),
+          school: asString(e?.school),
+          startDate: asString(e?.startDate),
+          endDate: asString(e?.endDate),
+        }))
+      : [],
+    skills: asStringArray(parsed?.skills),
+    languages: Array.isArray(parsed?.languages)
+      ? parsed.languages.map((l: any) => ({ name: asString(l?.name), level: asString(l?.level) }))
+      : [],
+    interests: asStringArray(parsed?.interests),
   }
 
-  let html = ''
-  const divMatch = raw.match(/<div[\s\S]*<\/div>/i)
-  if (divMatch) {
-    html = divMatch[0]
-  } else {
-    const htmlFieldMatch = raw.match(/"optimized_html"\s*:\s*"([\s\S]*?)"\s*,\s*"improvements"/)
-    if (htmlFieldMatch) {
-      html = htmlFieldMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n').replace(/\\\\/g, '\\')
-    }
-  }
+  const improvements: CvImprovement[] = Array.isArray(parsed?.improvements) ? parsed.improvements : []
 
-  let improvements: CvImprovement[] = []
-  const improvementsMatch = raw.match(/"improvements"\s*:\s*(\[[\s\S]*?\])/)
-  if (improvementsMatch) {
-    try {
-      improvements = JSON.parse(improvementsMatch[1])
-    } catch {
-      improvements = []
-    }
-  }
-
-  if (!html) {
-    throw new Error('Could not extract HTML from LLM response')
-  }
-
-  return { optimizedHtml: html, improvements }
+  return { optimizedData, improvements }
 }

@@ -6,7 +6,7 @@ import type { Context } from '@/context.js'
 import { messages } from '@/constants/messages.js'
 import { callLLM, LLMError } from '@/lib/llmClient.js'
 import { CV_MAX_FILE_SIZE_BYTES, publicUrlToFilePath } from '@/lib/uploadStorage.js'
-import { buildExtractionPrompt, buildOptimizationPrompt } from './cvPrompts.js'
+import { buildExtractionPrompt, buildOptimizationPrompt, type CvTemplateKey } from './cvPrompts.js'
 import { parseExtractionResult, parseOptimizationResult } from './cvLlmParsing.js'
 
 const createCvSchema = z.object({
@@ -79,13 +79,16 @@ export async function createCv(ctx: Context, input: unknown) {
 }
 
 // Runs the ATS optimization prompt against an already-extracted CV.
-export async function optimizeCv(ctx: Context, id: string) {
+export async function optimizeCv(ctx: Context, id: string, template?: CvTemplateKey | null) {
   let cv = await getOwnedCv(ctx, id)
   if (!cv.extractedData) {
     throw new GraphQLError(messages.cvOptimizationRequiresExtraction, { extensions: { code: 'BAD_USER_INPUT' } })
   }
 
-  cv = await ctx.prisma.cv.update({ where: { id }, data: { status: 'OPTIMIZING' } })
+  // Use the newly chosen format, else fall back to the one already stored, else ATS.
+  const chosenTemplate = (template ?? (cv.template as CvTemplateKey | null) ?? 'ATS') as CvTemplateKey
+
+  cv = await ctx.prisma.cv.update({ where: { id }, data: { status: 'OPTIMIZING', template: chosenTemplate } })
 
   try {
     const profile = await ctx.prisma.profile.findUnique({ where: { userId: ctx.user!.id } })
@@ -97,10 +100,10 @@ export async function optimizeCv(ctx: Context, id: string) {
       jsonMode: true,
     })
 
-    const { optimizedHtml, improvements } = parseOptimizationResult(content)
+    const { optimizedData, improvements } = parseOptimizationResult(content)
     cv = await ctx.prisma.cv.update({
       where: { id },
-      data: { status: 'OPTIMIZED', optimizedHtml, improvements: improvements as never },
+      data: { status: 'OPTIMIZED', optimizedData: optimizedData as never, improvements: improvements as never },
     })
   } catch (err) {
     await ctx.prisma.cv.update({ where: { id }, data: { status: 'OPTIMIZATION_FAILED' } })
@@ -110,6 +113,12 @@ export async function optimizeCv(ctx: Context, id: string) {
   }
 
   return cv
+}
+
+// Persists the candidate's chosen layout without re-running the optimizer (layout is client-side).
+export async function setCvTemplate(ctx: Context, id: string, template: CvTemplateKey) {
+  await getOwnedCv(ctx, id)
+  return ctx.prisma.cv.update({ where: { id }, data: { template } })
 }
 
 // Patches user-edited fields into the extracted data blob.

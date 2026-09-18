@@ -3,24 +3,22 @@ import { FormattedMessage, useIntl } from 'react-intl'
 
 import { LoadingState } from '@/components/common/LoadingState/LoadingState'
 import { PageHeader } from '@/components/layout/PageHeader/PageHeader'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { CvDetailsAccordion } from './CvDetailsAccordion'
-import { CvOptimizationResult } from './CvOptimizationResult'
+import { CvFormatSelector } from './CvFormatSelector'
+import { CvImprovementsGrid } from './CvImprovementsGrid'
+import { CvPreviewPane } from './CvPreviewPane'
 import { CvUploadZone } from './CvUploadZone'
 import { ReplaceCvDialog } from './ReplaceCvDialog'
+import { buildRenderData } from './templates/types'
 import { useCv } from './useCv'
 
 export const Cv = () => {
   const cv = useCv()
   const intl = useIntl()
-  const isOptimized = cv.status === 'OPTIMIZED' && !!cv.optimizedHtml
-
-  const replaceTrigger = (
-    <Button variant="ghost" size="sm" className="text-primary hover:text-primary" onClick={cv.openReplaceModal}>
-      <RefreshCw className="size-3.5" />
-      <FormattedMessage id="candidate.cv.replace.trigger" />
-    </Button>
-  )
+  const isOptimized = cv.isOptimized
+  const renderData = buildRenderData(cv.extractedData, cv.optimizedData)
 
   const zoneProps = {
     step: cv.uploadStep,
@@ -36,81 +34,112 @@ export const Cv = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5">
       <PageHeader titleId="candidate.cv.title" descriptionId="candidate.cv.subtitle" />
 
       {cv.isLoading && !cv.hasCv ? (
         <LoadingState />
       ) : cv.hasCv ? (
-        <>
-          <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border bg-card p-5 shadow-xs">
-            <div className="flex min-w-0 items-center gap-3.5">
-              <div className="flex size-9 items-center justify-center rounded-full bg-success/15 text-success">
-                <FileText className="size-[18px]" />
+        <div className="grid items-start gap-5 lg:grid-cols-[300px_minmax(0,1fr)]">
+          {/* Sidebar: file, actions, format, details, improvements */}
+          <aside className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3.5 rounded-lg border bg-card p-4 shadow-xs">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-success/15 text-success">
+                  <FileText className="size-[18px]" />
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold">{cv.cvFileName}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{cv.formatSize(cv.cvSizeBytes)}</p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold">{cv.cvFileName}</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">{cv.formatSize(cv.cvSizeBytes)}</p>
+              <div className="flex flex-col gap-2">
+                <Button onClick={cv.openAtsOptimizer} disabled={!cv.canOptimize || cv.isOptimizing}>
+                  {cv.isOptimizing ? (
+                    <Loader2 className="size-[15px] animate-spin" />
+                  ) : (
+                    <Sparkles className="size-[15px]" />
+                  )}
+                  <FormattedMessage id={isOptimized ? 'candidate.cv.optimization.reoptimize' : 'candidate.cv.actions.optimize'} />
+                </Button>
+                <div className="flex items-center justify-between">
+                  <Button variant="ghost" size="sm" onClick={cv.viewCv} disabled={!cv.cvUrl}>
+                    <FileText className="size-3.5" />
+                    <FormattedMessage id="candidate.cv.actions.view" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-primary hover:text-primary"
+                    onClick={cv.openReplaceModal}
+                  >
+                    <RefreshCw className="size-3.5" />
+                    <FormattedMessage id="candidate.cv.replace.trigger" />
+                  </Button>
+                </div>
               </div>
             </div>
-            <div className="flex shrink-0 items-center gap-2.5">
-              <Button size="lg" onClick={cv.openAtsOptimizer} disabled={!cv.canOptimize || cv.isOptimizing}>
-                {cv.isOptimizing ? <Loader2 className="size-[15px] animate-spin" /> : <Sparkles className="size-[15px]" />}
-                <FormattedMessage id="candidate.cv.actions.optimize" />
-              </Button>
-              <Button size="lg" variant="outline" onClick={cv.viewCv} disabled={!cv.cvUrl}>
-                <FormattedMessage id="candidate.cv.actions.view" />
-              </Button>
-            </div>
-          </div>
 
-          <CvDetailsAccordion
-            name={cv.detailsName}
-            onNameChange={cv.setDetailsName}
-            title={cv.detailsTitle}
-            onTitleChange={cv.setDetailsTitle}
-            summary={cv.detailsSummary}
-            onSummaryChange={cv.setDetailsSummary}
-            onSave={cv.saveDetails}
+            <CvFormatSelector
+              orientation="sidebar"
+              value={cv.selectedTemplate}
+              onChange={cv.changeTemplate}
+              disabled={cv.isOptimizing}
+            />
+
+            <CvDetailsAccordion
+              name={cv.detailsName}
+              onNameChange={cv.setDetailsName}
+              title={cv.detailsTitle}
+              onTitleChange={cv.setDetailsTitle}
+              summary={cv.detailsSummary}
+              onSummaryChange={cv.setDetailsSummary}
+              onSave={cv.saveDetails}
+            />
+
+            {isOptimized && cv.improvements.length > 0 && (
+              <Accordion type="single" collapsible className="rounded-lg border bg-card shadow-xs">
+                <AccordionItem value="improvements" className="border-none">
+                  <AccordionTrigger className="gap-4 px-4 hover:no-underline">
+                    <div className="flex items-center gap-3.5">
+                      <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <Sparkles className="size-[18px]" />
+                      </div>
+                      <div className="text-left">
+                        <p className="text-sm font-semibold">
+                          <FormattedMessage id="candidate.cv.optimization.tabs.improvements" /> ({cv.improvements.length})
+                        </p>
+                        <p className="text-xs font-normal text-muted-foreground">
+                          <FormattedMessage
+                            id="candidate.cv.optimization.summary"
+                            values={{
+                              total: cv.improvements.length,
+                              high: cv.improvements.filter((i) => i.impact === 'high').length,
+                            }}
+                          />
+                        </p>
+                      </div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4">
+                    <div className="border-t pt-3">
+                      <CvImprovementsGrid improvements={cv.improvements} />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            )}
+          </aside>
+
+          {/* Preview pane */}
+          <CvPreviewPane
+            originalCvUrl={cv.cvUrl}
+            renderData={renderData}
+            template={cv.selectedTemplate}
+            isOptimized={isOptimized}
+            optimizedAt={cv.optimizedAt}
           />
-
-          {isOptimized ? (
-            <>
-              <CvOptimizationResult
-                originalCvUrl={cv.cvUrl}
-                optimizedHtml={cv.optimizedHtml!}
-                optimizedAt={cv.optimizedAt}
-                improvements={cv.improvements}
-                onReOptimize={cv.openAtsOptimizer}
-                isReOptimizing={cv.isOptimizing}
-              />
-              <div className="flex justify-end">{replaceTrigger}</div>
-            </>
-          ) : (
-            <div className="flex flex-col overflow-hidden rounded-lg border bg-card shadow-xs">
-              <p className="border-b p-3.5 px-5 text-[13px] font-semibold">
-                <FormattedMessage id="candidate.cv.preview.title" />
-              </p>
-              <div className="h-[480px] overflow-auto bg-muted">
-                {cv.cvUrl ? (
-                  <iframe
-                    src={cv.cvUrl}
-                    title={intl.formatMessage({ id: 'candidate.cv.preview.iframeTitle' })}
-                    className="block size-full border-0"
-                  />
-                ) : (
-                  <div className="flex h-full flex-col items-center justify-center gap-2 p-8 text-center text-muted-foreground">
-                    <FileText className="size-8" />
-                    <p className="text-[13px]">
-                      <FormattedMessage id="candidate.cv.preview.empty" />
-                    </p>
-                  </div>
-                )}
-              </div>
-              <div className="flex justify-end border-t p-3 px-5">{replaceTrigger}</div>
-            </div>
-          )}
-        </>
+        </div>
       ) : (
         <div className="flex flex-col gap-2.5">
           <Button

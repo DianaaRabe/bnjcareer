@@ -8,8 +8,9 @@ export const MY_CV_QUERY = graphql(`
       fileName
       fileSizeBytes
       status
+      template
       extractedData
-      optimizedHtml
+      optimizedData
       improvements
       createdAt
       updatedAt

@@ -32,6 +32,9 @@ async function main() {
 
   const apollo = new ApolloServer<Context>({
     schema,
+    // Enabled so build-time GraphQL codegen (e.g. the Vercel web build) can introspect
+    // the deployed schema. Safe here: the schema itself is not sensitive.
+    introspection: true,
     plugins: [
       {
         // Close live sockets when Apollo shuts down, otherwise the process hangs.

@@ -1,0 +1,40 @@
+# Render blueprint for the GraphQL API (apps/api).
+# The API is a long-running Node process (Express + Apollo) with WebSocket
+# subscriptions and disk-backed CV uploads, so it CANNOT run on Vercel's
+# serverless functions — it needs a persistent host with a persistent disk.
+#
+# The web SPA (apps/web) is deployed separately on Vercel (see apps/web/vercel.json).
+# The database is managed Postgres (Supabase) via DATABASE_URL — set in the dashboard.
+services:
+  - type: web
+    name: skills-maker-api
+    runtime: node
+    plan: starter # WebSockets require a paid instance; free tier sleeps + drops sockets.
+    rootDir: .
+    # codegen (local typeDefs) + prisma client generation happen at build time;
+    # apps/api/src/gql is gitignored so codegen must run before tsc.
+    buildCommand: npm ci && npm run codegen -w apps/api && npm run db:generate -w apps/api && npm run build -w apps/api
+    # Apply pending migrations to the Supabase DB, then boot the compiled server.
+    startCommand: npm run db:migrate:deploy -w apps/api && npm run start -w apps/api
+    healthCheckPath: /health
+    disk:
+      name: uploads
+      mountPath: /var/data # UPLOAD_DIR / JOBS_RUNS_DIR point here (see envVars)
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: PORT
+        value: "4100"
+      - key: UPLOAD_DIR
+        value: /var/data/uploads
+      - key: JOBS_RUNS_DIR
+        value: /var/data/runs
+      # Secrets & environment-specific values — set in the Render dashboard (sync:false
+      # keeps them out of the repo). DATABASE_URL = Supabase connection string.
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN # the deployed Vercel URL, e.g. https://your-app.vercel.app
+        sync: false

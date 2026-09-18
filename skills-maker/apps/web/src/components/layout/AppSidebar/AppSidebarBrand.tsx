@@ -3,6 +3,7 @@ import { ChevronsLeft } from 'lucide-react'
 import { FormattedMessage, useIntl } from 'react-intl'
 
 import { Button } from '@/components/ui/button'
+import logoMark from '@/public/logos/5c0d84e4-ee1f-4ce5-ae53-c6ed61d05f2f.jpeg'
 
 type AppSidebarBrandProps = {
   portalLabelId: string
@@ -13,9 +14,11 @@ type AppSidebarBrandProps = {
 }
 
 const BrandLogo = () => (
-  <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-brand-yellow text-base font-bold text-brand-yellow-foreground">
-    <FormattedMessage id="app.initial" />
-  </span>
+  <img
+    src={logoMark}
+    alt="Skills Maker"
+    className="size-9 shrink-0 rounded-xl object-contain bg-white p-0.5 border border-sidebar-border/40 shadow-xs"
+  />
 )
 
 export const AppSidebarBrand = ({

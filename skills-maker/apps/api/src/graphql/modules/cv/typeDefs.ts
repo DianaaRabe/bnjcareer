@@ -13,15 +13,25 @@ export const cvTypeDefs = gql`
     OPTIMIZATION_FAILED
   }
 
+  "The layout the candidate picked for the optimized CV."
+  enum CvTemplate {
+    ATS
+    PROFESSIONAL
+    CREATIVE
+  }
+
   type Cv {
     id: ID!
     pdfUrl: String
     fileName: String
     fileSizeBytes: Int
     status: CvStatus!
+    "The layout the candidate selected for rendering (applied client-side)."
+    template: CvTemplate
     "Structured data extracted from the PDF (contact info, experiences, education, skills, summary)."
     extractedData: JSON
-    optimizedHtml: String
+    "Structured, layout-agnostic optimized content. Rendered into the chosen template client-side."
+    optimizedData: JSON
     "Categorized list of ATS improvements applied by the optimizer."
     improvements: JSON
     createdAt: String!
@@ -48,8 +58,10 @@ export const cvTypeDefs = gql`
   type Mutation {
     "Registers an uploaded PDF and synchronously extracts its content via the LLM."
     createCv(input: CreateCvInput!): Cv!
-    "Runs the ATS optimization prompt against an already-extracted CV."
-    optimizeCv(id: ID!): Cv!
+    "Runs the ATS optimization prompt against an already-extracted CV, producing structured content."
+    optimizeCv(id: ID!, template: CvTemplate): Cv!
+    "Persists the candidate's chosen layout without re-running the optimizer."
+    setCvTemplate(id: ID!, template: CvTemplate!): Cv!
     "Patches user-edited fields (name/title/summary) into the extracted data."
     updateCvDetails(id: ID!, input: UpdateCvDetailsInput!): Cv!
   }

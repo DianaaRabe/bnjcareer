@@ -1,0 +1,4 @@
+- **Classic / Professional Templates**: Minimalist and clean layouts featuring high contrast (black text on white background) and standard fonts. Ideal for corporate, legal, financial, and traditional industries.
+- **Modern Templates**: Sleek designs with smart spacing, subtle accents, or structured blocks. Great for IT, marketing, management, and tech roles.
+- **Creative Templates**: Bold layouts incorporating unique geometry, color splashes, or multi-column grids. Best suited for design, media, and creative arts.
+- **ATS-Friendly Templates**: Plain, text-heavy designs without complex tables, text boxes, or graphics so automated software can read them easily. [1] (https://www.canva.com/resumes/templates/)

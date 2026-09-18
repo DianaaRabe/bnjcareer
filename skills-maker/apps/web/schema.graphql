@@ -1,0 +1,689 @@
+input AnalyzeJobMatchInput {
+  company: String
+  description: String!
+  jobTitle: String
+
+  """Reference only — the analysis runs on the pasted description."""
+  jobUrl: String
+}
+
+enum ApplicationStatus {
+  INTERVIEW
+  PENDING
+  REJECTED
+  SENT
+}
+
+input AssistantAskInput {
+  """
+  The conversation so far, oldest first. The last entry is the new question.
+  """
+  messages: [AssistantMessageInput!]!
+}
+
+type AssistantChunk {
+  """Text produced since the previous chunk — append it, do not replace."""
+  delta: String!
+
+  """True on the last chunk, when nothing more will come."""
+  done: Boolean!
+}
+
+input AssistantMessageInput {
+  content: String!
+  role: AssistantRole!
+}
+
+enum AssistantRole {
+  ASSISTANT
+  USER
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type Coach {
+  """
+  A coach who stopped taking new candidates stays listed but cannot be booked.
+  """
+  acceptingClients: Boolean!
+  avatarUrl: String
+  bio: String
+  certifications: [String!]!
+  expertise: [CoachExpertise!]!
+  firstName: String
+  id: ID!
+  lastName: String
+
+  """Average rating out of 5. Null until enough sessions were reviewed."""
+  rating: Float
+
+  """Headline shown under the name."""
+  specialty: String
+  yearsExperience: Int
+}
+
+type CoachAgreement {
+  """ISO 8601 datetime."""
+  acceptedAt: String!
+  contractVersion: String!
+  formationSharePlatformPct: Int!
+  id: ID!
+  signedName: String!
+  subscriptionShareCoachPct: Int!
+}
+
+type CoachAgreementStatus {
+  """True once the coach signed the current version and has not revoked it."""
+  isSigned: Boolean!
+
+  """
+  The signature in force, if any. A signature on an older version is not returned.
+  """
+  signature: CoachAgreement
+  terms: CoachAgreementTerms!
+}
+
+type CoachAgreementTerms {
+  """Contract version a coach must sign to reach the coach space."""
+  currentVersion: String!
+
+  """Platform commission on a paid training, in percent."""
+  formationSharePlatformPct: Int!
+
+  """Share of a candidate subscription paid to the coach, in percent."""
+  subscriptionShareCoachPct: Int!
+}
+
+type CoachCandidate {
+  avatarUrl: String
+  bio: String
+  firstName: String
+  id: ID!
+  lastName: String
+
+  """
+  ISO 8601 datetime of the most recent session with this coach, past or future.
+  """
+  lastSessionAt: String!
+
+  """
+  No session left ahead of now — every past session, nothing on the calendar.
+  """
+  needsFollowUp: Boolean!
+  sector: String
+  sessionsCount: Int!
+  situation: ProfileSituation
+}
+
+type CoachCandidateApplication {
+  company: String
+
+  """ISO 8601 datetime."""
+  createdAt: String!
+  id: ID!
+  jobTitle: String
+  matchScore: Float
+  status: ApplicationStatus!
+}
+
+type CoachCandidateDetail {
+  """Most recent applications first."""
+  applications: [CoachCandidateApplication!]!
+  avatarUrl: String
+  bio: String
+
+  """Null when the candidate has not uploaded a CV yet."""
+  cvStatus: CvStatus
+  firstName: String
+  goals: [CoachCandidateGoal!]!
+  id: ID!
+  lastName: String
+
+  """ISO 8601 datetime of the most recent past session, if any."""
+  lastSessionAt: String
+
+  """ISO 8601 datetime of the closest session ahead, if any."""
+  nextSessionAt: String
+  sector: String
+  sessionsCount: Int!
+  situation: ProfileSituation
+}
+
+type CoachCandidateGoal {
+  id: ID!
+
+  """Completion, 0–100."""
+  progress: Int!
+  target: Int
+  title: String
+}
+
+type CoachDashboardOverview {
+  """Most recently active candidates first."""
+  recentCandidates: [CoachCandidate!]!
+  sessionsThisWeek: Int!
+  totalCandidates: Int!
+
+  """Soonest sessions ahead, earliest first."""
+  upcomingSessions: [CoachUpcomingSession!]!
+
+  """Total sessions ahead — upcomingSessions is capped for display."""
+  upcomingSessionsCount: Int!
+}
+
+enum CoachExpertise {
+  CAREER_CHANGE
+  CV_STRATEGY
+  INTERVIEW
+  LEADERSHIP
+  LINKEDIN
+  NEGOTIATION
+}
+
+type CoachUpcomingSession {
+  id: ID!
+
+  """ISO 8601 datetime."""
+  startsAt: String!
+  title: String!
+  type: EventType!
+}
+
+type CoachingGoal {
+  done: Boolean!
+  key: CoachingGoalKey!
+  points: Int!
+
+  """
+  Completion 0–100 while in progress. Null once done, or when the goal is all-or-nothing.
+  """
+  progress: Int
+}
+
+enum CoachingGoalKey {
+  APPLICATIONS
+  CV
+  INTERVIEW
+  MATCHING
+  WORKSHOP
+}
+
+type CoachingOverview {
+  goals: [CoachingGoal!]!
+  score: CoachingScore!
+
+  """Consecutive days ending today with at least one application sent."""
+  streakDays: Int!
+
+  """Booked sessions still ahead, earliest first."""
+  workshops: [CoachingWorkshop!]!
+}
+
+type CoachingScore {
+  max: Int!
+  percent: Int!
+  points: Int!
+}
+
+type CoachingWorkshop {
+  coachName: String
+  id: ID!
+
+  """ISO 8601 datetime."""
+  startsAt: String!
+  title: String!
+}
+
+"""
+Shared filter vocabulary — each provider translates it into its own API wording.
+"""
+enum ContractType {
+  APPRENTICESHIP
+  FIXED_TERM
+  FREELANCE
+  INTERNSHIP
+  PERMANENT
+  SEASONAL
+  TEMPORARY
+}
+
+input CreateCvInput {
+  fileName: String!
+  fileSizeBytes: Int!
+  pdfUrl: String!
+}
+
+input CredentialsInput {
+  email: String!
+  password: String!
+}
+
+type Cv {
+  createdAt: String!
+
+  """
+  Structured data extracted from the PDF (contact info, experiences, education, skills, summary).
+  """
+  extractedData: JSON
+  fileName: String
+  fileSizeBytes: Int
+  id: ID!
+
+  """Categorized list of ATS improvements applied by the optimizer."""
+  improvements: JSON
+
+  """
+  Structured, layout-agnostic optimized content. Rendered into the chosen template client-side.
+  """
+  optimizedData: JSON
+  pdfUrl: String
+  status: CvStatus!
+
+  """The layout the candidate selected for rendering (applied client-side)."""
+  template: CvTemplate
+  updatedAt: String!
+}
+
+enum CvStatus {
+  EXTRACTED
+  EXTRACTING
+  EXTRACTION_FAILED
+  OPTIMIZATION_FAILED
+  OPTIMIZED
+  OPTIMIZING
+  UPLOADED
+}
+
+"""The layout the candidate picked for the optimized CV."""
+enum CvTemplate {
+  ATS
+  CREATIVE
+  PROFESSIONAL
+}
+
+enum EventType {
+  GROUP
+  ONE_ON_ONE
+}
+
+enum ExperienceLevel {
+  ENTRY
+  JUNIOR
+  SENIOR
+}
+
+scalar JSON
+
+type Job {
+  applyUrl: String!
+  company: String
+  description: String!
+  id: ID!
+  isRemote: Boolean!
+  location: String!
+
+  """ISO 8601 publication date, when the source provides one."""
+  postedAt: String
+  salary: JobSalary
+  source: JobSource!
+
+  """Contract type, experience level, sector… as published by the source."""
+  tags: [String!]!
+  title: String!
+}
+
+"""
+Filters a given source can actually honour — the client hides the others.
+"""
+enum JobFilterKind {
+  CONTRACT_TYPE
+  EXPERIENCE_LEVEL
+  POSTED_WITHIN
+  WORK_TIME
+}
+
+type JobMatchResult {
+  """Requirements the CV does not cover."""
+  gaps: [String!]!
+
+  """Compatibility between the stored CV and the offer, 0-100."""
+  score: Int!
+
+  """What the CV already proves for this offer."""
+  strengths: [String!]!
+
+  """One-sentence verdict, written in French by the model."""
+  summary: String!
+
+  """Actionable CV edits, ordered by impact."""
+  tips: [String!]!
+}
+
+type JobSalary {
+  currency: String
+
+  """Raw label published by the source — always displayable."""
+  label: String!
+  max: Float
+
+  """
+  Structured values, extracted best-effort from the label; null when unparseable.
+  """
+  min: Float
+  period: SalaryPeriod
+}
+
+type JobSearchResult {
+  jobs: [Job!]!
+  source: JobSource!
+
+  """Total matches upstream — may exceed the returned page."""
+  total: Int
+}
+
+enum JobSource {
+  FRANCE_TRAVAIL
+  HELLOWORK
+  INDEED
+  JOOBLE
+  LINKEDIN
+}
+
+type JobSourceInfo {
+  id: JobSource!
+  supportedFilters: [JobFilterKind!]!
+}
+
+type Mutation {
+  """
+  Scores the authenticated candidate's CV against a job offer via the LLM.
+  """
+  analyzeJobMatch(input: AnalyzeJobMatchInput!): JobMatchResult!
+
+  """
+  Registers an uploaded PDF and synchronously extracts its content via the LLM.
+  """
+  createCv(input: CreateCvInput!): Cv!
+  login(input: CredentialsInput!): AuthPayload!
+
+  """
+  Runs the ATS optimization prompt against an already-extracted CV, producing structured content.
+  """
+  optimizeCv(id: ID!, template: CvTemplate): Cv!
+  register(input: CredentialsInput!): AuthPayload!
+
+  """
+  Persists the candidate's chosen layout without re-running the optimizer.
+  """
+  setCvTemplate(id: ID!, template: CvTemplate!): Cv!
+  signCoachAgreement(input: SignCoachAgreementInput!): CoachAgreement!
+
+  """
+  Patches user-edited fields (name/title/summary) into the extracted data.
+  """
+  updateCvDetails(id: ID!, input: UpdateCvDetailsInput!): Cv!
+  updateProfile(input: UpdateProfileInput!): Profile!
+}
+
+enum PostedWithin {
+  DAY
+  MONTH
+  THREE_DAYS
+  WEEK
+}
+
+type Profile {
+  avatarUrl: String
+  bio: String
+
+  """ISO date (YYYY-MM-DD)"""
+  birthDate: String
+  educationLevel: String
+  firstName: String
+  id: ID!
+  improvements: [String!]!
+  lastName: String
+  objective: ProfileObjective
+  phone: String
+  school: String
+  sector: String
+  situation: ProfileSituation
+  skills: [String!]!
+  strengths: [String!]!
+}
+
+enum ProfileObjective {
+  CAREER_CHANGE
+  DEVELOP_SKILLS
+  FIND_JOB
+  IMPROVE_CV
+  NETWORK
+}
+
+enum ProfileSituation {
+  EMPLOYED
+  JOB_SEARCH
+  RECONVERSION
+  STUDENT
+}
+
+type Query {
+  """
+  One of the authenticated coach's candidates, with applications, goals and CV status.
+  """
+  coachCandidate(id: ID!): CoachCandidateDetail!
+
+  """Overview for the authenticated coach's dashboard."""
+  coachDashboard: CoachDashboardOverview!
+
+  """
+  Published coach directory, most experienced first. Filtering happens client-side.
+  """
+  coaches: [Coach!]!
+
+  """Sources configured server-side, with the filters each one supports."""
+  jobSources: [JobSourceInfo!]!
+
+  """Currently authenticated user"""
+  me: User
+
+  """
+  Candidates who have booked at least one session with the authenticated coach.
+  """
+  myCandidates: [CoachCandidate!]!
+
+  """Whether the signed-in coach already accepted the agreement in force."""
+  myCoachAgreement: CoachAgreementStatus!
+
+  """
+  Journey overview for the authenticated candidate: workshops, goals and score.
+  """
+  myCoaching: CoachingOverview!
+
+  """The authenticated candidate's most recent CV, if any."""
+  myCv: Cv
+
+  """
+  Published resource library, newest first. Filtering happens client-side.
+  """
+  resources: [Resource!]!
+  searchJobs(input: SearchJobsInput!): JobSearchResult!
+
+  """One published training with its programme."""
+  training(id: ID!): Training!
+
+  """
+  Published training catalog, newest first. Filtering happens client-side on this list.
+  """
+  trainings: [Training!]!
+}
+
+type Resource {
+  access: ResourceAccess!
+  category: ResourceCategory!
+  description: String
+
+  """Minutes — videos and replays only."""
+  durationMinutes: Int
+  id: ID!
+
+  """Price in cents. Only set when access is PAID."""
+  priceCents: Int
+
+  """Bytes — documents only."""
+  sizeBytes: Int
+  title: String!
+  type: ResourceType!
+
+  """Null while the file or the article is not published yet."""
+  url: String
+}
+
+enum ResourceAccess {
+  FREE
+  PAID
+  PREMIUM
+}
+
+enum ResourceCategory {
+  APPLICATION
+  COACHING
+  INTERVIEW
+  NETWORK
+  ORGANIZATION
+  TOOLS
+}
+
+enum ResourceType {
+  ARTICLE
+  DOC
+  PDF
+  REPLAY
+  VIDEO
+}
+
+enum Role {
+  ADMIN
+  CANDIDATE
+  COACH
+}
+
+enum SalaryPeriod {
+  HOUR
+  MONTH
+  YEAR
+}
+
+input SearchJobsInput {
+  contractTypes: [ContractType!]
+  experienceLevel: ExperienceLevel
+  keywords: String
+  limit: Int
+  location: String
+  postedWithin: PostedWithin
+  source: JobSource!
+  workTime: WorkTime
+}
+
+input SignCoachAgreementInput {
+  """
+  Must match the version currently in force, or the signature is refused.
+  """
+  contractVersion: String!
+
+  """The coach full name, typed by hand — this is the electronic signature."""
+  signedName: String!
+}
+
+type Subscription {
+  """Streams the assistant answer as it is produced."""
+  assistantReply(input: AssistantAskInput!): AssistantChunk!
+}
+
+type Training {
+  category: TrainingCategory!
+  certificate: Boolean!
+
+  """Ordered programme. Only resolved on the detail query."""
+  curriculum: [TrainingModule!]!
+  description: String
+
+  """Duration in days — the client renders weeks or days per locale."""
+  durationDays: Int!
+  id: ID!
+  instructor: String
+  level: TrainingLevel!
+
+  """Number of modules — derived from the curriculum."""
+  modules: Int!
+
+  """Price in cents. Null means the training is free."""
+  priceCents: Int
+  title: String!
+}
+
+enum TrainingCategory {
+  CAREER_CHANGE
+  CV
+  INTERVIEW
+  LEADERSHIP
+  SOFT_SKILLS
+  TECHNICAL
+}
+
+enum TrainingLevel {
+  ADVANCED
+  BEGINNER
+  INTERMEDIATE
+}
+
+type TrainingModule {
+  durationMinutes: Int
+  id: ID!
+
+  """1-based rank inside the training."""
+  position: Int!
+  summary: String
+  title: String!
+}
+
+input UpdateCvDetailsInput {
+  fullName: String
+  professionalTitle: String
+  summary: String
+}
+
+input UpdateProfileInput {
+  avatarUrl: String
+  bio: String
+
+  """ISO date (YYYY-MM-DD)"""
+  birthDate: String
+  educationLevel: String
+  firstName: String
+  improvements: [String!]
+  lastName: String
+  objective: ProfileObjective
+  phone: String
+  school: String
+  sector: String
+  situation: ProfileSituation
+  skills: [String!]
+  strengths: [String!]
+}
+
+type User {
+  createdAt: String!
+  email: String!
+  id: ID!
+  profile: Profile
+  role: Role!
+}
+
+enum WorkTime {
+  FULL_TIME
+  PART_TIME
+}

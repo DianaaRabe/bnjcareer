@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import logoFull from "@/public/logos/WhatsApp Image 2026-09-03 at 10.44.11.jpeg";
 import { useLogin } from "./useLogin";
 
 export function Login() {
@@ -27,8 +28,12 @@ export function Login() {
     <main className="flex min-h-screen items-center justify-center bg-muted p-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="flex flex-col items-center gap-3 text-center">
-          <div className="flex size-10 items-center justify-center rounded-lg bg-primary text-lg font-semibold text-primary-foreground">
-            S
+          <div className="flex items-center justify-center py-1">
+            <img
+              src={logoFull}
+              alt="BNJ Skills Maker"
+              className="h-16 w-auto max-w-[200px] object-contain"
+            />
           </div>
           <div>
             <h1 className="text-2xl font-semibold text-foreground">

@@ -8,8 +8,9 @@ export const CREATE_CV_MUTATION = graphql(`
       fileName
       fileSizeBytes
       status
+      template
       extractedData
-      optimizedHtml
+      optimizedData
       improvements
       createdAt
       updatedAt
@@ -18,12 +19,23 @@ export const CREATE_CV_MUTATION = graphql(`
 `)
 
 export const OPTIMIZE_CV_MUTATION = graphql(`
-  mutation OptimizeCv($id: ID!) {
-    optimizeCv(id: $id) {
+  mutation OptimizeCv($id: ID!, $template: CvTemplate) {
+    optimizeCv(id: $id, template: $template) {
       id
       status
-      optimizedHtml
+      template
+      optimizedData
       improvements
+      updatedAt
+    }
+  }
+`)
+
+export const SET_CV_TEMPLATE_MUTATION = graphql(`
+  mutation SetCvTemplate($id: ID!, $template: CvTemplate!) {
+    setCvTemplate(id: $id, template: $template) {
+      id
+      template
       updatedAt
     }
   }

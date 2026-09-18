@@ -1,8 +1,15 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
-import { CvStatus } from '@/gql/graphql'
-import { useCreateCvMutation, useMyCvQuery, useOptimizeCvMutation, useUpdateCvDetailsMutation } from '@/graphql/hooks/cv'
+import { CvStatus, CvTemplate } from '@/gql/graphql'
+import {
+  useCreateCvMutation,
+  useMyCvQuery,
+  useOptimizeCvMutation,
+  useSetCvTemplateMutation,
+  useUpdateCvDetailsMutation,
+} from '@/graphql/hooks/cv'
+import type { CvOptimizedData } from './templates/types'
 import { useTranslate } from '@/hooks/useTranslate'
 import { getGraphQLErrorCode, GRAPHQL_URL } from '@/lib/apollo'
 import { getToken } from '@/lib/auth'
@@ -65,6 +72,7 @@ export const useCv = () => {
   const { data, loading, refetch } = useMyCvQuery()
   const [createCv] = useCreateCvMutation()
   const [runOptimizeCv, { loading: isOptimizing }] = useOptimizeCvMutation()
+  const [runSetCvTemplate] = useSetCvTemplateMutation()
   const [runUpdateCvDetails] = useUpdateCvDetailsMutation()
 
   const [uploadStep, setUploadStep] = useState<UploadStep>(UPLOAD_STEP.idle)
@@ -76,12 +84,20 @@ export const useCv = () => {
   const hasCv = cv != null
   const cvUrl = toAbsolutePdfUrl(cv?.pdfUrl)
   const extractedData = (cv?.extractedData as CvExtractedData | null) ?? null
+  const optimizedData = (cv?.optimizedData as CvOptimizedData | null) ?? null
   const improvements = (cv?.improvements as CvImprovement[] | null) ?? []
   const canOptimize = cv?.status === CvStatus.Extracted || cv?.status === CvStatus.Optimized
+  const isOptimized = cv?.status === CvStatus.Optimized && optimizedData != null
 
   const [detailsName, setDetailsName] = useState('')
   const [detailsTitle, setDetailsTitle] = useState('')
   const [detailsSummary, setDetailsSummary] = useState('')
+  const [selectedTemplate, setSelectedTemplate] = useState<CvTemplate>(CvTemplate.Ats)
+
+  // Keep the selector in sync with the format already stored on the CV.
+  useEffect(() => {
+    if (cv?.template) setSelectedTemplate(cv.template)
+  }, [cv?.template])
 
   useEffect(() => {
     setDetailsName(extractedData?.fullName ?? '')
@@ -175,7 +191,7 @@ export const useCv = () => {
   const openAtsOptimizer = async () => {
     if (!cv || !canOptimize) return
     try {
-      await runOptimizeCv({ variables: { id: cv.id } })
+      await runOptimizeCv({ variables: { id: cv.id, template: selectedTemplate } })
       toast.success(translate('candidate.cv.upload.success.title'), {
         description: translate('candidate.cv.upload.success.description'),
       })
@@ -183,6 +199,15 @@ export const useCv = () => {
       toast.error(translate('candidate.cv.optimize.error.title'), {
         description: translate('candidate.cv.optimize.error.description'),
       })
+    }
+  }
+
+  // Switching the layout is instant (client-side re-render). We only persist the choice
+  // in the background — no LLM call, since the structured content doesn't change.
+  const changeTemplate = (template: CvTemplate) => {
+    setSelectedTemplate(template)
+    if (cv && template !== cv.template) {
+      runSetCvTemplate({ variables: { id: cv.id, template } }).catch(() => {})
     }
   }
 
@@ -219,7 +244,12 @@ export const useCv = () => {
     status: cv?.status ?? null,
     canOptimize,
     isOptimizing,
-    optimizedHtml: cv?.optimizedHtml ?? null,
+    selectedTemplate,
+    setSelectedTemplate,
+    changeTemplate,
+    extractedData,
+    optimizedData,
+    isOptimized,
     optimizedAt: cv?.updatedAt ?? null,
     improvements,
     uploadStep,

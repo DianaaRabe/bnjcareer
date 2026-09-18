@@ -1,20 +1,25 @@
 import { FormattedMessage, useIntl } from 'react-intl'
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import type { CvTemplate } from '@/gql/graphql'
+import { CvTemplateRenderer } from './templates/CvTemplateRenderer'
+import type { CvRenderData } from './templates/types'
 import type { FullscreenPanel } from './useCvOptimizationResult'
 
 type CvFullscreenPreviewDialogProps = {
   panel: FullscreenPanel
   onClose: () => void
   originalCvUrl: string | null
-  optimizedHtml: string
+  renderData: CvRenderData
+  template: CvTemplate
 }
 
 export const CvFullscreenPreviewDialog = ({
   panel,
   onClose,
   originalCvUrl,
-  optimizedHtml,
+  renderData,
+  template,
 }: CvFullscreenPreviewDialogProps) => {
   const intl = useIntl()
 
@@ -36,7 +41,7 @@ export const CvFullscreenPreviewDialog = ({
               className="h-[70vh] w-full rounded-lg border-0"
             />
           ) : (
-            <div dangerouslySetInnerHTML={{ __html: optimizedHtml }} />
+            <CvTemplateRenderer template={template} data={renderData} />
           )}
         </div>
       </DialogContent>
