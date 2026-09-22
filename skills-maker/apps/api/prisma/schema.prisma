@@ -2,14 +2,12 @@
 // FKs that referenced profiles(id) now reference User. @@map/@map keep original names for data migration.
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["multiSchema"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["public", "auth"]
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -20,8 +18,6 @@ enum Role {
   CANDIDATE
   COACH
   ADMIN
-
-  @@schema("public")
 }
 
 enum ApplicationStatus {
@@ -29,29 +25,21 @@ enum ApplicationStatus {
   PENDING
   REJECTED
   INTERVIEW
-
-  @@schema("public")
 }
 
 enum BookingStatus {
   BOOKED
   CANCELED
-
-  @@schema("public")
 }
 
 enum EventType {
   ONE_ON_ONE // '1v1'
   GROUP      // 'group'
-
-  @@schema("public")
 }
 
 enum EventStatus {
   SCHEDULED
   CANCELED
-
-  @@schema("public")
 }
 
 enum ResourceType {
@@ -60,8 +48,6 @@ enum ResourceType {
   ARTICLE
   VIDEO
   REPLAY
-
-  @@schema("public")
 }
 
 enum ResourceCategory {
@@ -71,24 +57,18 @@ enum ResourceCategory {
   ORGANIZATION
   COACHING
   TOOLS
-
-  @@schema("public")
 }
 
 enum ResourceAccess {
   FREE
   PAID
   PREMIUM
-
-  @@schema("public")
 }
 
 enum TicketStatus {
   OPEN
   IN_PROGRESS
   CLOSED
-
-  @@schema("public")
 }
 
 enum TrainingCategory {
@@ -98,8 +78,6 @@ enum TrainingCategory {
   SOFT_SKILLS
   TECHNICAL
   LEADERSHIP
-
-  @@schema("public")
 }
 
 enum CoachExpertise {
@@ -109,16 +87,12 @@ enum CoachExpertise {
   NEGOTIATION
   CAREER_CHANGE
   LEADERSHIP
-
-  @@schema("public")
 }
 
 enum TrainingLevel {
   BEGINNER
   INTERMEDIATE
   ADVANCED
-
-  @@schema("public")
 }
 
 enum ProfileSituation {
@@ -126,8 +100,6 @@ enum ProfileSituation {
   JOB_SEARCH
   RECONVERSION
   STUDENT
-
-  @@schema("public")
 }
 
 enum ProfileObjective {
@@ -136,8 +108,6 @@ enum ProfileObjective {
   CAREER_CHANGE
   DEVELOP_SKILLS
   NETWORK
-
-  @@schema("public")
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -167,7 +137,6 @@ model User {
   coachTrainings Training[]                 @relation("CoachTrainings")
 
   @@map("users")
-  @@schema("public")
 }
 
 model Profile {
@@ -191,7 +160,6 @@ model Profile {
   createdAt      DateTime          @default(now()) @map("created_at")
 
   @@map("profiles")
-  @@schema("public")
 }
 
 /// Coach-specific data — candidates never have a row here.
@@ -214,7 +182,6 @@ model CoachProfile {
 
   @@index([published, acceptingClients])
   @@map("coach_profiles")
-  @@schema("public")
 }
 
 /// Signature of the coach collaboration agreement — an audit record, never updated in place.
@@ -240,7 +207,6 @@ model CoachAgreement {
 
   @@index([coachId, revokedAt])
   @@map("coach_agreements")
-  @@schema("public")
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -255,8 +221,6 @@ enum CvStatus {
   OPTIMIZING
   OPTIMIZED
   OPTIMIZATION_FAILED
-
-  @@schema("public")
 }
 
 model Cv {
@@ -276,7 +240,6 @@ model Cv {
   updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("cvs")
-  @@schema("public")
 }
 
 model JobOffer {
@@ -290,7 +253,6 @@ model JobOffer {
   application Application[]
 
   @@map("job_offers")
-  @@schema("public")
 }
 
 model Application {
@@ -306,7 +268,6 @@ model Application {
   matchAnalysis MatchAnalysis?
 
   @@map("applications")
-  @@schema("public")
 }
 
 model MatchAnalysis {
@@ -318,7 +279,6 @@ model MatchAnalysis {
   suggestions   Json?
 
   @@map("match_analyses")
-  @@schema("public")
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -337,7 +297,6 @@ model CalendarEvent {
   bookings  Booking[]
 
   @@map("calendar_events")
-  @@schema("public")
 }
 
 model Booking {
@@ -349,7 +308,6 @@ model Booking {
   status  BookingStatus @default(BOOKED)
 
   @@map("bookings")
-  @@schema("public")
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -363,7 +321,6 @@ model Conversation {
   messages     Message[]
 
   @@map("conversations")
-  @@schema("public")
 }
 
 model ConversationParticipant {
@@ -374,7 +331,6 @@ model ConversationParticipant {
 
   @@id([conversationId, userId])
   @@map("conversation_participants")
-  @@schema("public")
 }
 
 model Message {
@@ -387,7 +343,6 @@ model Message {
   createdAt      DateTime      @default(now()) @map("created_at")
 
   @@map("messages")
-  @@schema("public")
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -403,7 +358,6 @@ model Goal {
   target   Int?
 
   @@map("goals")
-  @@schema("public")
 }
 
 model Resource {
@@ -426,7 +380,6 @@ model Resource {
 
   @@index([published, category])
   @@map("resources")
-  @@schema("public")
 }
 
 model Skill {
@@ -435,7 +388,6 @@ model Skill {
   users UserSkill[]
 
   @@map("skills")
-  @@schema("public")
 }
 
 model Training {
@@ -464,7 +416,6 @@ model Training {
   @@index([published, category, level])
   @@index([coachId])
   @@map("trainings")
-  @@schema("public")
 }
 
 model TrainingModule {
@@ -479,7 +430,6 @@ model TrainingModule {
 
   @@unique([trainingId, position])
   @@map("training_modules")
-  @@schema("public")
 }
 
 model UserSkill {
@@ -490,7 +440,6 @@ model UserSkill {
 
   @@id([userId, skillId])
   @@map("user_skills")
-  @@schema("public")
 }
 
 model Ticket {
@@ -503,5 +452,4 @@ model Ticket {
   createdAt DateTime     @default(now()) @map("created_at")
 
   @@map("tickets")
-  @@schema("public")
 }
