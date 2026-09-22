@@ -13,30 +13,11 @@ import { resourcesResolvers } from './modules/resources/resolvers.js'
 import { assistantResolvers } from './modules/assistant/resolvers.js'
 import { coachAgreementResolvers } from './modules/coachAgreement/resolvers.js'
 import { coachDashboardResolvers } from './modules/coachDashboard/resolvers.js'
-import { sessionsTypeDefs } from './modules/sessions/typeDefs.js'
 import { sessionsResolvers } from './modules/sessions/resolvers.js'
 
 // Merges all modules — each new domain adds its typeDefs (in ./typeDefs.ts) + resolvers here.
 export const schema = makeExecutableSchema({
-<<<<<<< HEAD
-  typeDefs: [
-    authTypeDefs,
-    profilesTypeDefs,
-    cvTypeDefs,
-    jobsTypeDefs,
-    matchingTypeDefs,
-    coachingTypeDefs,
-    trainingsTypeDefs,
-    coachesTypeDefs,
-    resourcesTypeDefs,
-    assistantTypeDefs,
-    coachAgreementTypeDefs,
-    coachDashboardTypeDefs,
-    sessionsTypeDefs,
-  ],
-=======
   typeDefs: allTypeDefs,
->>>>>>> d882af5 (ajout des templates de mises en formes des CVs et basculement vers supabase)
   resolvers: [
     authResolvers,
     profilesResolvers,

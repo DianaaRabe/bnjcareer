@@ -44,6 +44,11 @@ type AuthPayload {
   user: User!
 }
 
+enum BookingStatus {
+  BOOKED
+  CANCELED
+}
+
 type Coach {
   """
   A coach who stopped taking new candidates stays listed but cannot be booked.
@@ -183,6 +188,63 @@ enum CoachExpertise {
   NEGOTIATION
 }
 
+"""
+A coach's management view of a resource — same shape as Resource, unredacted, plus the publish state.
+"""
+type CoachResource {
+  access: ResourceAccess!
+  category: ResourceCategory!
+  description: String
+  durationMinutes: Int
+  id: ID!
+  priceCents: Int
+
+  """Hidden from candidates until true."""
+  published: Boolean!
+  sizeBytes: Int
+  title: String!
+  type: ResourceType!
+  url: String
+}
+
+type CoachSession {
+  """Only resolved on the detail query."""
+  attendees: [SessionAttendee!]!
+
+  """Candidates with an active (non-canceled) booking on this session."""
+  attendeesCount: Int!
+
+  """ISO 8601 datetime."""
+  endTime: String!
+  id: ID!
+
+  """ISO 8601 datetime."""
+  startTime: String!
+  status: EventStatus!
+  title: String!
+  type: EventType!
+}
+
+"""
+The coach's own view of a training — same shape as Training, plus the draft/published state.
+"""
+type CoachTraining {
+  category: TrainingCategory!
+  certificate: Boolean!
+  curriculum: [TrainingModule!]!
+  description: String
+  durationDays: Int!
+  id: ID!
+  instructor: String
+  level: TrainingLevel!
+  modules: Int!
+  priceCents: Int
+
+  """Hidden from candidates until true."""
+  published: Boolean!
+  title: String!
+}
+
 type CoachUpcomingSession {
   id: ID!
 
@@ -256,6 +318,37 @@ input CreateCvInput {
   pdfUrl: String!
 }
 
+input CreateResourceInput {
+  access: ResourceAccess
+  category: ResourceCategory!
+  description: String
+  durationMinutes: Int
+  priceCents: Int
+  published: Boolean
+  sizeBytes: Int
+  title: String!
+  type: ResourceType!
+  url: String
+}
+
+input CreateSessionInput {
+  endTime: String!
+  startTime: String!
+  title: String!
+  type: EventType!
+}
+
+input CreateTrainingInput {
+  category: TrainingCategory!
+  certificate: Boolean
+  description: String
+  durationDays: Int!
+  instructor: String
+  level: TrainingLevel!
+  priceCents: Int
+  title: String!
+}
+
 input CredentialsInput {
   email: String!
   password: String!
@@ -302,6 +395,11 @@ enum CvTemplate {
   ATS
   CREATIVE
   PROFESSIONAL
+}
+
+enum EventStatus {
+  CANCELED
+  SCHEDULED
 }
 
 enum EventType {
@@ -398,15 +496,43 @@ type JobSourceInfo {
 }
 
 type Mutation {
+  """Appends a module to the end of the training's curriculum."""
+  addTrainingModule(input: TrainingModuleInput!, trainingId: ID!): TrainingModule!
+
   """
   Scores the authenticated candidate's CV against a job offer via the LLM.
   """
   analyzeJobMatch(input: AnalyzeJobMatchInput!): JobMatchResult!
 
   """
+  Cancels one candidate's booking on a session owned by the authenticated coach.
+  """
+  cancelBooking(id: ID!): Boolean!
+
+  """Marks a session owned by the authenticated coach as canceled."""
+  cancelSession(id: ID!): Boolean!
+
+  """
   Registers an uploaded PDF and synchronously extracts its content via the LLM.
   """
   createCv(input: CreateCvInput!): Cv!
+
+  """Adds a resource to the shared library."""
+  createResource(input: CreateResourceInput!): CoachResource!
+
+  """Creates a session owned by the authenticated coach."""
+  createSession(input: CreateSessionInput!): CoachSession!
+
+  """Creates a draft training owned by the authenticated coach."""
+  createTraining(input: CreateTrainingInput!): CoachTraining!
+
+  """Removes a resource from the shared library."""
+  deleteResource(id: ID!): Boolean!
+
+  """
+  Deletes a training owned by the authenticated coach, and its curriculum with it.
+  """
+  deleteTraining(id: ID!): Boolean!
   login(input: CredentialsInput!): AuthPayload!
 
   """
@@ -416,16 +542,59 @@ type Mutation {
   register(input: CredentialsInput!): AuthPayload!
 
   """
+  Removes one module and shifts the following ones up so positions stay contiguous.
+  """
+  removeTrainingModule(id: ID!): Boolean!
+
+  """
   Persists the candidate's chosen layout without re-running the optimizer.
   """
   setCvTemplate(id: ID!, template: CvTemplate!): Cv!
   signCoachAgreement(input: SignCoachAgreementInput!): CoachAgreement!
 
   """
+  Updates the authenticated coach's own directory settings — omitted fields are left untouched.
+  """
+  updateCoachProfile(input: UpdateCoachProfileInput!): MyCoachProfile!
+
+  """
   Patches user-edited fields (name/title/summary) into the extracted data.
   """
   updateCvDetails(id: ID!, input: UpdateCvDetailsInput!): Cv!
   updateProfile(input: UpdateProfileInput!): Profile!
+
+  """
+  Updates a resource of the shared library — omitted fields are left untouched.
+  """
+  updateResource(id: ID!, input: UpdateResourceInput!): CoachResource!
+
+  """
+  Updates a session owned by the authenticated coach — omitted fields are left untouched.
+  """
+  updateSession(id: ID!, input: UpdateSessionInput!): CoachSession!
+
+  """
+  Updates a training owned by the authenticated coach — omitted fields are left untouched.
+  """
+  updateTraining(id: ID!, input: UpdateTrainingInput!): CoachTraining!
+
+  """Updates one module of a training owned by the authenticated coach."""
+  updateTrainingModule(id: ID!, input: TrainingModuleInput!): TrainingModule!
+}
+
+"""
+The authenticated coach's own directory settings — same data, plus the publish state.
+"""
+type MyCoachProfile {
+  acceptingClients: Boolean!
+  certifications: [String!]!
+  expertise: [CoachExpertise!]!
+
+  """Hidden from the candidate-facing directory until true."""
+  published: Boolean!
+  rating: Float
+  specialty: String
+  yearsExperience: Int
 }
 
 enum PostedWithin {
@@ -479,6 +648,14 @@ type Query {
   """Overview for the authenticated coach's dashboard."""
   coachDashboard: CoachDashboardOverview!
 
+  """One resource of the shared library."""
+  coachResource(id: ID!): CoachResource!
+
+  """
+  The whole shared library, drafts included — any coach can manage any resource.
+  """
+  coachResources: [CoachResource!]!
+
   """
   Published coach directory, most experienced first. Filtering happens client-side.
   """
@@ -498,6 +675,9 @@ type Query {
   """Whether the signed-in coach already accepted the agreement in force."""
   myCoachAgreement: CoachAgreementStatus!
 
+  """The authenticated coach's own directory settings."""
+  myCoachProfile: MyCoachProfile!
+
   """
   Journey overview for the authenticated candidate: workshops, goals and score.
   """
@@ -505,6 +685,20 @@ type Query {
 
   """The authenticated candidate's most recent CV, if any."""
   myCv: Cv
+
+  """One of the authenticated coach's own sessions, with its attendees."""
+  mySession(id: ID!): CoachSession!
+
+  """The authenticated coach's own sessions, latest start time first."""
+  mySessions: [CoachSession!]!
+
+  """One of the authenticated coach's own trainings, with its programme."""
+  myTraining(id: ID!): CoachTraining!
+
+  """
+  The authenticated coach's own trainings, drafts included, newest first.
+  """
+  myTrainings: [CoachTraining!]!
 
   """
   Published resource library, newest first. Filtering happens client-side.
@@ -588,6 +782,16 @@ input SearchJobsInput {
   workTime: WorkTime
 }
 
+type SessionAttendee {
+  avatarUrl: String
+  firstName: String
+
+  """The booking id — target of cancelBooking."""
+  id: ID!
+  lastName: String
+  status: BookingStatus!
+}
+
 input SignCoachAgreementInput {
   """
   Must match the version currently in force, or the signature is refused.
@@ -650,6 +854,21 @@ type TrainingModule {
   title: String!
 }
 
+input TrainingModuleInput {
+  durationMinutes: Int
+  summary: String
+  title: String!
+}
+
+input UpdateCoachProfileInput {
+  acceptingClients: Boolean
+  certifications: [String!]
+  expertise: [CoachExpertise!]
+  published: Boolean
+  specialty: String
+  yearsExperience: Int
+}
+
 input UpdateCvDetailsInput {
   fullName: String
   professionalTitle: String
@@ -673,6 +892,38 @@ input UpdateProfileInput {
   situation: ProfileSituation
   skills: [String!]
   strengths: [String!]
+}
+
+input UpdateResourceInput {
+  access: ResourceAccess
+  category: ResourceCategory
+  description: String
+  durationMinutes: Int
+  priceCents: Int
+  published: Boolean
+  sizeBytes: Int
+  title: String
+  type: ResourceType
+  url: String
+}
+
+input UpdateSessionInput {
+  endTime: String
+  startTime: String
+  title: String
+  type: EventType
+}
+
+input UpdateTrainingInput {
+  category: TrainingCategory
+  certificate: Boolean
+  description: String
+  durationDays: Int
+  instructor: String
+  level: TrainingLevel
+  priceCents: Int
+  published: Boolean
+  title: String
 }
 
 type User {
