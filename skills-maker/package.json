@@ -10,10 +10,11 @@
   "scripts": {
     "dev": "npm run dev -w apps/api",
     "build": "npm run codegen -w apps/api && npm run db:generate -w apps/api && npm run build -w apps/api",
-    "start": "npm run db:migrate:deploy -w apps/api && npm run start -w apps/api",
+    "start": "npm run db:push -w apps/api && npm run start -w apps/api",
     "lint": "npm run lint -w apps/api",
     "dev:api": "npm run dev -w apps/api",
     "dev:web": "npm run dev -w apps/web",
+    "db:push": "npm run db:push -w apps/api",
     "db:migrate": "npm run db:migrate -w apps/api",
     "db:migrate:deploy": "npm run db:migrate:deploy -w apps/api",
     "db:seed": "npm run db:seed -w apps/api",

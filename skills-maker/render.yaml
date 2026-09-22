@@ -14,8 +14,8 @@ services:
     # codegen (local typeDefs) + prisma client generation happen at build time;
     # apps/api/src/gql is gitignored so codegen must run before tsc.
     buildCommand: npm ci && npm run codegen -w apps/api && npm run db:generate -w apps/api && npm run build -w apps/api
-    # Apply pending migrations to the Supabase DB, then boot the compiled server.
-    startCommand: npm run db:migrate:deploy -w apps/api && npm run start -w apps/api
+    # Synchronize schema with the Supabase DB, then boot the compiled server.
+    startCommand: npm run db:push -w apps/api && npm run start -w apps/api
     healthCheckPath: /health
     disk:
       name: uploads
