@@ -1,4 +1,4 @@
-import { GraphQLError } from 'graphql'
+import { GraphQLError } from 'graphql/index.js'
 import type { Role } from '@prisma/client'
 import type { Context } from '@/context.js'
 import { messages } from '@/constants/messages.js'
