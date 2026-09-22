@@ -172,8 +172,8 @@ model User {
 
 model Profile {
   id             String            @id @default(uuid())
-  userId         String            @unique @map("user_id")
-  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String?           @unique @map("user_id")
+  user           User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
   firstName      String?           @map("first_name")
   lastName       String?           @map("last_name")
   phone          String?
@@ -273,7 +273,7 @@ model Cv {
   improvements  Json?
   status        CvStatus @default(UPLOADED)
   createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("cvs")
   @@schema("public")
@@ -410,8 +410,8 @@ model Resource {
   id              String           @id @default(uuid())
   title           String
   description     String?
-  type            ResourceType
-  category        ResourceCategory
+  type            ResourceType     @default(PDF)
+  category        ResourceCategory @default(APPLICATION)
   url             String?
   /// Bytes — documents only, null for videos and articles.
   sizeBytes       Int?             @map("size_bytes")
