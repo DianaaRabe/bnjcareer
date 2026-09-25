@@ -22,11 +22,14 @@ export const JobSourceTabs = ({ sources, active, onChange, className }: JobSourc
       variant="pill"
       className="w-fit max-w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
-      {sources.map((source) => (
-        <TabsTrigger key={source} value={source} className="flex-none">
-          <FormattedMessage id={JOB_SOURCE_LABEL_IDS[source]} />
-        </TabsTrigger>
-      ))}
+      {sources.map((source) => {
+        const labelId = JOB_SOURCE_LABEL_IDS[source]
+        return (
+          <TabsTrigger key={source} value={source} className="flex-none">
+            {labelId ? <FormattedMessage id={labelId} /> : source}
+          </TabsTrigger>
+        )
+      })}
     </TabsList>
   </Tabs>
 )
