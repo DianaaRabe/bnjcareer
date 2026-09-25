@@ -1,12 +1,16 @@
 import type { QuickLink } from '@/components/common/QuickAccessCard/QuickAccessCard'
 import { STAT_FORMAT, type StatItem } from '@/components/common/StatCard/StatCard'
 import { ROUTES } from '@/constants/routes'
+import { CoachingGoalKey, type MyCoachingQuery } from '@/gql/graphql'
+import { useMyCoachingQuery } from '@/graphql/hooks/coaching'
 
 export type GoalItem = {
   labelId: string
   /** Completion, 0–100. */
   progress: number
 }
+
+export type RecentApplication = MyCoachingQuery['myCoaching']['recentApplications'][number]
 
 const QUICK_LINKS: QuickLink[] = [
   {
@@ -46,33 +50,68 @@ const QUICK_LINKS: QuickLink[] = [
   },
 ]
 
-// TODO: read these from the candidate dashboard query once the API exposes it.
+/** A done goal reads as 100% — the API nulls `progress` once the goal is reached. */
+const goalProgress = (done: boolean, progress?: number | null) => (done ? 100 : (progress ?? 0))
+
+/** Maps the dashboard's goal rows to the coaching goal keys the API returns. */
+const DASHBOARD_GOALS: { labelId: string; key: CoachingGoalKey }[] = [
+  { labelId: 'candidate.dashboard.goals.cv', key: CoachingGoalKey.Cv },
+  { labelId: 'candidate.dashboard.goals.weeklyApplications', key: CoachingGoalKey.Applications },
+  { labelId: 'candidate.dashboard.goals.workshops', key: CoachingGoalKey.Workshop },
+  { labelId: 'candidate.dashboard.goals.matchingTarget', key: CoachingGoalKey.Matching },
+]
+
 export const useDashboard = () => {
+  const { data } = useMyCoachingQuery()
+  const overview = data?.myCoaching
+  const s = overview?.stats
+
+  const goalsByKey = new Map((overview?.goals ?? []).map((goal) => [goal.key, goal]))
+  const doneGoals = (overview?.goals ?? []).filter((goal) => goal.done).length
+  const totalGoals = overview?.goals.length ?? 0
+
   const stats: StatItem[] = [
-    { labelId: 'candidate.dashboard.stats.targetedJobs', value: 0, format: STAT_FORMAT.count },
-    { labelId: 'candidate.dashboard.stats.matchingScore', value: 0, format: STAT_FORMAT.percent },
-    { labelId: 'candidate.dashboard.stats.interviews', value: 0, format: STAT_FORMAT.count },
+    {
+      labelId: 'candidate.dashboard.stats.targetedJobs',
+      value: s?.applicationCount ?? 0,
+      format: STAT_FORMAT.count,
+    },
+    {
+      labelId: 'candidate.dashboard.stats.matchingScore',
+      value: s?.bestMatchScore ?? 0,
+      format: STAT_FORMAT.percent,
+    },
+    {
+      labelId: 'candidate.dashboard.stats.interviews',
+      value: s?.interviewCount ?? 0,
+      format: STAT_FORMAT.count,
+    },
     {
       labelId: 'candidate.dashboard.stats.goals',
-      value: 0,
-      total: 0,
+      value: doneGoals,
+      total: totalGoals,
       format: STAT_FORMAT.ratio,
     },
-    { labelId: 'candidate.dashboard.stats.formations', value: 0, format: STAT_FORMAT.count },
+    {
+      labelId: 'candidate.dashboard.stats.formations',
+      value: s?.attendedWorkshopCount ?? 0,
+      format: STAT_FORMAT.count,
+    },
   ]
 
-  const goals: GoalItem[] = [
-    { labelId: 'candidate.dashboard.goals.cv', progress: 0 },
-    { labelId: 'candidate.dashboard.goals.weeklyApplications', progress: 0 },
-    { labelId: 'candidate.dashboard.goals.workshops', progress: 0 },
-    { labelId: 'candidate.dashboard.goals.matchingTarget', progress: 0 },
-  ]
+  const goals: GoalItem[] = DASHBOARD_GOALS.map(({ labelId, key }) => {
+    const goal = goalsByKey.get(key)
+    return { labelId, progress: goalProgress(goal?.done ?? false, goal?.progress) }
+  })
+
+  const recentApplications = overview?.recentApplications ?? []
 
   return {
     stats,
     goals,
     quickLinks: QUICK_LINKS,
-    hasApplications: false,
+    recentApplications,
+    hasApplications: recentApplications.length > 0,
     isAiEnabled: true,
   }
 }

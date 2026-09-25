@@ -10,6 +10,7 @@ export const JOB_SOURCE = {
   hellowork: 'HELLOWORK',
   franceTravail: 'FRANCE_TRAVAIL',
   jooble: 'JOOBLE',
+  international: 'INTERNATIONAL',
 } as const
 
 export type JobSourceId = (typeof JOB_SOURCE)[keyof typeof JOB_SOURCE]

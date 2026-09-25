@@ -21,6 +21,19 @@ export const MY_COACHING_QUERY = graphql(`
         startsAt
         coachName
       }
+      stats {
+        applicationCount
+        interviewCount
+        bestMatchScore
+        attendedWorkshopCount
+      }
+      recentApplications {
+        id
+        title
+        company
+        status
+        appliedAt
+      }
     }
   }
 `)

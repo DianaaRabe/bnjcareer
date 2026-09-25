@@ -76,6 +76,7 @@ export const Jobs = () => {
               job={job}
               onOpenDetails={() => jobs.openDetails(job)}
               onOptimize={() => jobs.openAtsOptimizer(job)}
+              onApply={() => jobs.trackApply(job)}
             />
           ))}
         </div>
@@ -90,6 +91,7 @@ export const Jobs = () => {
             job={job}
             onOpenDetails={() => jobs.openDetails(job)}
             onOptimize={() => jobs.openAtsOptimizer(job)}
+            onApply={() => jobs.trackApply(job)}
           />
         ))}
       </div>
@@ -140,12 +142,18 @@ export const Jobs = () => {
         />
       )}
 
-      <JobDetailsDialog job={jobs.selectedJob} onClose={jobs.closeDetails} onOptimize={jobs.openAtsOptimizer} />
+      <JobDetailsDialog
+        job={jobs.selectedJob}
+        onClose={jobs.closeDetails}
+        onOptimize={jobs.openAtsOptimizer}
+        onApply={jobs.trackApply}
+      />
       <AtsOptimizerDialog
         job={jobs.jobToOptimize}
         hasCv={jobs.hasCv}
+        isOptimizing={jobs.isOptimizingForJob}
         onClose={jobs.closeAtsOptimizer}
-        onConfirm={jobs.goToCv}
+        onConfirm={jobs.optimizeForJob}
       />
     </div>
   )

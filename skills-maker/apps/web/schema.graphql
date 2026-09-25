@@ -254,6 +254,18 @@ type CoachUpcomingSession {
   type: EventType!
 }
 
+"""
+A recent offer the candidate applied to or analysed — shown on the dashboard preview.
+"""
+type CoachingApplication {
+  """ISO 8601 datetime the application row was created."""
+  appliedAt: String!
+  company: String
+  id: ID!
+  status: String!
+  title: String!
+}
+
 type CoachingGoal {
   done: Boolean!
   key: CoachingGoalKey!
@@ -275,7 +287,11 @@ enum CoachingGoalKey {
 
 type CoachingOverview {
   goals: [CoachingGoal!]!
+
+  """Most recent applications, newest first — for the dashboard preview."""
+  recentApplications: [CoachingApplication!]!
   score: CoachingScore!
+  stats: CoachingStats!
 
   """Consecutive days ending today with at least one application sent."""
   streakDays: Int!
@@ -288,6 +304,23 @@ type CoachingScore {
   max: Int!
   percent: Int!
   points: Int!
+}
+
+"""
+Headline counters for the candidate dashboard — all derived from real rows.
+"""
+type CoachingStats {
+  """
+  Offers the candidate applied to or analysed (dashboard: 'offres ciblées').
+  """
+  applicationCount: Int!
+
+  """Past sessions/workshops the candidate attended."""
+  attendedWorkshopCount: Int!
+
+  """Best match score recorded so far, 0–100."""
+  bestMatchScore: Int!
+  interviewCount: Int!
 }
 
 type CoachingWorkshop {
@@ -378,6 +411,19 @@ type Cv {
   """The layout the candidate selected for rendering (applied client-side)."""
   template: CvTemplate
   updatedAt: String!
+}
+
+"""
+A specific job offer to tailor the optimization to. Omit for a general (all-purpose) optimization.
+"""
+input CvJobContextInput {
+  company: String
+
+  """
+  The offer text the optimization targets — keywords/skills/structure are aligned to it.
+  """
+  description: String!
+  jobTitle: String
 }
 
 enum CvStatus {
@@ -486,6 +532,7 @@ enum JobSource {
   FRANCE_TRAVAIL
   HELLOWORK
   INDEED
+  INTERNATIONAL
   JOOBLE
   LINKEDIN
 }
@@ -536,9 +583,9 @@ type Mutation {
   login(input: CredentialsInput!): AuthPayload!
 
   """
-  Runs the ATS optimization prompt against an already-extracted CV, producing structured content.
+  Runs the ATS optimization prompt against an already-extracted CV, producing structured content. Pass jobContext to tailor it to a specific offer; omit for a general optimization.
   """
-  optimizeCv(id: ID!, template: CvTemplate): Cv!
+  optimizeCv(id: ID!, jobContext: CvJobContextInput, template: CvTemplate): Cv!
   register(input: CredentialsInput!): AuthPayload!
 
   """
@@ -551,6 +598,11 @@ type Mutation {
   """
   setCvTemplate(id: ID!, template: CvTemplate!): Cv!
   signCoachAgreement(input: SignCoachAgreementInput!): CoachAgreement!
+
+  """
+  Records that the candidate applied to an offer (dashboard + coaching tracking). Idempotent per offer.
+  """
+  trackJobApplication(input: TrackJobApplicationInput!): Boolean!
 
   """
   Updates the authenticated coach's own directory settings — omitted fields are left untouched.
@@ -772,6 +824,10 @@ enum SalaryPeriod {
 }
 
 input SearchJobsInput {
+  """
+  When true, an empty result auto-broadens (drop filters, then keywords) so the profile-seeded feed is never empty. Off for explicit searches.
+  """
+  broadenIfEmpty: Boolean
   contractTypes: [ContractType!]
   experienceLevel: ExperienceLevel
   keywords: String
@@ -805,6 +861,17 @@ input SignCoachAgreementInput {
 type Subscription {
   """Streams the assistant answer as it is produced."""
   assistantReply(input: AssistantAskInput!): AssistantChunk!
+}
+
+"""
+An offer the candidate is applying to — persisted so the dashboard reflects the action.
+"""
+input TrackJobApplicationInput {
+  applyUrl: String
+  company: String
+  description: String
+  source: String
+  title: String!
 }
 
 type Training {

@@ -19,9 +19,10 @@ type JobDetailsDialogProps = {
   job: JobListItem | null
   onClose: () => void
   onOptimize: (job: JobListItem) => void
+  onApply: (job: JobListItem) => void
 }
 
-export const JobDetailsDialog = ({ job, onClose, onOptimize }: JobDetailsDialogProps) => (
+export const JobDetailsDialog = ({ job, onClose, onOptimize, onApply }: JobDetailsDialogProps) => (
   <Dialog open={job !== null} onOpenChange={(next) => !next && onClose()}>
     {job && (
       <DialogContent className="sm:max-w-[560px]">
@@ -46,7 +47,7 @@ export const JobDetailsDialog = ({ job, onClose, onOptimize }: JobDetailsDialogP
 
         <DialogFooter className="gap-2 sm:justify-start">
           <Button size="lg" asChild>
-            <a href={job.applyUrl} target="_blank" rel="noreferrer">
+            <a href={job.applyUrl} target="_blank" rel="noreferrer" onClick={() => onApply(job)}>
               <FormattedMessage id="candidate.jobs.card.apply" />
               <ExternalLink className="size-3.5" />
             </a>

@@ -7,6 +7,7 @@ import { JobFilterKind, type ContractType, type ExperienceLevel, type JobSource 
 import {
   CONTRACT_TYPE_OPTIONS,
   EXPERIENCE_LEVEL_OPTIONS,
+  JOB_SOURCE_LABEL_IDS,
   POSTED_WITHIN_OPTIONS,
   WORK_TIME_OPTIONS,
   type JobFilters,
@@ -58,7 +59,7 @@ export const JobFiltersSheet = ({
           <p className="text-[12.5px] text-muted-foreground">
             <FormattedMessage
               id="candidate.jobs.filters.sourceHint"
-              values={{ source: intl.formatMessage({ id: `candidate.jobs.source.${source.toLowerCase()}` }) }}
+              values={{ source: intl.formatMessage({ id: JOB_SOURCE_LABEL_IDS[source] }) }}
             />
           </p>
 

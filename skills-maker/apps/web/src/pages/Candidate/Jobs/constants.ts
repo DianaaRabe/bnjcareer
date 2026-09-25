@@ -3,7 +3,10 @@ import {
   ExperienceLevel,
   JobSource,
   PostedWithin,
+  ProfileObjective,
+  ProfileSituation,
   WorkTime,
+  type MyProfileQuery,
   type SearchJobsQuery,
 } from '@/gql/graphql'
 
@@ -17,6 +20,7 @@ export const JOB_SOURCE_LABEL_IDS: Record<JobSource, string> = {
   [JobSource.Hellowork]: 'candidate.jobs.source.hellowork',
   [JobSource.FranceTravail]: 'candidate.jobs.source.franceTravail',
   [JobSource.Jooble]: 'candidate.jobs.source.jooble',
+  [JobSource.International]: 'candidate.jobs.source.international',
 }
 
 /** Recognition dots only — never used as fills or backgrounds. */
@@ -26,6 +30,7 @@ export const JOB_SOURCE_COLORS: Record<JobSource, string> = {
   [JobSource.Hellowork]: '#0f7a5c',
   [JobSource.FranceTravail]: '#1f5aa8',
   [JobSource.Jooble]: '#0f8a7e',
+  [JobSource.International]: '#b8541f',
 }
 
 export const AVATAR_PALETTE = [
@@ -91,3 +96,53 @@ export const countActiveFilters = (filters: JobFilters) =>
   (filters.experienceLevel ? 1 : 0) +
   (filters.workTime ? 1 : 0) +
   (filters.postedWithin ? 1 : 0)
+
+type CandidateProfile = NonNullable<NonNullable<MyProfileQuery['me']>['profile']>
+
+/** What the initial (un-searched) job feed should show, derived from the candidate's profile. */
+export type ProfileSearchCriteria = {
+  keywords: string
+  location: string
+  filters: JobFilters
+}
+
+const EMPTY_PROFILE_CRITERIA: ProfileSearchCriteria = {
+  keywords: '',
+  location: '',
+  filters: EMPTY_JOB_FILTERS,
+}
+
+/**
+ * Turns the candidate's profile into a first, relevant job query so the un-searched feed
+ * reflects who they are (sector, skills, student → part-time) instead of the provider's
+ * generic top listings. The user's own search always overrides this.
+ */
+export const buildProfileSearchCriteria = (
+  profile: CandidateProfile | null | undefined,
+): ProfileSearchCriteria => {
+  if (!profile) return EMPTY_PROFILE_CRITERIA
+
+  // The sector is the strongest single keyword; fall back to the first couple of skills.
+  const sector = profile.sector?.trim()
+  const skills = (profile.skills ?? []).map((s) => s.trim()).filter(Boolean)
+  const keywords = sector && sector.length > 1 ? sector : skills.slice(0, 2).join(' ')
+
+  const isStudent = profile.situation === ProfileSituation.Student
+  const wantsSkillGrowth = profile.objective === ProfileObjective.DevelopSkills
+
+  const contractTypes: ContractType[] = isStudent
+    ? [ContractType.Internship, ContractType.Apprenticeship, ContractType.Freelance]
+    : []
+
+  return {
+    keywords,
+    location: '',
+    filters: {
+      // Students / part-time seekers rarely want full-time roles surfaced first.
+      contractTypes,
+      experienceLevel: isStudent || wantsSkillGrowth ? ExperienceLevel.Entry : null,
+      workTime: isStudent ? WorkTime.PartTime : null,
+      postedWithin: null,
+    },
+  }
+}

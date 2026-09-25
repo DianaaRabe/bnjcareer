@@ -36,3 +36,6 @@ export const STREAK_LOOKBACK_DAYS = 365
 
 /** Upcoming workshops returned to the candidate. */
 export const UPCOMING_WORKSHOPS_LIMIT = 10
+
+/** Recent applications shown on the dashboard preview card. */
+export const RECENT_APPLICATIONS_LIMIT = 5

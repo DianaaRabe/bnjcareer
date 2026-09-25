@@ -15,9 +15,10 @@ type JobCardProps = {
   job: JobListItem
   onOpenDetails: () => void
   onOptimize: () => void
+  onApply: () => void
 }
 
-export const JobCard = ({ job, onOpenDetails, onOptimize }: JobCardProps) => (
+export const JobCard = ({ job, onOpenDetails, onOptimize, onApply }: JobCardProps) => (
   <Card className="gap-3.5 p-5 shadow-xs transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md">
     <div className="flex items-center justify-between gap-2.5">
       <div className="flex min-w-0 items-center gap-2.5">
@@ -48,7 +49,7 @@ export const JobCard = ({ job, onOpenDetails, onOptimize }: JobCardProps) => (
     <Separator />
 
     <Button variant="outline" size="lg" className="justify-center" asChild>
-      <a href={job.applyUrl} target="_blank" rel="noreferrer">
+      <a href={job.applyUrl} target="_blank" rel="noreferrer" onClick={onApply}>
         <FormattedMessage id="candidate.jobs.card.apply" />
         <ExternalLink className="size-3.5" />
       </a>

@@ -10,7 +10,7 @@ import { RecentApplicationsCard } from './RecentApplicationsCard'
 import { useDashboard } from './useDashboard'
 
 export const Dashboard = () => {
-  const { stats, goals, quickLinks, hasApplications, isAiEnabled } = useDashboard()
+  const { stats, goals, quickLinks, recentApplications, isAiEnabled } = useDashboard()
 
   return (
     <div className="flex flex-col gap-6">
@@ -34,7 +34,7 @@ export const Dashboard = () => {
       </section>
 
       <section className="grid items-stretch gap-4 lg:grid-cols-[1.7fr_1fr]">
-        <RecentApplicationsCard hasApplications={hasApplications} />
+        <RecentApplicationsCard applications={recentApplications} />
         <GoalsPanel goals={goals} />
       </section>
 

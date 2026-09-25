@@ -1,9 +1,11 @@
 import { PrismaClient, ResourceAccess, ResourceCategory, ResourceType } from '@prisma/client'
+import { seedId } from './seed-ids'
 
 const prisma = new PrismaClient()
 
-// Fixed ids keep the seed idempotent — re-running refreshes rows instead of duplicating them.
-const id = (n: number) => `d0000000-0000-4000-8000-${String(n).padStart(12, '0')}`
+// Fixed ids (from the central seed registry) keep the seed idempotent and let the
+// teardown script remove every row it wrote.
+const id = seedId.resource
 
 const KO = 1024
 const MO = 1024 * 1024

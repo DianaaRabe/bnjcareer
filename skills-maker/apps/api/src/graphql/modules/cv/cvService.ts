@@ -6,7 +6,7 @@ import type { Context } from '@/context.js'
 import { messages } from '@/constants/messages.js'
 import { callLLM, LLMError } from '@/lib/llmClient.js'
 import { CV_MAX_FILE_SIZE_BYTES, publicUrlToFilePath } from '@/lib/uploadStorage.js'
-import { buildExtractionPrompt, buildOptimizationPrompt, type CvTemplateKey } from './cvPrompts.js'
+import { buildExtractionPrompt, buildOptimizationPrompt, type CvJobContext, type CvTemplateKey } from './cvPrompts.js'
 import { parseExtractionResult, parseOptimizationResult } from './cvLlmParsing.js'
 
 const createCvSchema = z.object({
@@ -19,6 +19,12 @@ const updateCvDetailsSchema = z.object({
   fullName: z.string().trim().min(1).nullable().optional(),
   professionalTitle: z.string().trim().min(1).nullable().optional(),
   summary: z.string().trim().min(1).nullable().optional(),
+})
+
+const jobContextSchema = z.object({
+  jobTitle: z.string().trim().max(300).nullable().optional(),
+  company: z.string().trim().max(300).nullable().optional(),
+  description: z.string().trim().min(1).max(20000),
 })
 
 function badInput(message: string): never {
@@ -78,11 +84,24 @@ export async function createCv(ctx: Context, input: unknown) {
   return cv
 }
 
-// Runs the ATS optimization prompt against an already-extracted CV.
-export async function optimizeCv(ctx: Context, id: string, template?: CvTemplateKey | null) {
+// Runs the ATS optimization prompt against an already-extracted CV. When `jobContext`
+// is provided, the optimization is tailored to that specific offer; otherwise it is general.
+export async function optimizeCv(
+  ctx: Context,
+  id: string,
+  template?: CvTemplateKey | null,
+  jobContextInput?: unknown,
+) {
   let cv = await getOwnedCv(ctx, id)
   if (!cv.extractedData) {
     throw new GraphQLError(messages.cvOptimizationRequiresExtraction, { extensions: { code: 'BAD_USER_INPUT' } })
+  }
+
+  let jobContext: CvJobContext | null = null
+  if (jobContextInput != null) {
+    const parsed = jobContextSchema.safeParse(jobContextInput)
+    if (!parsed.success) badInput(messages.cvUploadInvalid)
+    jobContext = parsed.data
   }
 
   // Use the newly chosen format, else fall back to the one already stored, else ATS.
@@ -94,7 +113,7 @@ export async function optimizeCv(ctx: Context, id: string, template?: CvTemplate
     const profile = await ctx.prisma.profile.findUnique({ where: { userId: ctx.user!.id } })
 
     const { content } = await callLLM({
-      messages: [{ role: 'system', content: buildOptimizationPrompt(profile, cv.extractedData) }],
+      messages: [{ role: 'system', content: buildOptimizationPrompt(profile, cv.extractedData, jobContext) }],
       temperature: 0.3,
       maxTokens: 6000,
       jsonMode: true,

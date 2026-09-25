@@ -1,10 +1,12 @@
 import { CoachExpertise, PrismaClient, Role } from '@prisma/client'
 import bcrypt from 'bcryptjs'
+import { seedId } from './seed-ids'
 
 const prisma = new PrismaClient()
 
-// Fixed ids keep the seed idempotent — re-running refreshes rows instead of duplicating them.
-const id = (n: number) => `c0000000-0000-4000-8000-${String(n).padStart(12, '0')}`
+// Fixed ids (from the central seed registry) keep the seed idempotent and let the
+// teardown script remove every row it wrote.
+const id = seedId.coach
 
 const coaches = [
   {

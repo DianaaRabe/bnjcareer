@@ -19,8 +19,8 @@ export const CREATE_CV_MUTATION = graphql(`
 `)
 
 export const OPTIMIZE_CV_MUTATION = graphql(`
-  mutation OptimizeCv($id: ID!, $template: CvTemplate) {
-    optimizeCv(id: $id, template: $template) {
+  mutation OptimizeCv($id: ID!, $template: CvTemplate, $jobContext: CvJobContextInput) {
+    optimizeCv(id: $id, template: $template, jobContext: $jobContext) {
       id
       status
       template

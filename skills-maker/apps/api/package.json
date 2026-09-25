@@ -19,6 +19,8 @@
     "db:seed:coaches": "tsx prisma/seed-coaches.ts",
     "db:seed:resources": "tsx prisma/seed-resources.ts",
     "db:seed:coach-candidates": "tsx prisma/seed-coach-candidates.ts",
+    "db:seed:all": "npm run db:seed && npm run db:seed:coaches && npm run db:seed:resources && npm run db:seed:trainings && npm run db:seed:coaching && npm run db:seed:coach-candidates",
+    "db:teardown": "tsx prisma/seed-teardown.ts",
     "db:studio": "prisma studio",
     "codegen": "graphql-codegen --config codegen.ts",
     "schema:export": "tsx scripts/print-schema.ts",

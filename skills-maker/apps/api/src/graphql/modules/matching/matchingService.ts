@@ -2,6 +2,7 @@ import { GraphQLError } from 'graphql'
 import type { Context } from '@/context.js'
 import { messages } from '@/constants/messages.js'
 import { callLLM, LLMError } from '@/lib/llmClient.js'
+import { recordApplication, recordMatchAnalysis } from '@/lib/candidateTracking.js'
 import { getMyCv } from '../cv/cvService.js'
 import { parseAnalyzeJobMatchInput } from './matchingInput.js'
 import { parseJobMatchResult, type JobMatchResult } from './matchingLlmParsing.js'
@@ -25,7 +26,34 @@ export async function analyzeJobMatch(ctx: Context, input: unknown): Promise<Job
       jsonMode: true,
     })
 
-    return parseJobMatchResult(content)
+    const result = parseJobMatchResult(content)
+
+    // Persist so the candidate dashboard and coaching journey reflect this real action.
+    // Best-effort: a write failure must never turn a successful analysis into an error.
+    if (ctx.user) {
+      try {
+        const application = await recordApplication(
+          ctx,
+          {
+            title: offer.jobTitle ?? offer.company ?? 'Offre analysée',
+            company: offer.company,
+            description: offer.description,
+            source: 'MATCHING',
+            url: offer.jobUrl,
+          },
+          { status: 'PENDING', matchScore: result.score },
+        )
+        await recordMatchAnalysis(ctx, application.id, {
+          score: result.score,
+          gaps: result.gaps,
+          suggestions: result.tips,
+        })
+      } catch (persistErr) {
+        console.error('[matchingService] tracking persist failed:', persistErr)
+      }
+    }
+
+    return result
   } catch (err) {
     const detail = err instanceof LLMError ? err.attempts.map((a) => a.error).join('; ') : String(err)
     console.error('[matchingService] analysis failed:', detail)

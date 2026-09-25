@@ -1,17 +1,13 @@
 import { ApplicationStatus, BookingStatus, EventType, PrismaClient } from '@prisma/client'
+import { seedId } from './seed-ids'
 
 const prisma = new PrismaClient()
 
 const DAY_MS = 24 * 60 * 60 * 1000
 
-// Fixed ids keep the seed idempotent — re-running refreshes the rows instead of duplicating them.
-const ID = {
-  offer: (n: number) => `a0000000-0000-4000-8000-00000000000${n}`,
-  application: (n: number) => `a1000000-0000-4000-8000-00000000000${n}`,
-  match: 'a2000000-0000-4000-8000-000000000001',
-  event: (n: number) => `a3000000-0000-4000-8000-00000000000${n}`,
-  booking: (n: number) => `a4000000-0000-4000-8000-00000000000${n}`,
-}
+// Fixed ids (from the central seed registry) keep the seed idempotent and let the
+// teardown script remove every row it wrote.
+const ID = seedId.coaching
 
 const at = (offsetDays: number) => new Date(Date.now() + offsetDays * DAY_MS)
 

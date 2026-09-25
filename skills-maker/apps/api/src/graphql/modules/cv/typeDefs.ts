@@ -50,6 +50,14 @@ export const cvTypeDefs = gql`
     summary: String
   }
 
+  "A specific job offer to tailor the optimization to. Omit for a general (all-purpose) optimization."
+  input CvJobContextInput {
+    jobTitle: String
+    company: String
+    "The offer text the optimization targets — keywords/skills/structure are aligned to it."
+    description: String!
+  }
+
   type Query {
     "The authenticated candidate's most recent CV, if any."
     myCv: Cv
@@ -58,8 +66,8 @@ export const cvTypeDefs = gql`
   type Mutation {
     "Registers an uploaded PDF and synchronously extracts its content via the LLM."
     createCv(input: CreateCvInput!): Cv!
-    "Runs the ATS optimization prompt against an already-extracted CV, producing structured content."
-    optimizeCv(id: ID!, template: CvTemplate): Cv!
+    "Runs the ATS optimization prompt against an already-extracted CV, producing structured content. Pass jobContext to tailor it to a specific offer; omit for a general optimization."
+    optimizeCv(id: ID!, template: CvTemplate, jobContext: CvJobContextInput): Cv!
     "Persists the candidate's chosen layout without re-running the optimizer."
     setCvTemplate(id: ID!, template: CvTemplate!): Cv!
     "Patches user-edited fields (name/title/summary) into the extracted data."

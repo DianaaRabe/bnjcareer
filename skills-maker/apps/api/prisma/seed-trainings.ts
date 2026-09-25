@@ -1,9 +1,11 @@
 import { PrismaClient, TrainingCategory, TrainingLevel } from '@prisma/client'
+import { seedId } from './seed-ids'
 
 const prisma = new PrismaClient()
 
-// Fixed ids keep the seed idempotent — re-running refreshes rows instead of duplicating them.
-const id = (n: number) => `b0000000-0000-4000-8000-${String(n).padStart(12, '0')}`
+// Fixed ids (from the central seed registry) keep the seed idempotent and let the
+// teardown script remove every row it wrote.
+const id = seedId.training
 
 const trainings = [
   {
@@ -86,6 +88,16 @@ const trainings = [
     instructor: 'Camille Rousseau',
     certificate: true,
   },
+  {
+    title: 'Cours de Français — communication professionnelle',
+    description: 'Maîtriser le français écrit et oral pour évoluer sereinement en milieu professionnel.',
+    category: TrainingCategory.SOFT_SKILLS,
+    level: TrainingLevel.BEGINNER,
+    priceCents: null,
+    durationDays: 30,
+    instructor: 'Sophie Marchand',
+    certificate: true,
+  },
 ]
 
 /** Programme per training, in reading order — the module count derives from these rows. */
@@ -148,6 +160,14 @@ const curriculum: Record<number, { title: string; summary?: string; durationMinu
     { title: 'Gérer les désaccords', durationMinutes: 90 },
     { title: 'Faire des retours utiles', durationMinutes: 60 },
     { title: 'Tenir dans la durée', durationMinutes: 60 },
+  ],
+  9: [
+    { title: 'Se présenter et échanger au travail', summary: 'Les bases de l\'oral professionnel.', durationMinutes: 60 },
+    { title: 'Vocabulaire du monde de l\'emploi', durationMinutes: 60 },
+    { title: 'Rédiger un e-mail professionnel', summary: 'Formules, ton et structure.', durationMinutes: 90 },
+    { title: 'Comprendre une offre et un contrat', durationMinutes: 90 },
+    { title: 'Prendre la parole en réunion', durationMinutes: 60 },
+    { title: 'Réussir un entretien en français', durationMinutes: 90 },
   ],
 }
 

@@ -7,6 +7,7 @@ export const jobsTypeDefs = gql`
     HELLOWORK
     FRANCE_TRAVAIL
     JOOBLE
+    INTERNATIONAL
   }
 
   enum SalaryPeriod {
@@ -99,11 +100,27 @@ export const jobsTypeDefs = gql`
     experienceLevel: ExperienceLevel
     workTime: WorkTime
     postedWithin: PostedWithin
+    "When true, an empty result auto-broadens (drop filters, then keywords) so the profile-seeded feed is never empty. Off for explicit searches."
+    broadenIfEmpty: Boolean
+  }
+
+  "An offer the candidate is applying to — persisted so the dashboard reflects the action."
+  input TrackJobApplicationInput {
+    title: String!
+    company: String
+    description: String
+    source: String
+    applyUrl: String
   }
 
   type Query {
     "Sources configured server-side, with the filters each one supports."
     jobSources: [JobSourceInfo!]!
     searchJobs(input: SearchJobsInput!): JobSearchResult!
+  }
+
+  type Mutation {
+    "Records that the candidate applied to an offer (dashboard + coaching tracking). Idempotent per offer."
+    trackJobApplication(input: TrackJobApplicationInput!): Boolean!
   }
 `

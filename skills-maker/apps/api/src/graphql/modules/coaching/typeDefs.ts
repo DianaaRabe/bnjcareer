@@ -31,6 +31,27 @@ export const coachingTypeDefs = gql`
     percent: Int!
   }
 
+  "Headline counters for the candidate dashboard — all derived from real rows."
+  type CoachingStats {
+    "Offers the candidate applied to or analysed (dashboard: 'offres ciblées')."
+    applicationCount: Int!
+    interviewCount: Int!
+    "Best match score recorded so far, 0–100."
+    bestMatchScore: Int!
+    "Past sessions/workshops the candidate attended."
+    attendedWorkshopCount: Int!
+  }
+
+  "A recent offer the candidate applied to or analysed — shown on the dashboard preview."
+  type CoachingApplication {
+    id: ID!
+    title: String!
+    company: String
+    status: String!
+    "ISO 8601 datetime the application row was created."
+    appliedAt: String!
+  }
+
   type CoachingOverview {
     "Booked sessions still ahead, earliest first."
     workshops: [CoachingWorkshop!]!
@@ -38,6 +59,9 @@ export const coachingTypeDefs = gql`
     score: CoachingScore!
     "Consecutive days ending today with at least one application sent."
     streakDays: Int!
+    stats: CoachingStats!
+    "Most recent applications, newest first — for the dashboard preview."
+    recentApplications: [CoachingApplication!]!
   }
 
   type Query {

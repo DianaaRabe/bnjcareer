@@ -12,9 +12,10 @@ type JobRowProps = {
   job: JobListItem
   onOpenDetails: () => void
   onOptimize: () => void
+  onApply: () => void
 }
 
-export const JobRow = ({ job, onOpenDetails, onOptimize }: JobRowProps) => {
+export const JobRow = ({ job, onOpenDetails, onOptimize, onApply }: JobRowProps) => {
   const intl = useIntl()
 
   return (
@@ -50,7 +51,7 @@ export const JobRow = ({ job, onOpenDetails, onOptimize }: JobRowProps) => {
           aria-label={intl.formatMessage({ id: 'candidate.jobs.card.apply' })}
           asChild
         >
-          <a href={job.applyUrl} target="_blank" rel="noreferrer">
+          <a href={job.applyUrl} target="_blank" rel="noreferrer" onClick={onApply}>
             <ExternalLink className="size-3.5" />
           </a>
         </Button>

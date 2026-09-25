@@ -58,14 +58,56 @@ const SITUATION_LABELS: Record<string, string> = {
  */
 export type CvTemplateKey = 'ATS' | 'PROFESSIONAL' | 'CREATIVE'
 
+/** A specific offer the optimization must target. Omit for a general optimization. */
+export interface CvJobContext {
+  jobTitle?: string | null
+  company?: string | null
+  description: string
+}
+
+/**
+ * When the candidate optimizes from a specific job offer, this block steers keyword
+ * selection, skill ordering and phrasing toward THAT offer — strictly by re-surfacing
+ * what already exists in the CV, never by inventing anything to match the offer.
+ */
+function buildJobTargetingSection(jobContext: CvJobContext | null | undefined): string {
+  if (!jobContext) {
+    return `## MODE D'OPTIMISATION : GÉNÉRALE
+Optimise le CV de façon polyvalente, alignée sur l'objectif de carrière du candidat (aucune offre précise visée).`
+  }
+
+  const header = [jobContext.jobTitle, jobContext.company].filter(Boolean).join(' — ') || 'Offre ciblée'
+  return `## MODE D'OPTIMISATION : CIBLÉE SUR UNE OFFRE PRÉCISE
+Tu optimises ce CV POUR CETTE OFFRE UNIQUEMENT : « ${header} ».
+
+### OFFRE CIBLE (texte de référence)
+"""
+${jobContext.description.slice(0, 6000)}
+"""
+
+### CONSIGNES SPÉCIFIQUES À L'OFFRE (sans jamais inventer)
+- Repère les mots-clés, compétences et exigences de l'offre, puis **fais remonter en priorité** ceux qui existent DÉJÀ dans le CV du candidat.
+- **Réordonne** expériences et compétences pour mettre en avant celles pertinentes pour cette offre.
+- **Adapte le titre et le résumé** au poste visé, en restant fidèle au parcours réel du candidat.
+- Reformule les bullets pour faire écho au vocabulaire de l'offre — MAIS uniquement à partir de faits déjà présents dans le CV.
+- ❌ N'ajoute AUCUNE compétence, expérience ou qualification absente du CV juste parce que l'offre la demande. Un manque reste un manque.`
+}
+
 /**
  * Rewrites the CV content (summary, titles, bullets, skills) for ATS compatibility,
  * while forbidding invention of facts (contact, experiences, education).
  *
  * Output is STRUCTURED JSON — the visual layout is rendered client-side from this
  * data into whichever template the candidate selects, so no HTML is produced here.
+ *
+ * When `jobContext` is provided, the optimization is tailored to that specific offer
+ * (keywords, skill ordering, phrasing) without fabricating anything to fit it.
  */
-export function buildOptimizationPrompt(profile: Profile | null, extractedData: any): string {
+export function buildOptimizationPrompt(
+  profile: Profile | null,
+  extractedData: any,
+  jobContext?: CvJobContext | null,
+): string {
   const immutable = extractImmutableContact(extractedData, profile)
   const immutableExperiences = formatImmutableExperiences(extractedData)
   const immutableEducation = formatImmutableEducation(extractedData)
@@ -115,6 +157,8 @@ Tu NE peux RIEN modifier dans les formations : ni le diplôme, ni l'établisseme
   ❌ Ajouter des compétences sans lien avec le parcours réel
 
 Si une info manque dans le CV original, OMETS-LA (null ou tableau vide). N'INVENTE JAMAIS.
+
+${buildJobTargetingSection(jobContext)}
 
 ## PROFIL DU CANDIDAT
 - Nom : ${profile?.firstName || 'Non renseigné'} ${profile?.lastName || ''}

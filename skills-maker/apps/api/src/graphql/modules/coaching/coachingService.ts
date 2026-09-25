@@ -1,6 +1,10 @@
 import type { CvStatus } from '@prisma/client'
 import type { Context } from '@/context.js'
-import { STREAK_LOOKBACK_DAYS, UPCOMING_WORKSHOPS_LIMIT } from './coachingConstants.js'
+import {
+  RECENT_APPLICATIONS_LIMIT,
+  STREAK_LOOKBACK_DAYS,
+  UPCOMING_WORKSHOPS_LIMIT,
+} from './coachingConstants.js'
 import { buildGoals, computeScore } from './coachingGoals.js'
 import { toGraphQLWorkshop, type CoachingWorkshop } from './coachingMappers.js'
 import { computeStreakDays } from './coachingStreak.js'
@@ -22,7 +26,7 @@ export async function getCoachingOverview(ctx: Context, userId: string) {
   const now = new Date()
   const streakSince = new Date(now.getTime() - STREAK_LOOKBACK_DAYS * DAY_MS)
 
-  const [cv, applications, attendedWorkshopCount, match, bookings] = await Promise.all([
+  const [cv, applications, recentApplications, attendedWorkshopCount, match, bookings] = await Promise.all([
     ctx.prisma.cv.findFirst({
       where: { userId },
       orderBy: { createdAt: 'desc' },
@@ -32,6 +36,18 @@ export async function getCoachingOverview(ctx: Context, userId: string) {
     ctx.prisma.application.findMany({
       where: { userId },
       select: { status: true, createdAt: true },
+    }),
+    // Newest applications for the dashboard preview — needs the offer's title/company.
+    ctx.prisma.application.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      take: RECENT_APPLICATIONS_LIMIT,
+      select: {
+        id: true,
+        status: true,
+        createdAt: true,
+        jobOffer: { select: { title: true, company: true } },
+      },
     }),
     ctx.prisma.booking.count({
       where: { userId, status: 'BOOKED', event: { startTime: { lt: now } } },
@@ -48,12 +64,16 @@ export async function getCoachingOverview(ctx: Context, userId: string) {
     }),
   ])
 
+  const applicationCount = applications.length
+  const interviewCount = applications.filter(({ status }) => status === 'INTERVIEW').length
+  const bestMatchScore = match._max.score
+
   const goals = buildGoals({
     cvStage: cv ? CV_STAGE_BY_STATUS[cv.status] : 0,
-    applicationCount: applications.length,
-    interviewCount: applications.filter(({ status }) => status === 'INTERVIEW').length,
+    applicationCount,
+    interviewCount,
     attendedWorkshopCount,
-    bestMatchScore: match._max.score,
+    bestMatchScore,
   })
 
   const workshops = bookings
@@ -70,5 +90,21 @@ export async function getCoachingOverview(ctx: Context, userId: string) {
         .filter((createdAt) => createdAt >= streakSince),
       now,
     ),
+    // Headline counters the candidate dashboard reads directly — all derived from real rows.
+    stats: {
+      applicationCount,
+      interviewCount,
+      bestMatchScore: bestMatchScore != null ? Math.round(bestMatchScore) : 0,
+      attendedWorkshopCount,
+    },
+    recentApplications: recentApplications
+      .filter((application) => application.jobOffer != null)
+      .map((application) => ({
+        id: application.id,
+        title: application.jobOffer!.title,
+        company: application.jobOffer!.company,
+        status: application.status,
+        appliedAt: application.createdAt.toISOString(),
+      })),
   }
 }

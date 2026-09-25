@@ -16,7 +16,7 @@ const createCvMutation: MutationResolvers['createCv'] = async (_parent, args, ct
 
 const optimizeCvMutation: MutationResolvers['optimizeCv'] = async (_parent, args, ctx) => {
   requireUser(ctx)
-  const cv = await optimizeCv(ctx, args.id, args.template)
+  const cv = await optimizeCv(ctx, args.id, args.template, args.jobContext)
   return toGraphQLCv(cv)
 }
 

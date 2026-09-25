@@ -1,13 +1,15 @@
 import bcrypt from 'bcryptjs'
 import { ApplicationStatus, BookingStatus, EventType, ProfileSituation, PrismaClient, Role } from '@prisma/client'
+import { seedId } from './seed-ids'
 
 const prisma = new PrismaClient()
 
 const DAY_MS = 24 * 60 * 60 * 1000
 const at = (offsetDays: number) => new Date(Date.now() + offsetDays * DAY_MS)
 
-// Readable, fixed ids keep the seed idempotent — re-running refreshes rows instead of duplicating them.
-const id = (kind: string, slug: string) => `seed-coach-candidates-${kind}-${slug}`
+// Readable, fixed ids (from the central seed registry) keep the seed idempotent and
+// let the teardown script remove every row it wrote.
+const id = seedId.coachCandidate
 
 type SessionSeed = { day: number; title: string }
 type ApplicationSeed = { title: string; company: string; status: ApplicationStatus; matchScore: number | null; day: number }
