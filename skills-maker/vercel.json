@@ -3,6 +3,6 @@
   "framework": "vite",
   "buildCommand": "npm run codegen -w apps/web && npm run build -w apps/web",
   "outputDirectory": "apps/web/dist",
-  "installCommand": "npm install",
+  "installCommand": "npm install --include=dev",
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
