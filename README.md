@@ -1,6 +1,6 @@
-# 🚀 BNJ Career - Plateforme d'Accompagnement IA
+# 🚀 BNJ Skills Maker - Plateforme d'Accompagnement IA
 
-BNJ Career est une plateforme moderne et intuitive conçue pour révolutionner l'accompagnement vers l'emploi. Alliant puissance de l'IA et suivi humain, elle offre aux candidats un écosystème complet pour booster leur carrière.
+BNJ Skills Maker est une plateforme moderne et intuitive conçue pour révolutionner l'accompagnement vers l'emploi. Alliant puissance de l'IA et suivi humain, elle offre aux candidats un écosystème complet pour booster leur carrière.
 
 ## ✨ Fonctionnalités Clés
 
@@ -30,7 +30,8 @@ BNJ Career est une plateforme moderne et intuitive conçue pour révolutionner l
 *   **Backend / APIs** :
     *   CV Data Extraction API
     *   Job Matching Score API
-    *   Apify (Indeed Scrapper)
+    *   Apify (Jobs Scrapper)
+    *   Brevo (SMTP)
 
 ## 🚀 Installation & Lancement
 
