@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 
-import { HomeRedirect } from '@/components/auth/HomeRedirect'
 import { AppShell } from '@/components/layout/AppShell/AppShell'
 import {
   CANDIDATE_NAV_ITEMS,
@@ -12,6 +11,8 @@ import {
 import { ROUTES } from '@/constants/routes'
 import { PORTAL_ROLES } from '@/lib/rbac'
 import { Login } from '@/pages/Auth/Login'
+import { CoachLanding } from '@/pages/Landing/CoachLanding'
+import { LandingGate } from '@/pages/Landing/LandingGate'
 import { Coaches as CandidateCoaches } from '@/pages/Candidate/Coaches/Coaches'
 import { Coaching as CandidateCoaching } from '@/pages/Candidate/Coaching/Coaching'
 import { Dashboard as CandidateDashboard } from '@/pages/Candidate/Dashboard/Dashboard'
@@ -137,7 +138,8 @@ export function App() {
 
       {/* <Route path="/admin/*" element={<AdminShell />} /> */}
 
-      <Route path="/" element={<HomeRedirect />} />
+      <Route path="/" element={<LandingGate />} />
+      <Route path="/coach-landing" element={<CoachLanding />} />
       <Route path="*" element={<Navigate to={ROUTES.login} replace />} />
     </Routes>
   )

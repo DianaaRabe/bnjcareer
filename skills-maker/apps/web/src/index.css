@@ -53,6 +53,38 @@
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
   --font-sans: 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
+
+  /* Landing-page brand palette (opacity modifiers work via color-mix). */
+  --color-brand-primary: #590293;
+  --color-brand-dark: #3e0863;
+  --color-brand-light: #c069ee;
+  --color-brand-accent: #f3d01f;
+  --color-brand-bg: #f3f2f1;
+
+  /* Landing-page animations. */
+  --animate-fade-in: fadeIn 0.5s ease-out;
+  --animate-slide-up: slideUp 0.5s ease-out forwards;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-delayed: float 6s ease-in-out -3s infinite;
+  --animate-float-slow: float 8s ease-in-out infinite;
+  --animate-wobble: wobble 5s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes slideUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes wobble {
+  0%, 100% { transform: rotate(3deg) translateY(0); }
+  50% { transform: rotate(-2deg) translateY(-6px); }
 }
 
 @layer base {
