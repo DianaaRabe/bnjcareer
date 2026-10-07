@@ -40,10 +40,27 @@ export {
   runApplicationPipeline,
   runAutomationForCandidate,
   startOfDayUtc,
+  type CandidateRunContext,
   type CvContext,
   type EngineDependencies,
+  type RunAutomationOptions,
   type RunEngineInput,
 } from './engine.js'
+
+export {
+  createPrismaSchedulerStore,
+  createSchedulerDeps,
+  runDueAutomations,
+  statsFromOutcome,
+  type CandidateDisposition,
+  type CandidateResult,
+  type ClaimedRun,
+  type CompleteRunInput,
+  type RunStats,
+  type SchedulerDeps,
+  type SchedulerStore,
+  type SchedulerSummary,
+} from './scheduler.js'
 
 export {
   createPrismaAutomationStore,

@@ -35,6 +35,11 @@ const schema = z.object({
   BREVO_SENDER_EMAIL: z.string().optional().default(''),
   EMAIL_SEND_LIVE: z.string().optional().default('false'),
 
+  // Shared secret for the internal automation-cron trigger (skill §17). The endpoint is an
+  // admin/worker seam, never a candidate route: when this is empty the route refuses every
+  // request (503), so automation cannot be driven in an environment that did not opt in.
+  AUTOMATION_CRON_SECRET: z.string().optional().default(''),
+
   UPLOAD_DIR: z.string().default('./uploads'),
   /** Pre-downloaded Apify datasets served as the browse-mode preview. */
   JOBS_RUNS_DIR: z.string().default('./data/runs'),

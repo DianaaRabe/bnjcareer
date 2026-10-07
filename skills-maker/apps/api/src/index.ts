@@ -9,6 +9,7 @@ import { env } from './config/env.js'
 import { schema } from './graphql/schema.js'
 import { buildContext, contextFromAuthHeader, type Context } from './context.js'
 import { cvUploadRouter } from './routes/cvUpload.js'
+import { automationCronRouter } from './routes/automationCron.js'
 
 const SUBSCRIPTIONS_PATH = '/graphql'
 
@@ -59,6 +60,10 @@ async function main() {
     express.static(env.UPLOAD_DIR),
     cvUploadRouter,
   )
+
+  // Internal worker seam (skill §17), never a public candidate route. Default-closed and
+  // secret-gated inside the router; mounted without CORS so no browser origin can reach it.
+  app.use('/internal', express.json(), automationCronRouter)
 
   app.get('/health', (_req, res) => res.json({ ok: true }))
 

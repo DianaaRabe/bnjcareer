@@ -59,6 +59,12 @@ export interface EngineDependencies {
   generateLetter?: (context: CoverLetterContext, job: CanonicalJob) => Promise<{ content: string; model: string }>
   now?: () => Date
   runId?: string | null
+  /**
+   * Called a handful of times across the run so a supervising worker can refresh its run
+   * heartbeat; a slow pipeline then stays "live" and is not reclaimed as stale. A failure here
+   * never aborts the run — observability must not break the work it observes.
+   */
+  heartbeat?: () => Promise<void> | void
 }
 
 export interface RunEngineInput {
@@ -135,6 +141,16 @@ export async function runApplicationPipeline(
       return result.score
     })
 
+  // Best-effort heartbeat: swallow its own failure so a flaky write never fails the run.
+  const beat = async () => {
+    if (!deps.heartbeat) return
+    try {
+      await deps.heartbeat()
+    } catch {
+      /* observability only */
+    }
+  }
+
   const empty: PipelineOutcome = {
     enabled: false,
     discovered: [],
@@ -170,6 +186,8 @@ export async function runApplicationPipeline(
     for (const job of result.jobs) discovered.push(toCanonical(job, discoveredAt))
   }
 
+  await beat()
+
   // ── Canonicalization + deduplication ──────────────────────────────────────
   const { jobs: deduplicated, duplicatesRemoved } = dedupeJobs(discovered)
 
@@ -203,6 +221,8 @@ export async function runApplicationPipeline(
     }
   }
 
+  await beat()
+
   // ── Eligibility (deterministic, post-AI) ──────────────────────────────────
   const eligible: MatchedJob[] = []
   for (const entry of matched) {
@@ -223,6 +243,8 @@ export async function runApplicationPipeline(
   // ── Budget ────────────────────────────────────────────────────────────────
   const sentToday = await deps.store.countPreparedSince(candidateId, startOfDayUtc(now()))
   const budget = Math.min(remainingBudget({ sentThisRun: 0, sentToday }, settings), eligible.length)
+
+  await beat()
 
   const prepared: PreparedApplication[] = []
   const language = input.language ?? 'fr'
@@ -360,11 +382,29 @@ async function prepareOne(
   }
 }
 
+/** What a worker needs back from one candidate's run: the outcome and the resolved settings. */
+export interface CandidateRunContext {
+  outcome: PipelineOutcome
+  settings: AutomationSettingsResolved
+}
+
+export interface RunAutomationOptions {
+  /** Links the run's audit events to its {@link AutomationRun} row. */
+  runId?: string | null
+  /** Forwarded to the pipeline so the supervising worker can refresh its heartbeat. */
+  heartbeat?: () => Promise<void> | void
+}
+
 /**
- * Real wiring for the future worker: loads the candidate's settings and CV, and runs the
- * pipeline against the live providers and database. Still stops at preparation — no send.
+ * Real wiring for the worker: loads the candidate's settings and CV, and runs the pipeline
+ * against the live providers and database. Still stops at preparation — no send. Returns the
+ * resolved settings too, so the scheduler can reschedule by the candidate's frequency.
  */
-export async function runAutomationForCandidate(ctx: Context, candidateId: string) {
+export async function runAutomationForCandidate(
+  ctx: Context,
+  candidateId: string,
+  options: RunAutomationOptions = {},
+): Promise<CandidateRunContext> {
   const [settingsRow, cv, profile] = await Promise.all([
     ctx.prisma.candidateAutomationSettings.findUnique({ where: { candidateId } }),
     ctx.prisma.cv.findFirst({ where: { userId: candidateId }, orderBy: { createdAt: 'desc' } }),
@@ -373,7 +413,7 @@ export async function runAutomationForCandidate(ctx: Context, candidateId: strin
 
   const settings = resolveAutomationSettings(settingsRow ?? null)
 
-  return runApplicationPipeline(
+  const outcome = await runApplicationPipeline(
     {
       candidateId,
       settings,
@@ -382,6 +422,10 @@ export async function runAutomationForCandidate(ctx: Context, candidateId: strin
     {
       store: createPrismaAutomationStore(ctx),
       providers: getConfiguredProviders(),
+      runId: options.runId ?? null,
+      heartbeat: options.heartbeat,
     },
   )
+
+  return { outcome, settings }
 }
