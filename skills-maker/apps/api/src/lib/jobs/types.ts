@@ -46,6 +46,19 @@ export interface NormalizedJob {
   /** Contract type, experience level, sector… as published by the source. */
   tags: string[]
   isRemote: boolean
+  /**
+   * Source-scoped vacancy id, when the provider exposes a stable one (`id` above is prefixed
+   * with the source, which is not always what the provider itself publishes). Optional so a
+   * provider that has none keeps compiling — canonical identity then falls back to the URL.
+   */
+  externalId?: string | null
+  /** Company site published by the source, when it does. Feeds contact enrichment. */
+  companyWebsite?: string | null
+  /**
+   * Opaque pointer back into the provider payload (actor run id, offer id…). Deliberately not
+   * the raw payload: the row keeps a way to re-fetch instead of a copy of third-party data.
+   */
+  rawSourceReference?: string | null
 }
 
 export const CONTRACT_TYPE = {

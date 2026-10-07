@@ -34,7 +34,7 @@ enum BookingStatus {
 
 enum EventType {
   ONE_ON_ONE // '1v1'
-  GROUP      // 'group'
+  GROUP // 'group'
 }
 
 enum EventStatus {
@@ -125,16 +125,20 @@ model User {
   profile         Profile?
   coachProfile    CoachProfile?
   coachAgreements CoachAgreement[]
-  cvs            Cv[]
-  applications   Application[]
-  bookings       Booking[]
-  goals          Goal[]
-  tickets        Ticket[]
-  messages       Message[]                  @relation("SentMessages")
-  calendarEvents CalendarEvent[]            @relation("CoachEvents")
-  conversations  ConversationParticipant[]
-  skills         UserSkill[]
-  coachTrainings Training[]                 @relation("CoachTrainings")
+  cvs             Cv[]
+  applications    Application[]
+  bookings        Booking[]
+  goals           Goal[]
+  tickets         Ticket[]
+  messages        Message[]                 @relation("SentMessages")
+  calendarEvents  CalendarEvent[]           @relation("CoachEvents")
+  conversations   ConversationParticipant[]
+  skills          UserSkill[]
+  coachTrainings  Training[]                @relation("CoachTrainings")
+
+  automationSettings CandidateAutomationSettings?
+  automationRuns     AutomationRun[]
+  emailAccounts      CandidateEmailAccount[]
 
   @@map("users")
 }
@@ -164,21 +168,21 @@ model Profile {
 
 /// Coach-specific data — candidates never have a row here.
 model CoachProfile {
-  id              String           @id @default(uuid())
-  userId          String           @unique @map("user_id")
-  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id               String           @id @default(uuid())
+  userId           String           @unique @map("user_id")
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   /// Headline shown under the name, e.g. "Leadership & Négociation".
-  specialty       String?
-  yearsExperience Int?             @map("years_experience")
-  certifications  String[]         @default([])
-  expertise       CoachExpertise[] @default([])
+  specialty        String?
+  yearsExperience  Int?             @map("years_experience")
+  certifications   String[]         @default([])
+  expertise        CoachExpertise[] @default([])
   /// Average rating out of 5. Null until enough sessions were reviewed.
-  rating          Float?
+  rating           Float?
   /// Coaches who stopped taking new candidates stay listed but cannot be booked.
-  acceptingClients Boolean         @default(true) @map("accepting_clients")
+  acceptingClients Boolean          @default(true) @map("accepting_clients")
   /// Drafts stay hidden from the directory until published.
-  published       Boolean          @default(true)
-  createdAt       DateTime         @default(now()) @map("created_at")
+  published        Boolean          @default(true)
+  createdAt        DateTime         @default(now()) @map("created_at")
 
   @@index([published, acceptingClients])
   @@map("coach_profiles")
@@ -189,21 +193,21 @@ model CoachProfile {
 /// (coachId, contractVersion): a revoked signature must be re-signable for the same version,
 /// so idempotence is enforced in the service rather than by the database.
 model CoachAgreement {
-  id              String    @id @default(uuid())
-  coachId         String    @map("coach_id")
-  coach           User      @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  id                        String    @id @default(uuid())
+  coachId                   String    @map("coach_id")
+  coach                     User      @relation(fields: [coachId], references: [id], onDelete: Cascade)
   /// Bumped when the contract text changes; past signatures stay valid for their version.
-  contractVersion String    @map("contract_version")
+  contractVersion           String    @map("contract_version")
   /// Typed by the coach and kept verbatim — this is the electronic signature.
-  signedName      String    @map("signed_name")
+  signedName                String    @map("signed_name")
   /// Revenue split frozen at signature time, so revising the terms cannot rewrite the past.
-  subscriptionShareCoachPct Int @default(25) @map("subscription_share_coach_pct")
-  formationSharePlatformPct Int @default(25) @map("formation_share_platform_pct")
-  acceptedAt      DateTime  @default(now()) @map("accepted_at")
-  ipAddress       String?   @map("ip_address") @db.Inet
-  userAgent       String?   @map("user_agent")
+  subscriptionShareCoachPct Int       @default(25) @map("subscription_share_coach_pct")
+  formationSharePlatformPct Int       @default(25) @map("formation_share_platform_pct")
+  acceptedAt                DateTime  @default(now()) @map("accepted_at")
+  ipAddress                 String?   @map("ip_address") @db.Inet
+  userAgent                 String?   @map("user_agent")
   /// Non-null means the signature no longer holds; the row stays for the audit trail.
-  revokedAt       DateTime? @map("revoked_at")
+  revokedAt                 DateTime? @map("revoked_at")
 
   @@index([coachId, revokedAt])
   @@map("coach_agreements")
@@ -251,7 +255,23 @@ model JobOffer {
   url         String?
   createdAt   DateTime      @default(now()) @map("created_at")
   application Application[]
+  contacts    JobContact[]
 
+  /// Source-scoped vacancy id, when the provider exposes one (`NormalizedJob.id`).
+  externalId         String?   @map("external_id")
+  /// Stable cross-source identity used to collapse the same vacancy across aggregators and to
+  /// make "already applied" checkable. Null for rows created before canonicalization existed.
+  canonicalKey       String?   @unique @map("canonical_key")
+  companyWebsite     String?   @map("company_website")
+  location           String?
+  remote             Boolean?
+  tags               String[]  @default([])
+  publishedAt        DateTime? @map("published_at")
+  discoveredAt       DateTime? @map("discovered_at")
+  /// Opaque pointer back into the provider payload, kept instead of storing the raw blob.
+  rawSourceReference String?   @map("raw_source_reference")
+
+  @@index([source, externalId])
   @@map("job_offers")
 }
 
@@ -267,6 +287,30 @@ model Application {
 
   matchAnalysis MatchAnalysis?
 
+  /// Manual = the candidate clicked "Postuler" themselves. Automated = sent by the job-search cron.
+  source     ApplicationSource     @default(MANUAL)
+  /// Automation lifecycle (skill §13). Null on manual applications, which have no pipeline.
+  stage      AutomationStage?      @map("stage")
+  /// Single terminal reason an automated application never reached SENT — never a second status.
+  skipReason AutomationSkipReason? @map("skip_reason")
+
+  recipientEmail   String?   @map("recipient_email")
+  /// The generated letter, kept for auditability. Never logged, never sent to analytics.
+  coverLetter      String?   @map("cover_letter")
+  coverLetterModel String?   @map("cover_letter_model")
+  /// Pointer to the CV artifact actually attached (a stored file path, not the file itself).
+  cvReference      String?   @map("cv_reference")
+  sentAt           DateTime? @map("sent_at")
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  events       ApplicationEvent[]
+  emailMessage EmailMessage?
+
+  /// The idempotency guarantee for skill §6: one application per candidate per canonical vacancy,
+  /// enforced by the database rather than by a read-then-write in application code.
+  @@unique([userId, jobOfferId])
+  @@index([userId, stage])
+  @@index([userId, createdAt])
   @@map("applications")
 }
 
@@ -286,26 +330,26 @@ model MatchAnalysis {
 // ─────────────────────────────────────────────────────────────
 
 model CalendarEvent {
-  id        String    @id @default(uuid())
-  coachId   String?   @map("coach_id")
-  coach     User?     @relation("CoachEvents", fields: [coachId], references: [id])
+  id        String      @id @default(uuid())
+  coachId   String?     @map("coach_id")
+  coach     User?       @relation("CoachEvents", fields: [coachId], references: [id])
   title     String?
   type      EventType?
   status    EventStatus @default(SCHEDULED)
-  startTime DateTime? @map("start_time")
-  endTime   DateTime? @map("end_time")
+  startTime DateTime?   @map("start_time")
+  endTime   DateTime?   @map("end_time")
   bookings  Booking[]
 
   @@map("calendar_events")
 }
 
 model Booking {
-  id      String        @id @default(uuid())
-  eventId String?       @map("event_id")
+  id      String         @id @default(uuid())
+  eventId String?        @map("event_id")
   event   CalendarEvent? @relation(fields: [eventId], references: [id])
-  userId  String?       @map("user_id")
-  user    User?         @relation(fields: [userId], references: [id])
-  status  BookingStatus @default(BOOKED)
+  userId  String?        @map("user_id")
+  user    User?          @relation(fields: [userId], references: [id])
+  status  BookingStatus  @default(BOOKED)
 
   @@map("bookings")
 }
@@ -391,27 +435,27 @@ model Skill {
 }
 
 model Training {
-  id          String           @id @default(uuid())
+  id           String           @id @default(uuid())
   /// Null for the pre-existing catalog seeded before coaches could author their own.
-  coachId     String?          @map("coach_id")
-  coach       User?            @relation("CoachTrainings", fields: [coachId], references: [id])
-  title       String
-  description String?
-  category    TrainingCategory
-  level       TrainingLevel
+  coachId      String?          @map("coach_id")
+  coach        User?            @relation("CoachTrainings", fields: [coachId], references: [id])
+  title        String
+  description  String?
+  category     TrainingCategory
+  level        TrainingLevel
   /// Price in cents. Null means free — the client formats it in its own locale.
-  priceCents  Int?             @map("price_cents")
+  priceCents   Int?             @map("price_cents")
   /// Stored in days so the client can render weeks or days per locale.
-  durationDays Int             @map("duration_days")
-  instructor  String?
-  certificate Boolean          @default(false)
+  durationDays Int              @map("duration_days")
+  instructor   String?
+  certificate  Boolean          @default(false)
   /// Drafts stay hidden from candidates until published.
-  published   Boolean          @default(true)
+  published    Boolean          @default(true)
   /// Soft-deleted trainings stay in the database (audit, in-flight enrollments) but never load.
-  removed     Boolean          @default(false)
-  createdAt   DateTime         @default(now()) @map("created_at")
+  removed      Boolean          @default(false)
+  createdAt    DateTime         @default(now()) @map("created_at")
 
-  curriculum  TrainingModule[]
+  curriculum TrainingModule[]
 
   @@index([published, category, level])
   @@index([coachId])
@@ -419,14 +463,14 @@ model Training {
 }
 
 model TrainingModule {
-  id         String   @id @default(uuid())
-  trainingId String   @map("training_id")
-  training   Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
-  title      String
-  summary    String?
+  id              String   @id @default(uuid())
+  trainingId      String   @map("training_id")
+  training        Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  title           String
+  summary         String?
   /// 1-based rank inside the training — the module count derives from these rows.
-  position   Int
-  durationMinutes Int? @map("duration_minutes")
+  position        Int
+  durationMinutes Int?     @map("duration_minutes")
 
   @@unique([trainingId, position])
   @@map("training_modules")
@@ -452,4 +496,244 @@ model Ticket {
   createdAt DateTime     @default(now()) @map("created_at")
 
   @@map("tickets")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Automated job applications
+// ─────────────────────────────────────────────────────────────
+
+enum AutomationFrequency {
+  DAILY
+  WEEKLY
+}
+
+enum AutomationRunStatus {
+  RUNNING
+  COMPLETED
+  /// Some sources failed but the run finished — one provider must not abort the rest (skill §26).
+  PARTIAL
+  FAILED
+}
+
+/// Where a vacancy came from in the pipeline. Separate from ApplicationSource so a manual
+/// application can still be excluded from automated volume accounting.
+enum ApplicationSource {
+  MANUAL
+  AUTOMATED
+}
+
+/// Automation lifecycle (skill §13). Deliberately distinct from ApplicationStatus, which is the
+/// candidate/coach tracking vocabulary already rendered across the dashboard and coach screens.
+/// Two enums keep a delivery or reply event from rewriting what the coach sees.
+enum AutomationStage {
+  DISCOVERED
+  MATCHED
+  ELIGIBLE
+  PREPARING
+  READY_TO_SEND
+  SENDING
+  SENT
+  CANCELLED
+}
+
+/// One terminal reason an automated application stopped short of SENT. A skip reason is not a
+/// stage: it is recorded once, alongside whatever stage the row reached.
+enum AutomationSkipReason {
+  MATCH_TOO_LOW
+  ALREADY_APPLIED
+  NO_CONTACT
+  REQUIRES_REVIEW
+  SKIPPED
+  SEND_FAILED
+}
+
+/// Delivery is tracked separately from the application lifecycle (skill §13).
+enum EmailDeliveryStatus {
+  QUEUED
+  SENDING
+  SENT
+  DELIVERED
+  BOUNCED
+  FAILED
+}
+
+enum EmailProvider {
+  BREVO
+  GOOGLE
+  MICROSOFT
+}
+
+/// Provenance of a resolved application contact — required for skill §8 data minimization:
+/// a guessed `contact@domain` must never be indistinguishable from a published address.
+enum JobContactSource {
+  OFFER
+  SITE
+  LUSHA
+  MANUAL
+}
+
+enum JobContactConfidence {
+  VERIFIED
+  GUESSED
+}
+
+/// Per-candidate automation configuration. The absence of a row means automation was never
+/// enabled — which is what makes consent explicit rather than implied by a default (skill §25).
+model CandidateAutomationSettings {
+  id          String @id @default(uuid())
+  candidateId String @unique @map("candidate_id")
+  candidate   User   @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  /// Flipped true only through the explicit confirmation flow.
+  enabled   Boolean             @default(false)
+  frequency AutomationFrequency @default(WEEKLY)
+  /// When the next run is due. Null while automation is disabled.
+  nextRunAt DateTime?           @map("next_run_at")
+
+  /// Null means "use the server default" — the effective value is always resolved server-side,
+  /// so a candidate can never remove the ceiling (skill §16).
+  maxApplicationsPerRun Int? @map("max_applications_per_run")
+  maxApplicationsPerDay Int? @map("max_applications_per_day")
+  minMatchScore         Int? @map("min_match_score")
+
+  /// True prepares applications for the candidate to send; false sends them without review.
+  approvalMode Boolean @default(true) @map("approval_mode")
+
+  keywords      String[] @default([])
+  locations     String[] @default([])
+  contractTypes String[] @default([]) @map("contract_types")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([enabled, nextRunAt])
+  @@map("candidate_automation_settings")
+}
+
+/// One automation execution for one candidate. The row doubles as the concurrency claim: a worker
+/// finding a live RUNNING row for a due candidate skips it, so a double cron cannot double-apply.
+model AutomationRun {
+  id          String @id @default(uuid())
+  candidateId String @map("candidate_id")
+  candidate   User   @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  status      AutomationRunStatus @default(RUNNING)
+  startedAt   DateTime            @default(now()) @map("started_at")
+  completedAt DateTime?           @map("completed_at")
+  /// Touched as work progresses so a crashed worker's run can be reclaimed after a timeout.
+  heartbeatAt DateTime            @default(now()) @map("heartbeat_at")
+
+  jobsDiscovered   Int @default(0) @map("jobs_discovered")
+  jobsDeduplicated Int @default(0) @map("jobs_deduplicated")
+  jobsMatched      Int @default(0) @map("jobs_matched")
+  applicationsSent Int @default(0) @map("applications_sent")
+  failures         Int @default(0)
+
+  /// Per-source failure detail only — no candidate data, no offer text (skill §27).
+  errorSummary Json? @map("error_summary")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  events ApplicationEvent[]
+
+  @@index([candidateId, startedAt])
+  @@index([status, startedAt])
+  @@map("automation_runs")
+}
+
+/// Append-only audit row. Same discipline as CoachAgreement: written once, never updated.
+model ApplicationEvent {
+  id            String         @id @default(uuid())
+  applicationId String         @map("application_id")
+  application   Application    @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  runId         String?        @map("run_id")
+  run           AutomationRun? @relation(fields: [runId], references: [id], onDelete: SetNull)
+
+  type      String
+  /// Redacted, non-personal metadata only (counts, provider names, error codes).
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([applicationId, createdAt])
+  @@map("application_events")
+}
+
+/// One outgoing email per application. Retries update this row instead of inserting a new one, and
+/// the provider ids are what make reply correlation exact rather than subject-matched (skill §15).
+model EmailMessage {
+  id            String      @id @default(uuid())
+  applicationId String      @unique @map("application_id")
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  provider          EmailProvider
+  providerMessageId String?       @map("provider_message_id")
+  providerThreadId  String?       @map("provider_thread_id")
+
+  deliveryStatus EmailDeliveryStatus @default(QUEUED) @map("delivery_status")
+  attempts       Int                 @default(0)
+
+  sentAt      DateTime? @map("sent_at")
+  deliveredAt DateTime? @map("delivered_at")
+  bouncedAt   DateTime? @map("bounced_at")
+  repliedAt   DateTime? @map("replied_at")
+  failedAt    DateTime? @map("failed_at")
+  /// Provider status code only — message bodies are never persisted here (skill §19).
+  failureCode String?   @map("failure_code")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([providerMessageId])
+  @@index([providerThreadId])
+  @@index([deliveryStatus, createdAt])
+  @@map("email_messages")
+}
+
+/// A mailbox the candidate explicitly connected. Tokens are stored encrypted and are never read
+/// by a resolver, never returned in a response and never logged (skill §10).
+model CandidateEmailAccount {
+  id          String @id @default(uuid())
+  candidateId String @map("candidate_id")
+  candidate   User   @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  provider     EmailProvider
+  emailAddress String        @map("email_address")
+
+  encryptedAccessToken  String?   @map("encrypted_access_token")
+  encryptedRefreshToken String?   @map("encrypted_refresh_token")
+  tokenExpiresAt        DateTime? @map("token_expires_at")
+  /// Minimum scopes actually granted, recorded so an over-broad grant is visible in review.
+  scopes                String[]  @default([])
+
+  connectedAt    DateTime  @default(now()) @map("connected_at")
+  lastRefreshAt  DateTime? @map("last_refresh_at")
+  /// Non-null means disconnected: credentials are wiped but the row stays, so a reconnect is a
+  /// deliberate new action rather than a silent resumption.
+  disconnectedAt DateTime? @map("disconnected_at")
+
+  @@unique([candidateId, provider])
+  @@index([candidateId, disconnectedAt])
+  @@map("candidate_email_accounts")
+}
+
+/// Where an application email can be sent for a vacancy, and how much that address is trusted.
+model JobContact {
+  id       String   @id @default(uuid())
+  jobId    String   @map("job_id")
+  jobOffer JobOffer @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  email       String
+  contactName String? @map("contact_name")
+
+  source     JobContactSource
+  confidence JobContactConfidence
+  /// Set only when the address was actually confirmed (published on the company site, or returned
+  /// as verified by Lusha) — never for a pattern guess.
+  verifiedAt DateTime?            @map("verified_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([jobId, email])
+  @@index([jobId, confidence])
+  @@map("job_contacts")
 }

@@ -1,5 +1,5 @@
 import type { Profile } from '@prisma/client'
-import { extractImmutableContact, formatImmutableEducation, formatImmutableExperiences } from './cvImmutable.js'
+import { extractImmutableContact, formatImmutableEducation, formatImmutableExperiences } from '@/lib/cv/immutable.js'
 
 /** Structures raw PDF text into JSON — must never invent data absent from the source text. */
 export function buildExtractionPrompt(rawText: string): string {

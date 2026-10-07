@@ -23,6 +23,18 @@ const schema = z.object({
   FRANCE_TRAVAIL_CLIENT_SECRET: z.string().optional().default(''),
   JOOBLE_API_KEY: z.string().optional().default(''),
 
+  // Contact enrichment — optional; the Lusha provider is skipped when the key is absent.
+  LUSHA_API_KEY: z.string().optional().default(''),
+
+  // Application email sending (skill §12). Optional: when BREVO_API_KEY is absent the real
+  // provider is unconfigured and the sender falls back to the dry-run provider, which never
+  // touches the network. EMAIL_SEND_LIVE must be the literal "true" to allow a real send —
+  // every other value (including unset) keeps the strict dry-run default required by §34.11.
+  BREVO_API_KEY: z.string().optional().default(''),
+  BREVO_SMTP_API_KEY: z.string().optional().default(''),
+  BREVO_SENDER_EMAIL: z.string().optional().default(''),
+  EMAIL_SEND_LIVE: z.string().optional().default('false'),
+
   UPLOAD_DIR: z.string().default('./uploads'),
   /** Pre-downloaded Apify datasets served as the browse-mode preview. */
   JOBS_RUNS_DIR: z.string().default('./data/runs'),

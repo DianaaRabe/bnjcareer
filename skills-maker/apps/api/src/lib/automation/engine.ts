@@ -1,0 +1,387 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Application engine.
+//
+// The ordered pipeline of skill §6, and the security gate of this phase:
+//
+//   discovery → normalization → canonicalization → deduplication
+//            → matching → eligibility → already-applied → preparation
+//
+// It stops at preparation. There is no code path from here to an email provider:
+// a prepared application is a row awaiting approval or the (later) send phase, and
+// nothing in this module can reach Brevo, Gmail or any mailbox. That is deliberate
+// — the gate must be provably closed, not merely documented.
+//
+// Every external effect is injected. The default wiring uses the real providers,
+// the real LLM matcher and the real contact chain; tests substitute them, which is
+// what makes the ten required scenarios (isolation, duplication, limits, timeout…)
+// checkable without a database or network.
+// ─────────────────────────────────────────────────────────────────────────────
+
+import type { Profile } from '@prisma/client'
+import type { Context } from '@/context.js'
+import { mapBounded } from '@/lib/enrichment/concurrency.js'
+import { resolveJobContact, type ContactResolution } from '@/lib/enrichment/resolveContact.js'
+import { canonicalJobKey, dedupeJobs } from '@/lib/jobs/canonical.js'
+import { getConfiguredProviders } from '@/lib/jobs/index.js'
+import { CONTRACT_TYPE, type JobProvider, type JobSearchOutcome, type JobSearchQuery, type NormalizedJob } from '@/lib/jobs/types.js'
+import { scoreJobOffer } from '@/graphql/modules/matching/matchingService.js'
+import { generateCoverLetter, type CoverLetterContext, type LetterLanguage } from './coverLetter.js'
+import { resolveAutomationSettings, type AutomationSettingsResolved } from './constants.js'
+import { evaluateJobEligibility, isValidRecipient, remainingBudget } from './eligibility.js'
+import { createPrismaAutomationStore, type AutomationStore } from './store.js'
+import type {
+  CanonicalJob,
+  MatchedJob,
+  PipelineOutcome,
+  PreparedApplication,
+  SkippedJob,
+  SourceFailure,
+} from './types.js'
+
+export interface CvContext {
+  extractedData: unknown
+  profile: Profile | null
+}
+
+/** How many providers we hit at once — bounded so one slow source cannot stall the run. */
+const PROVIDER_CONCURRENCY = 4
+const DEFAULT_DISCOVERY_LIMIT = 40
+
+const VALID_CONTRACT_TYPES = new Set<string>(Object.values(CONTRACT_TYPE))
+
+export interface EngineDependencies {
+  store: AutomationStore
+  providers: JobProvider[]
+  search?: (provider: JobProvider, query: JobSearchQuery) => Promise<JobSearchOutcome>
+  /** Returns the match score, or null when the model could not produce a usable one. */
+  match?: (job: CanonicalJob, cv: CvContext) => Promise<number | null>
+  resolveContact?: (job: CanonicalJob) => Promise<ContactResolution>
+  generateLetter?: (context: CoverLetterContext, job: CanonicalJob) => Promise<{ content: string; model: string }>
+  now?: () => Date
+  runId?: string | null
+}
+
+export interface RunEngineInput {
+  candidateId: string
+  settings: AutomationSettingsResolved
+  cv: CvContext
+  discoveryLimit?: number
+  language?: LetterLanguage
+}
+
+/** UTC midnight — the daily ceiling is a calendar day, evaluated on the server's clock. */
+export function startOfDayUtc(date: Date): Date {
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()))
+}
+
+function describeError(error: unknown): string {
+  if (error instanceof Error) return `${error.name}: ${error.message}`.slice(0, 200)
+  return String(error).slice(0, 200)
+}
+
+function toCanonical(job: NormalizedJob, discoveredAt: string): CanonicalJob {
+  return { ...job, canonicalKey: canonicalJobKey(job), discoveredAt }
+}
+
+/**
+ * Builds a provider query from the candidate's filters, dropping any filter the source cannot
+ * honour rather than pretending to apply it (same rule as the candidate-facing search).
+ */
+export function buildSearchQuery(
+  provider: JobProvider,
+  settings: AutomationSettingsResolved,
+  limit: number,
+): JobSearchQuery {
+  const supports = (kind: (typeof provider.supportedFilters)[number]) =>
+    provider.supportedFilters.includes(kind)
+  const contractTypes = settings.contractTypes.filter((type) => VALID_CONTRACT_TYPES.has(type))
+
+  return {
+    keywords: settings.keywords.join(' ').trim() || undefined,
+    location: settings.locations[0]?.trim() || undefined,
+    limit,
+    contractTypes: supports('CONTRACT_TYPE') && contractTypes.length > 0 ? (contractTypes as never) : undefined,
+  }
+}
+
+/**
+ * Runs the full pipeline for one candidate. Never throws for a single source or a single job:
+ * a provider outage or a malformed LLM answer is recorded and the run continues (skill §26).
+ */
+export async function runApplicationPipeline(
+  input: RunEngineInput,
+  deps: EngineDependencies,
+): Promise<PipelineOutcome> {
+  const { candidateId, settings, cv } = input
+  const now = deps.now ?? (() => new Date())
+  const search = deps.search ?? ((provider, query) => provider.search(query))
+  const resolveContact =
+    deps.resolveContact ??
+    ((job: CanonicalJob) =>
+      resolveJobContact({
+        companyName: job.company,
+        companyWebsite: job.companyWebsite ?? null,
+        description: job.description,
+      }))
+  const generateLetter = deps.generateLetter ?? generateCoverLetter
+  const match =
+    deps.match ??
+    (async (job: CanonicalJob, context: CvContext) => {
+      const result = await scoreJobOffer(context.extractedData, {
+        jobTitle: job.title,
+        company: job.company,
+        description: job.description,
+      })
+      return result.score
+    })
+
+  const empty: PipelineOutcome = {
+    enabled: false,
+    discovered: [],
+    deduplicated: [],
+    duplicatesRemoved: 0,
+    matched: [],
+    prepared: [],
+    skipped: [],
+    failures: [],
+  }
+
+  // Consent gate first: a disabled candidate causes no discovery call at all.
+  if (!settings.enabled || deps.providers.length === 0) return empty
+
+  const skipped: SkippedJob[] = []
+  const failures: SourceFailure[] = []
+  const discoveredAt = now().toISOString()
+  const discoveryLimit = input.discoveryLimit ?? DEFAULT_DISCOVERY_LIMIT
+
+  // ── Discovery + normalization ─────────────────────────────────────────────
+  const results = await mapBounded(deps.providers, PROVIDER_CONCURRENCY, async (provider) => {
+    try {
+      const outcome = await search(provider, buildSearchQuery(provider, settings, discoveryLimit))
+      return { provider, jobs: outcome.jobs }
+    } catch (error) {
+      return { provider, jobs: [] as NormalizedJob[], failure: describeError(error) }
+    }
+  })
+
+  const discovered: CanonicalJob[] = []
+  for (const result of results) {
+    if (result.failure) failures.push({ source: result.provider.id, detail: result.failure })
+    for (const job of result.jobs) discovered.push(toCanonical(job, discoveredAt))
+  }
+
+  // ── Canonicalization + deduplication ──────────────────────────────────────
+  const { jobs: deduplicated, duplicatesRemoved } = dedupeJobs(discovered)
+
+  // ── Already-applied ───────────────────────────────────────────────────────
+  // Evaluated before matching on purpose: it is a free, indexed lookup, and paying for an
+  // LLM score on a vacancy the candidate already applied to is pure waste. The same gate is
+  // also enforced again by the unique constraint at write time, so a race cannot slip through.
+  const applied = await deps.store.findApplied(
+    candidateId,
+    deduplicated.map((job) => job.canonicalKey),
+  )
+  const fresh: CanonicalJob[] = []
+  for (const job of deduplicated) {
+    if (applied.has(job.canonicalKey)) skipped.push({ job, reason: 'ALREADY_APPLIED' })
+    else fresh.push(job)
+  }
+
+  // ── Matching (LLM, sequential to respect provider quotas) ─────────────────
+  const matched: MatchedJob[] = []
+  for (const job of fresh) {
+    try {
+      const score = await match(job, cv)
+      if (score == null) {
+        skipped.push({ job, reason: 'REQUIRES_REVIEW', detail: 'matching_failed' })
+        continue
+      }
+      matched.push({ job, score })
+    } catch (error) {
+      failures.push({ source: `matching:${job.source}`, detail: describeError(error) })
+      skipped.push({ job, reason: 'REQUIRES_REVIEW', detail: 'matching_failed' })
+    }
+  }
+
+  // ── Eligibility (deterministic, post-AI) ──────────────────────────────────
+  const eligible: MatchedJob[] = []
+  for (const entry of matched) {
+    const verdict = evaluateJobEligibility({
+      job: entry.job,
+      matchScore: entry.score,
+      settings,
+      alreadyApplied: false,
+    })
+    if (verdict.eligible) eligible.push(entry)
+    else skipped.push({ job: entry.job, reason: verdict.skipReason ?? 'SKIPPED', detail: verdict.detail })
+  }
+
+  // Best matches first, so a limited budget is spent where it matters. The key breaks ties
+  // deterministically — two runs over the same data prepare the same jobs.
+  eligible.sort((a, b) => b.score - a.score || a.job.canonicalKey.localeCompare(b.job.canonicalKey))
+
+  // ── Budget ────────────────────────────────────────────────────────────────
+  const sentToday = await deps.store.countPreparedSince(candidateId, startOfDayUtc(now()))
+  const budget = Math.min(remainingBudget({ sentThisRun: 0, sentToday }, settings), eligible.length)
+
+  const prepared: PreparedApplication[] = []
+  const language = input.language ?? 'fr'
+
+  for (const entry of eligible) {
+    if (prepared.length >= budget) {
+      skipped.push({ job: entry.job, reason: 'SKIPPED', detail: 'budget' })
+      continue
+    }
+
+    try {
+      const outcome = await prepareOne(entry, {
+        candidateId,
+        settings,
+        cv,
+        language,
+        runId: deps.runId ?? null,
+        resolveContact,
+        generateLetter,
+        store: deps.store,
+      })
+      if ('prepared' in outcome) prepared.push(outcome.prepared)
+      else skipped.push(outcome.skipped)
+    } catch (error) {
+      failures.push({ source: `prepare:${entry.job.source}`, detail: describeError(error) })
+      skipped.push({ job: entry.job, reason: 'REQUIRES_REVIEW', detail: 'prepare_failed' })
+    }
+  }
+
+  return {
+    enabled: true,
+    discovered,
+    deduplicated,
+    duplicatesRemoved,
+    matched,
+    prepared,
+    skipped,
+    failures,
+  }
+}
+
+/** A discriminated result, so the caller reports the exact reason a job was not prepared. */
+type PrepareOutcome = { prepared: PreparedApplication } | { skipped: SkippedJob }
+
+async function prepareOne(
+  entry: MatchedJob,
+  deps: {
+    candidateId: string
+    settings: AutomationSettingsResolved
+    cv: CvContext
+    language: LetterLanguage
+    runId: string | null
+    resolveContact: (job: CanonicalJob) => Promise<ContactResolution>
+    generateLetter: (context: CoverLetterContext, job: CanonicalJob) => Promise<{ content: string; model: string }>
+    store: AutomationStore
+  },
+): Promise<PrepareOutcome> {
+  const { job } = entry
+
+  // ── Contact resolution ────────────────────────────────────────────────────
+  const resolution = await deps.resolveContact(job)
+  const verified = resolution.verified.find((candidate) => isValidRecipient(candidate.email)) ?? null
+
+  let contact = verified
+  let needsReview = false
+
+  if (!contact) {
+    const guess = resolution.guessed.find((candidate) => isValidRecipient(candidate.email)) ?? null
+    // A pattern guess is never auto-sent (skill §8): under approval it can be *shown* to the
+    // candidate, otherwise it is treated as no contact at all.
+    if (guess && deps.settings.approvalMode) {
+      contact = guess
+      needsReview = true
+    }
+  }
+
+  if (!contact) {
+    return {
+      skipped: {
+        job,
+        reason: 'NO_CONTACT',
+        detail: resolution.failures.map((failure) => failure.source).join(',') || undefined,
+      },
+    }
+  }
+
+  // ── Cover letter ──────────────────────────────────────────────────────────
+  let letter: { content: string; model: string }
+  try {
+    letter = await deps.generateLetter(
+      { profile: deps.cv.profile, extractedData: deps.cv.extractedData, language: deps.language },
+      job,
+    )
+  } catch {
+    return { skipped: { job, reason: 'REQUIRES_REVIEW', detail: 'letter_failed' } }
+  }
+
+  // ── Preparation (a row awaiting approval or the send phase — never a send) ─
+  const stage = deps.settings.approvalMode ? 'READY_TO_SEND' : 'PREPARING'
+  const saved = await deps.store.savePrepared({
+    candidateId: deps.candidateId,
+    job,
+    matchScore: entry.score,
+    contact,
+    coverLetter: letter.content,
+    coverLetterModel: letter.model,
+    stage,
+    runId: deps.runId,
+  })
+
+  if (!saved.created) {
+    // Lost a race with a concurrent run: the vacancy is already applied to.
+    return { skipped: { job, reason: 'ALREADY_APPLIED' } }
+  }
+
+  await deps.store.saveContact(saved.jobOfferId, contact)
+  await deps.store.recordEvent(saved.applicationId, 'APPLICATION_PREPARED', {
+    stage,
+    matchScore: entry.score,
+    contactSource: contact.source,
+    contactConfidence: contact.confidence,
+    needsReview,
+    model: letter.model,
+  })
+
+  return {
+    prepared: {
+      job,
+      matchScore: entry.score,
+      coverLetter: letter.content,
+      coverLetterModel: letter.model,
+      contact,
+      needsReview,
+    },
+  }
+}
+
+/**
+ * Real wiring for the future worker: loads the candidate's settings and CV, and runs the
+ * pipeline against the live providers and database. Still stops at preparation — no send.
+ */
+export async function runAutomationForCandidate(ctx: Context, candidateId: string) {
+  const [settingsRow, cv, profile] = await Promise.all([
+    ctx.prisma.candidateAutomationSettings.findUnique({ where: { candidateId } }),
+    ctx.prisma.cv.findFirst({ where: { userId: candidateId }, orderBy: { createdAt: 'desc' } }),
+    ctx.prisma.profile.findUnique({ where: { userId: candidateId } }),
+  ])
+
+  const settings = resolveAutomationSettings(settingsRow ?? null)
+
+  return runApplicationPipeline(
+    {
+      candidateId,
+      settings,
+      cv: { extractedData: cv?.extractedData ?? null, profile },
+    },
+    {
+      store: createPrismaAutomationStore(ctx),
+      providers: getConfiguredProviders(),
+    },
+  )
+}

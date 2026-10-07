@@ -6,7 +6,23 @@ import { recordApplication, recordMatchAnalysis } from '@/lib/candidateTracking.
 import { getMyCv } from '../cv/cvService.js'
 import { parseAnalyzeJobMatchInput } from './matchingInput.js'
 import { parseJobMatchResult, type JobMatchResult } from './matchingLlmParsing.js'
-import { buildJobMatchMessages } from './matchingPrompts.js'
+import { buildJobMatchMessages, type JobOfferContext } from './matchingPrompts.js'
+export type { JobOfferContext }
+
+/**
+ * Scores one offer against an already-extracted CV. Extracted from `analyzeJobMatch` so the
+ * automation engine reuses the exact same prompt, model routing and parser instead of
+ * re-implementing the matcher (skill §5: "reuse an existing matching engine").
+ */
+export async function scoreJobOffer(extractedData: unknown, offer: JobOfferContext): Promise<JobMatchResult> {
+  const { content } = await callLLM({
+    messages: buildJobMatchMessages(extractedData, offer),
+    temperature: 0.2,
+    maxTokens: 1500,
+    jsonMode: true,
+  })
+  return parseJobMatchResult(content)
+}
 
 export async function analyzeJobMatch(ctx: Context, input: unknown): Promise<JobMatchResult> {
   const offer = parseAnalyzeJobMatchInput(input)
@@ -19,14 +35,7 @@ export async function analyzeJobMatch(ctx: Context, input: unknown): Promise<Job
   }
 
   try {
-    const { content } = await callLLM({
-      messages: buildJobMatchMessages(cv.extractedData, offer),
-      temperature: 0.2,
-      maxTokens: 1500,
-      jsonMode: true,
-    })
-
-    const result = parseJobMatchResult(content)
+    const result = await scoreJobOffer(cv.extractedData, offer)
 
     // Persist so the candidate dashboard and coaching journey reflect this real action.
     // Best-effort: a write failure must never turn a successful analysis into an error.

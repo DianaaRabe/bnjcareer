@@ -3,7 +3,7 @@ import {
   formatImmutableEducation,
   formatImmutableExperiences,
   formatImmutableSkills,
-} from '../cv/cvImmutable.js'
+} from '@/lib/cv/immutable.js'
 import { MAX_DESCRIPTION_LENGTH } from './matchingConstants.js'
 
 export interface JobOfferContext {

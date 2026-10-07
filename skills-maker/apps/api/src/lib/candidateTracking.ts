@@ -1,4 +1,4 @@
-import type { ApplicationStatus } from '@prisma/client'
+import { Prisma, type ApplicationStatus } from '@prisma/client'
 import type { Context } from '@/context.js'
 
 /** Minimal offer shape either the matching flow or the apply flow can produce. */
@@ -34,17 +34,7 @@ export async function recordApplication(
     orderBy: { createdAt: 'desc' },
   })
 
-  if (existing) {
-    // Never downgrade a SENT application back to PENDING, but always refresh the best score.
-    const keepStatus = existing.status === 'SENT' && opts.status === 'PENDING'
-    return ctx.prisma.application.update({
-      where: { id: existing.id },
-      data: {
-        status: keepStatus ? existing.status : opts.status,
-        matchScore: opts.matchScore ?? existing.matchScore,
-      },
-    })
-  }
+  if (existing) return promote(ctx, existing, opts)
 
   const jobOffer = await ctx.prisma.jobOffer.create({
     data: {
@@ -56,12 +46,38 @@ export async function recordApplication(
     },
   })
 
-  return ctx.prisma.application.create({
+  try {
+    return await ctx.prisma.application.create({
+      data: {
+        userId,
+        jobOfferId: jobOffer.id,
+        status: opts.status,
+        matchScore: opts.matchScore ?? null,
+      },
+    })
+  } catch (err) {
+    // (userId, jobOfferId) is unique — a concurrent call can win the race after our read.
+    // Re-read and promote that row instead of surfacing a constraint error to the candidate.
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+      const raced = await ctx.prisma.application.findFirst({ where: { userId, jobOfferId: jobOffer.id } })
+      if (raced) return promote(ctx, raced, opts)
+    }
+    throw err
+  }
+}
+
+/** Never downgrade a SENT application back to PENDING, but always refresh the best score. */
+function promote(
+  ctx: Context,
+  existing: { id: string; status: ApplicationStatus; matchScore: number | null },
+  opts: { status: ApplicationStatus; matchScore?: number | null },
+) {
+  const keepStatus = existing.status === 'SENT' && opts.status === 'PENDING'
+  return ctx.prisma.application.update({
+    where: { id: existing.id },
     data: {
-      userId,
-      jobOfferId: jobOffer.id,
-      status: opts.status,
-      matchScore: opts.matchScore ?? null,
+      status: keepStatus ? existing.status : opts.status,
+      matchScore: opts.matchScore ?? existing.matchScore,
     },
   })
 }

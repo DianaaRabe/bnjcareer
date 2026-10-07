@@ -24,3 +24,11 @@ export function getProvider(id: JobSourceId): JobProvider | null {
 }
 
 export * from './types.js'
+export {
+  canonicalizeUrl,
+  canonicalJobKey,
+  dedupeJobs,
+  normalizeText,
+  type DedupeResult,
+  type JobIdentityFields,
+} from './canonical.js'
