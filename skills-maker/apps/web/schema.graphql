@@ -44,6 +44,91 @@ type AuthPayload {
   user: User!
 }
 
+"""
+Server-owned volume ceiling / default set. The candidate configures a preference; the server owns the cap (skill §16).
+"""
+type AutomationBounds {
+  maxApplicationsPerDay: Int!
+  maxApplicationsPerRun: Int!
+  minMatchScore: Int!
+}
+
+enum AutomationFrequency {
+  DAILY
+  WEEKLY
+}
+
+enum AutomationRunStatus {
+  COMPLETED
+  FAILED
+  PARTIAL
+  RUNNING
+}
+
+"""
+One automation execution, redacted to aggregate counters only (skill §27).
+"""
+type AutomationRunSummary {
+  """
+  Applications prepared this run. Until the send phase lands, 'prepared' is the real work done.
+  """
+  applicationsPrepared: Int!
+  completedAt: String
+  failures: Int!
+  id: ID!
+  jobsDiscovered: Int!
+  jobsMatched: Int!
+  startedAt: String!
+  status: AutomationRunStatus!
+}
+
+"""
+A candidate's effective automation configuration. All numeric values are already resolved and clamped server-side.
+"""
+type AutomationSettings {
+  """
+  True prepares applications for the candidate to review; false would send without review.
+  """
+  approvalMode: Boolean!
+
+  """The absolute server ceilings, so the UI can show the cap it clamps to."""
+  ceilings: AutomationBounds!
+  contractTypes: [String!]!
+
+  """The server defaults applied when the candidate leaves a field unset."""
+  defaults: AutomationBounds!
+
+  """
+  False until the candidate explicitly enables automation (skill §25) — a missing row reads as disabled, never as implied consent.
+  """
+  enabled: Boolean!
+  frequency: AutomationFrequency!
+  keywords: [String!]!
+  locations: [String!]!
+  maxApplicationsPerDay: Int!
+
+  """Effective (clamped) ceilings in force for this candidate."""
+  maxApplicationsPerRun: Int!
+  minMatchScore: Int!
+
+  """
+  ISO 8601 time the next run is due, or null while automation is disabled.
+  """
+  nextRunAt: String
+}
+
+"""Automation lifecycle stage of one prepared application (skill §13)."""
+enum AutomationStage {
+  CANCELLED
+  DISCOVERED
+  ELIGIBLE
+  MATCHED
+  PREPARING
+  READY_TO_SEND
+  SENDING
+  SENT
+}
+
 enum BookingStatus {
   BOOKED
   CANCELED
@@ -556,6 +641,11 @@ type Mutation {
   """
   cancelBooking(id: ID!): Boolean!
 
+  """
+  Cancels a prepared application the candidate does not want sent. Candidate-scoped: only the owner can cancel.
+  """
+  cancelPreparedApplication(id: ID!): Boolean!
+
   """Marks a session owned by the authenticated coach as canceled."""
   cancelSession(id: ID!): Boolean!
 
@@ -594,6 +684,11 @@ type Mutation {
   removeTrainingModule(id: ID!): Boolean!
 
   """
+  The explicit opt-in / opt-out. Enabling schedules the first run; disabling clears the schedule.
+  """
+  setAutomationEnabled(enabled: Boolean!): AutomationSettings!
+
+  """
   Persists the candidate's chosen layout without re-running the optimizer.
   """
   setCvTemplate(id: ID!, template: CvTemplate!): Cv!
@@ -603,6 +698,11 @@ type Mutation {
   Records that the candidate applied to an offer (dashboard + coaching tracking). Idempotent per offer.
   """
   trackJobApplication(input: TrackJobApplicationInput!): Boolean!
+
+  """
+  Updates automation preferences. Does NOT enable automation — enabling is a separate explicit action (skill §25).
+  """
+  updateAutomationSettings(input: UpdateAutomationSettingsInput!): AutomationSettings!
 
   """
   Updates the authenticated coach's own directory settings — omitted fields are left untouched.
@@ -654,6 +754,30 @@ enum PostedWithin {
   MONTH
   THREE_DAYS
   WEEK
+}
+
+"""
+An automated application awaiting the candidate's review. Only the candidate's own data is exposed.
+"""
+type PreparedApplication {
+  applyUrl: String
+  company: String
+
+  """
+  The generated cover letter — the candidate's own data, shown so they can review before it is sent.
+  """
+  coverLetter: String
+  createdAt: String!
+
+  """
+  Whether a recipient contact was resolved — never the address itself (skill §8).
+  """
+  hasContact: Boolean!
+  id: ID!
+  jobTitle: String!
+  location: String
+  matchScore: Float
+  stage: AutomationStage!
 }
 
 type Profile {
@@ -719,6 +843,14 @@ type Query {
   """Currently authenticated user"""
   me: User
 
+  """The candidate's most recent automation runs (redacted counters only)."""
+  myAutomationRuns(limit: Int): [AutomationRunSummary!]!
+
+  """
+  The signed-in candidate's effective automation settings, with the server ceilings and defaults.
+  """
+  myAutomationSettings: AutomationSettings!
+
   """
   Candidates who have booked at least one session with the authenticated coach.
   """
@@ -737,6 +869,11 @@ type Query {
 
   """The authenticated candidate's most recent CV, if any."""
   myCv: Cv
+
+  """
+  Automated applications prepared for the candidate and still awaiting review.
+  """
+  myPreparedApplications: [PreparedApplication!]!
 
   """One of the authenticated coach's own sessions, with its attendees."""
   mySession(id: ID!): CoachSession!
@@ -925,6 +1062,20 @@ input TrainingModuleInput {
   durationMinutes: Int
   summary: String
   title: String!
+}
+
+"""
+Preference changes only. This input can neither enable automation nor raise a ceiling past the server cap.
+"""
+input UpdateAutomationSettingsInput {
+  approvalMode: Boolean
+  contractTypes: [String!]
+  frequency: AutomationFrequency
+  keywords: [String!]
+  locations: [String!]
+  maxApplicationsPerDay: Int
+  maxApplicationsPerRun: Int
+  minMatchScore: Int
 }
 
 input UpdateCoachProfileInput {

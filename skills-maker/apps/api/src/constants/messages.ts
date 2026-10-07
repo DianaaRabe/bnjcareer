@@ -33,4 +33,6 @@ export const messages = {
   resourceNotFound: 'Resource not found',
   resourceInvalid: 'Invalid resource data',
   coachProfileInvalid: 'Invalid coach profile data',
+  automationSettingsInvalid: 'Invalid automation settings',
+  automationApplicationNotFound: 'Application not found',
 } as const

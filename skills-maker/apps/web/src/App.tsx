@@ -13,6 +13,7 @@ import { PORTAL_ROLES } from '@/lib/rbac'
 import { Login } from '@/pages/Auth/Login'
 import { CoachLanding } from '@/pages/Landing/CoachLanding'
 import { LandingGate } from '@/pages/Landing/LandingGate'
+import { Applications as CandidateApplications } from '@/pages/Candidate/Applications/Applications'
 import { Coaches as CandidateCoaches } from '@/pages/Candidate/Coaches/Coaches'
 import { Coaching as CandidateCoaching } from '@/pages/Candidate/Coaching/Coaching'
 import { Dashboard as CandidateDashboard } from '@/pages/Candidate/Dashboard/Dashboard'
@@ -98,12 +99,7 @@ export function App() {
         <Route path={ROUTES.candidate.resources} element={<CandidateResources />} />
         <Route path={ROUTES.candidate.profile} element={<CandidateProfile />} />
         {/* Reached from the dashboard, not from the nav. */}
-        <Route
-          path={ROUTES.candidate.applications}
-          element={
-            <ComingSoon titleId="candidate.applications.title" eyebrowId="nav.candidate.portal" />
-          }
-        />
+        <Route path={ROUTES.candidate.applications} element={<CandidateApplications />} />
         {CANDIDATE_PLACEHOLDERS.map(({ to, labelId }) => (
           <Route
             key={to}

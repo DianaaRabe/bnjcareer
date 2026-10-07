@@ -11,6 +11,7 @@ import { assistantTypeDefs } from './modules/assistant/typeDefs.js'
 import { coachAgreementTypeDefs } from './modules/coachAgreement/typeDefs.js'
 import { coachDashboardTypeDefs } from './modules/coachDashboard/typeDefs.js'
 import { sessionsTypeDefs } from './modules/sessions/typeDefs.js'
+import { automationTypeDefs } from './modules/automation/typeDefs.js'
 
 // Single source of truth for the module typeDefs. Imported by schema.ts (with
 // resolvers, for the runtime schema) and by scripts/print-schema.ts (typeDefs
@@ -29,4 +30,5 @@ export const allTypeDefs = [
   coachAgreementTypeDefs,
   coachDashboardTypeDefs,
   sessionsTypeDefs,
+  automationTypeDefs,
 ]

@@ -34,6 +34,7 @@ const config: CodegenConfig = {
           EventStatus: '@prisma/client#EventStatus',
           BookingStatus: '@prisma/client#BookingStatus',
           ApplicationStatus: '@prisma/client#ApplicationStatus',
+          AutomationFrequency: '@prisma/client#AutomationFrequency',
         },
         // The service returns its own shapes — resolvers see those, not the SDL types.
         mappers: {
@@ -46,6 +47,10 @@ const config: CodegenConfig = {
           SessionAttendee: '../graphql/modules/sessions/sessionsMappers.js#GraphQLSessionAttendee',
           Resource: '../graphql/modules/resources/resourcesMappers.js#GraphQLResource',
           CoachResource: '../graphql/modules/resources/resourcesMappers.js#GraphQLCoachResource',
+          AutomationSettings: '../graphql/modules/automation/automationMappers.js#GraphQLAutomationSettings',
+          AutomationBounds: '../graphql/modules/automation/automationMappers.js#GraphQLAutomationBounds',
+          AutomationRunSummary: '../graphql/modules/automation/automationMappers.js#GraphQLAutomationRunSummary',
+          PreparedApplication: '../graphql/modules/automation/automationMappers.js#GraphQLPreparedApplication',
         },
         useIndexSignature: true,
       },
