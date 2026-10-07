@@ -48,6 +48,7 @@ const CANDIDATE_PLACEHOLDERS = placeholdersOf(
     ROUTES.candidate.dashboard,
     ROUTES.candidate.cv,
     ROUTES.candidate.jobs,
+    ROUTES.candidate.applications,
     ROUTES.candidate.matching,
     ROUTES.candidate.coaching,
     ROUTES.candidate.formations,
@@ -98,7 +99,6 @@ export function App() {
         <Route path={ROUTES.candidate.coaches} element={<CandidateCoaches />} />
         <Route path={ROUTES.candidate.resources} element={<CandidateResources />} />
         <Route path={ROUTES.candidate.profile} element={<CandidateProfile />} />
-        {/* Reached from the dashboard, not from the nav. */}
         <Route path={ROUTES.candidate.applications} element={<CandidateApplications />} />
         {CANDIDATE_PLACEHOLDERS.map(({ to, labelId }) => (
           <Route
