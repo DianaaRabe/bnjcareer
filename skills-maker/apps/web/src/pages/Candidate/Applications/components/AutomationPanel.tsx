@@ -100,7 +100,12 @@ export const AutomationPanel = () => {
           {vm.preparedLoading ? (
             <LoadingState />
           ) : (
-            <PreparedApplicationsList applications={vm.prepared} onCancel={vm.cancelApplication} />
+            <PreparedApplicationsList
+              applications={vm.prepared}
+              onCancel={vm.cancelApplication}
+              onSend={vm.sendApplication}
+              sendingId={vm.sendingId}
+            />
           )}
         </div>
       </div>

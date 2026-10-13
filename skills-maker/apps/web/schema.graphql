@@ -862,14 +862,17 @@ type PreparedApplication {
   coverLetter: String
   createdAt: String!
 
-  """
-  Whether a recipient contact was resolved — never the address itself (skill §8).
-  """
+  """Whether a recipient contact was resolved."""
   hasContact: Boolean!
   id: ID!
   jobTitle: String!
   location: String
   matchScore: Float
+
+  """
+  The resolved recipient address, shown so the candidate can review it before deciding to send (own data only).
+  """
+  recipientEmail: String
   stage: AutomationStage!
 }
 

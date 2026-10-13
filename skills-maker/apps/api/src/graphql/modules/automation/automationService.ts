@@ -167,6 +167,7 @@ export interface PreparedApplicationView {
   location: string | null
   applyUrl: string | null
   hasContact: boolean
+  recipientEmail: string | null
   coverLetter: string | null
   createdAt: string
 }
@@ -191,8 +192,10 @@ export async function getMyPreparedApplications(ctx: Context): Promise<PreparedA
     company: row.jobOffer?.company ?? null,
     location: row.jobOffer?.location ?? null,
     applyUrl: row.jobOffer?.url ?? null,
-    // §8: expose only that a contact was resolved, never the address.
+    // §8: `hasContact` kept for back-compat, but the candidate reviewing their OWN prepared
+    // application may see the resolved recipient — they are the one deciding whether to send.
     hasContact: Boolean(row.recipientEmail),
+    recipientEmail: row.recipientEmail ?? null,
     coverLetter: row.coverLetter,
     createdAt: row.createdAt.toISOString(),
   }))

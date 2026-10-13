@@ -9,6 +9,7 @@ import {
   useSetAutomationEnabledMutation,
   useUpdateAutomationSettingsMutation,
 } from '@/graphql/hooks/automation'
+import { useSendApplicationMutation } from '@/graphql/hooks/applications'
 import { AutomationFrequency, type UpdateAutomationSettingsInput } from '@/gql/graphql'
 import { useTranslate } from '@/hooks/useTranslate'
 import { getGraphQLErrorCode } from '@/lib/apollo'
@@ -45,6 +46,9 @@ export const useAutomationPanel = () => {
   const [updateSettings, { loading: savingPrefs }] = useUpdateAutomationSettingsMutation()
   const [setEnabled, { loading: togglingEnabled }] = useSetAutomationEnabledMutation()
   const [cancelPrepared] = useCancelPreparedApplicationMutation()
+  const [sendApplication] = useSendApplicationMutation()
+  // The id currently being sent — drives the per-card spinner without blocking the others.
+  const [sendingId, setSendingId] = useState<string | null>(null)
 
   const settings = settingsQuery.data?.myAutomationSettings
   const [draft, setDraft] = useState<Draft | null>(null)
@@ -134,6 +138,33 @@ export const useAutomationPanel = () => {
     }
   }
 
+  // The candidate's explicit decision to send a reviewed application. Once sent, the application
+  // leaves READY_TO_SEND, so it drops out of the review queue — refetch to make the card disappear.
+  // Failures map to an honest message by error code, matching the main applications hub.
+  const sendApplication_ = async (id: string) => {
+    setSendingId(id)
+    try {
+      await sendApplication({
+        variables: { id },
+        refetchQueries: [MY_PREPARED_APPLICATIONS_QUERY],
+      })
+      toast.success(translate('candidate.applications.send.success'))
+    } catch (err) {
+      const code = getGraphQLErrorCode(err)
+      const descriptionId =
+        code === 'FORBIDDEN'
+          ? 'candidate.applications.send.disabled'
+          : code === 'FAILED_PRECONDITION'
+            ? 'candidate.applications.send.notReady'
+            : 'candidate.applications.send.unexpected'
+      toast.error(translate('candidate.applications.send.error'), {
+        description: translate(descriptionId),
+      })
+    } finally {
+      setSendingId(null)
+    }
+  }
+
   return {
     isLoading: settingsQuery.loading && !settings,
     hasError: Boolean(settingsQuery.error),
@@ -153,6 +184,8 @@ export const useAutomationPanel = () => {
     prepared: preparedQuery.data?.myPreparedApplications ?? [],
     preparedLoading: preparedQuery.loading && !preparedQuery.data,
     cancelApplication,
+    sendApplication: sendApplication_,
+    sendingId,
 
     runs: runsQuery.data?.myAutomationRuns ?? [],
   }

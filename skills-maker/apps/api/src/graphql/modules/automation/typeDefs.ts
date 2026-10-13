@@ -76,8 +76,10 @@ export const automationTypeDefs = gql`
     company: String
     location: String
     applyUrl: String
-    "Whether a recipient contact was resolved — never the address itself (skill §8)."
+    "Whether a recipient contact was resolved."
     hasContact: Boolean!
+    "The resolved recipient address, shown so the candidate can review it before deciding to send (own data only)."
+    recipientEmail: String
     "The generated cover letter — the candidate's own data, shown so they can review before it is sent."
     coverLetter: String
     createdAt: String!

@@ -53,6 +53,7 @@ export const MY_PREPARED_APPLICATIONS_QUERY = graphql(`
       location
       applyUrl
       hasContact
+      recipientEmail
       coverLetter
       createdAt
     }

@@ -1,4 +1,5 @@
-import { Building2, CheckCircle2, ExternalLink, MapPin, X } from 'lucide-react'
+import { useState } from 'react'
+import { Building2, CheckCircle2, ExternalLink, Loader2, Mail, MapPin, Send, X } from 'lucide-react'
 import { FormattedMessage, useIntl } from 'react-intl'
 
 import { EmptyState } from '@/components/common/EmptyState/EmptyState'
@@ -12,10 +13,23 @@ type Prepared = MyPreparedApplicationsQuery['myPreparedApplications'][number]
 type Props = {
   applications: Prepared[]
   onCancel: (id: string) => void
+  onSend: (id: string) => void
+  sendingId: string | null
 }
 
-const PreparedCard = ({ app, onCancel }: { app: Prepared; onCancel: (id: string) => void }) => {
+const PreparedCard = ({
+  app,
+  onCancel,
+  onSend,
+  sending,
+}: {
+  app: Prepared
+  onCancel: (id: string) => void
+  onSend: (id: string) => void
+  sending: boolean
+}) => {
   const intl = useIntl()
+  const [expanded, setExpanded] = useState(false)
 
   return (
     <Card size="sm">
@@ -50,7 +64,15 @@ const PreparedCard = ({ app, onCancel }: { app: Prepared; onCancel: (id: string)
 
         <div className="flex flex-wrap items-center gap-2 text-xs">
           <Badge variant="outline">{app.stage}</Badge>
-          {app.hasContact ? (
+          {app.recipientEmail ? (
+            <span className="inline-flex items-center gap-1 text-emerald-600">
+              <Mail className="size-3.5" />
+              <span className="font-medium">
+                <FormattedMessage id="candidate.applications.review.recipient" />:
+              </span>
+              <span className="text-foreground">{app.recipientEmail}</span>
+            </span>
+          ) : app.hasContact ? (
             <span className="inline-flex items-center gap-1 text-emerald-600">
               <CheckCircle2 className="size-3.5" />
               <FormattedMessage id="candidate.applications.review.contactFound" />
@@ -63,9 +85,28 @@ const PreparedCard = ({ app, onCancel }: { app: Prepared; onCancel: (id: string)
         </div>
 
         {app.coverLetter && (
-          <p className="line-clamp-3 rounded-md bg-muted/40 p-2.5 text-xs text-muted-foreground">
-            {app.coverLetter}
-          </p>
+          <div className="flex flex-col gap-1.5">
+            <p
+              className={`whitespace-pre-line rounded-md bg-muted/40 p-2.5 text-xs text-muted-foreground ${
+                expanded ? '' : 'line-clamp-3'
+              }`}
+            >
+              {app.coverLetter}
+            </p>
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              className="self-start text-xs font-medium text-primary hover:underline"
+            >
+              <FormattedMessage
+                id={
+                  expanded
+                    ? 'candidate.applications.review.hideLetter'
+                    : 'candidate.applications.review.showLetter'
+                }
+              />
+            </button>
+          </div>
         )}
 
         <div className="flex items-center justify-end gap-2">
@@ -81,10 +122,20 @@ const PreparedCard = ({ app, onCancel }: { app: Prepared; onCancel: (id: string)
             variant="outline"
             size="sm"
             onClick={() => onCancel(app.id)}
+            disabled={sending}
             aria-label={intl.formatMessage({ id: 'candidate.applications.review.cancel' })}
           >
             <X className="size-3.5" />
             <FormattedMessage id="candidate.applications.review.cancel" />
+          </Button>
+          <Button
+            size="sm"
+            onClick={() => onSend(app.id)}
+            disabled={sending || !app.recipientEmail}
+            aria-label={intl.formatMessage({ id: 'candidate.applications.review.send' })}
+          >
+            {sending ? <Loader2 className="size-3.5 animate-spin" /> : <Send className="size-3.5" />}
+            <FormattedMessage id="candidate.applications.review.send" />
           </Button>
         </div>
       </CardContent>
@@ -92,7 +143,7 @@ const PreparedCard = ({ app, onCancel }: { app: Prepared; onCancel: (id: string)
   )
 }
 
-export const PreparedApplicationsList = ({ applications, onCancel }: Props) => {
+export const PreparedApplicationsList = ({ applications, onCancel, onSend, sendingId }: Props) => {
   if (applications.length === 0) {
     return (
       <EmptyState
@@ -106,7 +157,13 @@ export const PreparedApplicationsList = ({ applications, onCancel }: Props) => {
   return (
     <div className="flex flex-col gap-3">
       {applications.map((app) => (
-        <PreparedCard key={app.id} app={app} onCancel={onCancel} />
+        <PreparedCard
+          key={app.id}
+          app={app}
+          onCancel={onCancel}
+          onSend={onSend}
+          sending={sendingId === app.id}
+        />
       ))}
     </div>
   )
