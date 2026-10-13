@@ -1,24 +1,19 @@
-import fs from 'node:fs'
 import { randomUUID } from 'node:crypto'
 import { Router, type Request } from 'express'
 import multer from 'multer'
 import { verifyAccessToken } from '@/graphql/modules/auth/authTokenService.js'
-import { CV_MAX_FILE_SIZE_BYTES, buildCvPublicUrl, getCvUploadDir } from '@/lib/uploadStorage.js'
+import { CV_MAX_FILE_SIZE_BYTES } from '@/lib/uploadStorage.js'
+import { uploadCvToStorage } from '@/lib/supabaseStorage.js'
 
-// multer.diskStorage doesn't create its destination — ensure it exists once at startup.
-fs.mkdirSync(getCvUploadDir(), { recursive: true })
+// CVs are held in memory only long enough to stream them into Supabase Storage — nothing
+// touches local disk, so any API instance or the automation worker can read them back.
 
 interface AuthenticatedRequest extends Request {
   userId?: string
 }
 
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, getCvUploadDir()),
-  filename: (req, _file, cb) => cb(null, `${(req as AuthenticatedRequest).userId}-${randomUUID()}.pdf`),
-})
-
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: CV_MAX_FILE_SIZE_BYTES },
   fileFilter: (_req, file, cb) => cb(null, file.mimetype === 'application/pdf'),
 })
@@ -39,15 +34,18 @@ cvUploadRouter.post(
     next()
   },
   upload.single('file'),
-  (req, res) => {
+  async (req: AuthenticatedRequest, res) => {
     if (!req.file) {
       res.status(400).json({ error: 'No PDF file uploaded' })
       return
     }
-    res.json({
-      url: buildCvPublicUrl(req.file.filename),
-      fileName: req.file.originalname,
-      fileSizeBytes: req.file.size,
-    })
+    try {
+      const objectPath = `cvs/${req.userId}/${randomUUID()}.pdf`
+      const url = await uploadCvToStorage(objectPath, req.file.buffer)
+      res.json({ url, fileName: req.file.originalname, fileSizeBytes: req.file.size })
+    } catch (err) {
+      console.error('[cvUpload] Supabase storage upload failed:', (err as Error).message)
+      res.status(502).json({ error: 'CV storage upload failed' })
+    }
   },
 )

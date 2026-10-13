@@ -13,14 +13,14 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { AutomationFrequency } from '@/gql/graphql'
-import type { useApplications } from '../useApplications'
+import type { useAutomationPanel } from './useAutomationPanel'
 
 type Bounds = { maxApplicationsPerRun: number; maxApplicationsPerDay: number; minMatchScore: number }
 
 type Props = {
-  draft: NonNullable<ReturnType<typeof useApplications>['draft']>
+  draft: NonNullable<ReturnType<typeof useAutomationPanel>['draft']>
   ceilings: Bounds | null
-  patch: ReturnType<typeof useApplications>['patch']
+  patch: ReturnType<typeof useAutomationPanel>['patch']
 }
 
 const MAX_KEYWORDS = 50

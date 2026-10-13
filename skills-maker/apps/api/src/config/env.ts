@@ -43,6 +43,13 @@ const schema = z.object({
   UPLOAD_DIR: z.string().default('./uploads'),
   /** Pre-downloaded Apify datasets served as the browse-mode preview. */
   JOBS_RUNS_DIR: z.string().default('./data/runs'),
+
+  // Supabase Storage — candidate CVs live in a hosted bucket (default `cvs`) so any API
+  // instance or worker can read them. Optional at boot; the upload/read helpers throw a
+  // clear error when invoked without a URL + service-role key configured.
+  SUPABASE_URL: z.string().optional().default(''),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().optional().default(''),
+  SUPABASE_CV_BUCKET: z.string().default('cvs'),
 })
 
 const parsed = schema.safeParse(process.env)

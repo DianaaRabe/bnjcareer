@@ -35,4 +35,11 @@ export const messages = {
   coachProfileInvalid: 'Invalid coach profile data',
   automationSettingsInvalid: 'Invalid automation settings',
   automationApplicationNotFound: 'Application not found',
+  sendRequiresAutomationEnabled: 'Turn on automated applications before sending',
+  sendNotReady: 'This application is not ready to send',
+  sendMissingContact: 'No verified recipient address for this application',
+  sendMissingIdentity: 'Complete your profile and email before sending',
+  sendMissingCv: 'Add a CV before sending an application',
+  sendDisabled: 'Email sending is not enabled on this environment',
+  sendFailed: 'Unable to send this application right now',
 } as const

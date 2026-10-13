@@ -31,7 +31,11 @@ type Draft = {
   contractTypes: string[]
 }
 
-export const useApplications = () => {
+/**
+ * Drives the automation control center (settings, runs, prepared-application review). Extracted
+ * from the page so the applications hub can mount it as one tab among others.
+ */
+export const useAutomationPanel = () => {
   const { translate } = useTranslate()
 
   const settingsQuery = useMyAutomationSettingsQuery()

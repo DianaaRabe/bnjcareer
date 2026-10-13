@@ -51,6 +51,10 @@ const config: CodegenConfig = {
           AutomationBounds: '../graphql/modules/automation/automationMappers.js#GraphQLAutomationBounds',
           AutomationRunSummary: '../graphql/modules/automation/automationMappers.js#GraphQLAutomationRunSummary',
           PreparedApplication: '../graphql/modules/automation/automationMappers.js#GraphQLPreparedApplication',
+          CandidateApplication: '../graphql/modules/applications/applicationsMappers.js#GraphQLCandidateApplication',
+          ApplicationDelivery: '../graphql/modules/applications/applicationsMappers.js#GraphQLApplicationDelivery',
+          CandidateApplicationStats:
+            '../graphql/modules/applications/applicationsMappers.js#GraphQLCandidateApplicationStats',
         },
         useIndexSignature: true,
       },

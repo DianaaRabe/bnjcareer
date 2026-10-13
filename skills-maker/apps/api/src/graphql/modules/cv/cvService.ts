@@ -1,11 +1,11 @@
-import fs from 'node:fs/promises'
 import { GraphQLError } from 'graphql'
 import { z } from 'zod'
 import pdf from 'pdf-parse'
 import type { Context } from '@/context.js'
 import { messages } from '@/constants/messages.js'
 import { callLLM, LLMError } from '@/lib/llmClient.js'
-import { CV_MAX_FILE_SIZE_BYTES, publicUrlToFilePath } from '@/lib/uploadStorage.js'
+import { CV_MAX_FILE_SIZE_BYTES } from '@/lib/uploadStorage.js'
+import { readCvBytes } from '@/lib/supabaseStorage.js'
 import { buildExtractionPrompt, buildOptimizationPrompt, type CvJobContext, type CvTemplateKey } from './cvPrompts.js'
 import { parseExtractionResult, parseOptimizationResult } from './cvLlmParsing.js'
 
@@ -58,8 +58,7 @@ export async function createCv(ctx: Context, input: unknown) {
   })
 
   try {
-    const filePath = publicUrlToFilePath(cv.pdfUrl!)
-    const buffer = await fs.readFile(filePath)
+    const buffer = await readCvBytes(cv.pdfUrl!)
     const { text } = await pdf(buffer)
 
     const { content } = await callLLM({

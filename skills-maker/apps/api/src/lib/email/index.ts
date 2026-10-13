@@ -20,6 +20,12 @@ export {
 } from './types.js'
 
 export { assertMandatoryBcc, buildProviderInput, type BuildMessageOptions } from './buildMessage.js'
+export {
+  buildApplicationEmail,
+  buildBody,
+  buildSubject,
+  type ApplicationEmailInput,
+} from './buildApplicationEmail.js'
 export { buildCvAttachment, verifyCvPdf, type CvVerification } from './cvAttachment.js'
 export { createDryRunProvider } from './dryRunProvider.js'
 export { createBrevoProvider } from './brevoProvider.js'
