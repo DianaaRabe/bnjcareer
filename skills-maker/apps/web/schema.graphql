@@ -738,6 +738,11 @@ type Mutation {
   """
   cancelPreparedApplication(id: ID!): Boolean!
 
+  """
+  Triggers an immediate automation pipeline run on demand for the authenticated candidate.
+  """
+  triggerMyAutomationRun: AutomationRunSummary!
+
   """Marks a session owned by the authenticated coach as canceled."""
   cancelSession(id: ID!): Boolean!
 
