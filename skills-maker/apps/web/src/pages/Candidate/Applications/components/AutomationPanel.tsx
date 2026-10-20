@@ -1,5 +1,5 @@
 import { FormattedDate, FormattedMessage } from 'react-intl'
-import { Power, TriangleAlert } from 'lucide-react'
+import { CheckCircle2, Loader2, Play, Power, Sparkles, TriangleAlert } from 'lucide-react'
 
 import { EmptyState } from '@/components/common/EmptyState/EmptyState'
 import { LoadingState } from '@/components/common/LoadingState/LoadingState'
@@ -73,14 +73,76 @@ export const AutomationPanel = () => {
               </p>
             </div>
           </div>
-          <Switch
-            checked={vm.enabled}
-            disabled={vm.togglingEnabled}
-            onCheckedChange={vm.toggleEnabled}
-            aria-label="toggle-automation"
-          />
+          <div className="flex items-center gap-3">
+            <Button
+              variant="default"
+              size="sm"
+              disabled={!vm.enabled || vm.isTriggering || vm.togglingEnabled}
+              onClick={vm.triggerRun}
+              className="gap-2 shadow-sm"
+            >
+              {vm.isTriggering ? (
+                <>
+                  <Loader2 className="size-4 animate-spin text-primary-foreground" />
+                  <span>
+                    <FormattedMessage id="candidate.applications.trigger.running" defaultMessage="Analyse en cours..." />
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Play className="size-4 fill-current" />
+                  <span>
+                    <FormattedMessage id="candidate.applications.trigger.button" defaultMessage="Lancer l'analyse maintenant" />
+                  </span>
+                </>
+              )}
+            </Button>
+            <Switch
+              checked={vm.enabled}
+              disabled={vm.togglingEnabled || vm.isTriggering}
+              onCheckedChange={vm.toggleEnabled}
+              aria-label="toggle-automation"
+            />
+          </div>
         </CardContent>
       </Card>
+
+      {/* Visual live progress card when an analysis is running on demand */}
+      {vm.isTriggering && (
+        <Card className="border-primary/40 bg-primary/5">
+          <CardContent className="flex flex-col gap-3 py-4">
+            <div className="flex items-center gap-2 font-medium text-primary">
+              <Loader2 className="size-5 animate-spin" />
+              <span>
+                <FormattedMessage
+                  id="candidate.applications.trigger.inProgressTitle"
+                  defaultMessage="Recherche et préparation automatique en cours"
+                />
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              <FormattedMessage
+                id="candidate.applications.trigger.inProgressHint"
+                defaultMessage="Notre IA explore le web, filtre les offres selon votre profil, sélectionne les meilleures correspondances et rédige vos candidatures personnalisées. Cela prend entre 10 et 30 secondes..."
+              />
+            </p>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 pt-1">
+              <div className="flex items-center gap-2 rounded-md border border-border/60 bg-background/80 p-2 text-xs">
+                <span className="flex size-5 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-[10px]">1</span>
+                <span>Exploration des offres</span>
+              </div>
+              <div className="flex items-center gap-2 rounded-md border border-border/60 bg-background/80 p-2 text-xs">
+                <span className="flex size-5 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-[10px]">2</span>
+                <span>Matching IA CV & scoring</span>
+              </div>
+              <div className="flex items-center gap-2 rounded-md border border-border/60 bg-background/80 p-2 text-xs">
+                <span className="flex size-5 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-[10px]">3</span>
+                <span>Génération des lettres & préparation</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.4fr]">
         <div className="flex flex-col gap-6">

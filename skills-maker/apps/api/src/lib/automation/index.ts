@@ -51,6 +51,7 @@ export {
   createPrismaSchedulerStore,
   createSchedulerDeps,
   runDueAutomations,
+  runAutomationNowForCandidate,
   statsFromOutcome,
   type CandidateDisposition,
   type CandidateResult,

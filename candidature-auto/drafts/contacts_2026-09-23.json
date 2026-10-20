@@ -1,0 +1,67 @@
+[
+  {
+    "id": "apollo-609b099f9064ca000186b751",
+    "entreprise": "Skello",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 3e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "paul.turbe-bion@skello.io",
+    "contact_nom": "Paul",
+    "contact_titre": "Senior Tech Talent Acquisition Manager",
+    "url_offre": "https://www.skello.io",
+    "score": 88
+  },
+  {
+    "id": "apollo-6551c5cac417f40001e5e5ff",
+    "entreprise": "Matera",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 10e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "anne-sophie.arfwedson@matera.eu",
+    "contact_nom": "Anne-Sophie",
+    "contact_titre": "Talent Acquisition Manager",
+    "url_offre": "https://www.matera.eu",
+    "score": 86
+  },
+  {
+    "id": "apollo-602a7901cf1a4c00011d8854",
+    "entreprise": "Cafeyn",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 9e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "m.rafali.ext@cafeyn.co",
+    "contact_nom": "Mehdi",
+    "contact_titre": "Talent Acquisition Manager",
+    "url_offre": "https://www.cafeyn.co",
+    "score": 84
+  },
+  {
+    "id": "apollo-5dc9b056b835cf000163f36b",
+    "entreprise": "Wecasa",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 18e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "iran.garcia@wecasa.fr",
+    "contact_nom": "Iran",
+    "contact_titre": "Talent Acquisition Manager & HRBP",
+    "url_offre": "https://www.wecasa.fr",
+    "score": 82
+  },
+  {
+    "id": "apollo-6664817f64c48d00013b5190",
+    "entreprise": "Agorastore",
+    "intitule": "Data Analyst",
+    "lieu": "Montreuil (93)",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "ammar@agorastore.fr",
+    "contact_nom": "Marion",
+    "contact_titre": "Talent Acquisition Manager",
+    "url_offre": "https://www.agorastore.fr",
+    "score": 80
+  }
+]

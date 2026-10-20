@@ -11,6 +11,7 @@ import {
 import { ROUTES } from '@/constants/routes'
 import { PORTAL_ROLES } from '@/lib/rbac'
 import { Login } from '@/pages/Auth/Login'
+import { AuthCallback } from '@/pages/Auth/AuthCallback'
 import { CoachLanding } from '@/pages/Landing/CoachLanding'
 import { LandingGate } from '@/pages/Landing/LandingGate'
 import { Applications as CandidateApplications } from '@/pages/Candidate/Applications/Applications'
@@ -74,6 +75,7 @@ export function App() {
   return (
     <Routes>
       <Route path={ROUTES.login} element={<Login />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
 
       <Route
         path={ROUTES.candidate.root}

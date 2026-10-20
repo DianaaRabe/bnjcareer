@@ -9,6 +9,7 @@ import { IdentitySection } from './components/IdentitySection'
 import { ObjectiveSection } from './components/ObjectiveSection'
 import { ProfileNav } from './components/ProfileNav'
 import { SkillsSection } from './components/SkillsSection'
+import { EmailConnectionSection } from './components/EmailConnectionSection'
 import { useProfile } from './useProfile'
 
 export const Profile = () => {
@@ -93,6 +94,7 @@ export const Profile = () => {
           />
         )}
         {p.activeSection === 'objectif' && <ObjectiveSection value={p.objective} onChange={p.setObjective} />}
+        {p.activeSection === 'emails' && <EmailConnectionSection />}
       </div>
     </div>
   )

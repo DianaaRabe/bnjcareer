@@ -48,6 +48,7 @@ const schema = z.object({
   // instance or worker can read them. Optional at boot; the upload/read helpers throw a
   // clear error when invoked without a URL + service-role key configured.
   SUPABASE_URL: z.string().optional().default(''),
+  SUPABASE_ANON_KEY: z.string().optional().default(''),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional().default(''),
   SUPABASE_CV_BUCKET: z.string().default('cvs'),
 })

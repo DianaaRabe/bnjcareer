@@ -24,6 +24,10 @@ export const authTypeDefs = gql`
     password: String!
   }
 
+  input GoogleAuthInput {
+    token: String!
+  }
+
   type Query {
     "Currently authenticated user"
     me: User
@@ -32,5 +36,6 @@ export const authTypeDefs = gql`
   type Mutation {
     register(input: CredentialsInput!): AuthPayload!
     login(input: CredentialsInput!): AuthPayload!
+    authWithGoogle(input: GoogleAuthInput!): AuthPayload!
   }
 `

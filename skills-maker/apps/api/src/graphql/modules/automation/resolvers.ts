@@ -5,6 +5,7 @@ import {
   getMyAutomationSettings,
   getMyPreparedApplications,
   setAutomationEnabled,
+  triggerMyAutomationRun,
   updateAutomationSettings,
 } from './automationService.js'
 
@@ -26,6 +27,9 @@ const setAutomationEnabledMutation: MutationResolvers['setAutomationEnabled'] = 
 const cancelPreparedApplicationMutation: MutationResolvers['cancelPreparedApplication'] = (_parent, args, ctx) =>
   cancelPreparedApplication(ctx, args.id)
 
+const triggerMyAutomationRunMutation: any = (_parent: any, _args: any, ctx: any) =>
+  triggerMyAutomationRun(ctx)
+
 export const automationResolvers = {
   Query: {
     myAutomationSettings,
@@ -36,5 +40,6 @@ export const automationResolvers = {
     updateAutomationSettings: updateAutomationSettingsMutation,
     setAutomationEnabled: setAutomationEnabledMutation,
     cancelPreparedApplication: cancelPreparedApplicationMutation,
+    triggerMyAutomationRun: triggerMyAutomationRunMutation,
   },
 }

@@ -4,6 +4,7 @@ import {
   FileText,
   GraduationCap,
   Handshake,
+  Mail,
   RefreshCw,
   Search,
   Sparkles,
@@ -14,13 +15,14 @@ import {
 
 import { ProfileObjective, ProfileSituation } from '@/gql/graphql'
 
-export type ProfileSectionId = 'identite' | 'parcours' | 'competences' | 'objectif'
+export type ProfileSectionId = 'identite' | 'parcours' | 'competences' | 'objectif' | 'emails'
 
 export const PROFILE_SECTIONS: { id: ProfileSectionId; labelId: string; icon: LucideIcon }[] = [
   { id: 'identite', labelId: 'candidate.profile.nav.identity', icon: User },
   { id: 'parcours', labelId: 'candidate.profile.nav.career', icon: GraduationCap },
   { id: 'competences', labelId: 'candidate.profile.nav.skills', icon: Sparkles },
   { id: 'objectif', labelId: 'candidate.profile.nav.objective', icon: Target },
+  { id: 'emails', labelId: 'candidate.profile.nav.emails', icon: Mail },
 ]
 
 /** Free-text `educationLevel` field — stable codes stored server-side, labels translated client-side. */

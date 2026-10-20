@@ -292,3 +292,28 @@ export function createSchedulerDeps(ctx: Context, overrides?: Partial<SchedulerD
     limit: overrides?.limit,
   }
 }
+
+/**
+ * Triggers an immediate automation execution on demand for the signed-in candidate.
+ */
+export async function runAutomationNowForCandidate(
+  ctx: Context,
+  candidateId: string,
+): Promise<{ runId: string; status: AutomationRunStatusName; stats: RunStats }> {
+  const deps = createSchedulerDeps(ctx)
+  const now = () => new Date()
+  const staleBefore = new Date(now().getTime() - RUN_STALE_AFTER_MS)
+
+  const claim = await deps.store.claimRun(candidateId, now(), staleBefore)
+  if (!claim) {
+    throw new Error('Une analyse est déjà en cours d\'exécution pour votre compte.')
+  }
+
+  const result = await runClaimed(deps, candidateId, claim.runId, now)
+  return {
+    runId: claim.runId,
+    status: (result.disposition === 'ERROR' ? 'FAILED' : result.disposition) as AutomationRunStatusName,
+    stats: result.stats ?? ZERO_STATS,
+  }
+}
+

@@ -322,13 +322,19 @@ async function prepareOne(
   }
 
   if (!contact) {
-    return {
-      skipped: {
-        job,
-        reason: 'NO_CONTACT',
-        detail: resolution.failures.map((failure) => failure.source).join(',') || undefined,
-      },
+    // Si aucun e-mail direct n'est trouvé, mais que l'offre a un lien pour postuler (applyUrl)
+    // ou qu'on est en mode relecture (approvalMode), on prépare quand même l'offre !
+    // Cela permet au candidat d'avoir sa lettre de motivation générée et de postuler en un clic.
+    if (!job.applyUrl && !deps.settings.approvalMode) {
+      return {
+        skipped: {
+          job,
+          reason: 'NO_CONTACT',
+          detail: resolution.failures.map((failure) => failure.source).join(',') || undefined,
+        },
+      }
     }
+    needsReview = true
   }
 
   // ── Cover letter ──────────────────────────────────────────────────────────
@@ -360,12 +366,14 @@ async function prepareOne(
     return { skipped: { job, reason: 'ALREADY_APPLIED' } }
   }
 
-  await deps.store.saveContact(saved.jobOfferId, contact)
+  if (contact) {
+    await deps.store.saveContact(saved.jobOfferId, contact)
+  }
   await deps.store.recordEvent(saved.applicationId, 'APPLICATION_PREPARED', {
     stage,
     matchScore: entry.score,
-    contactSource: contact.source,
-    contactConfidence: contact.confidence,
+    contactSource: contact?.source ?? 'NONE',
+    contactConfidence: contact?.confidence ?? 'NONE',
     needsReview,
     model: letter.model,
   })

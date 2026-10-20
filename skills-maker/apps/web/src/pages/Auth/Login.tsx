@@ -11,6 +11,8 @@ import { useLogin } from "./useLogin";
 
 export function Login() {
   const {
+    isRegister,
+    toggleMode,
     email,
     setEmail,
     password,
@@ -37,11 +39,13 @@ export function Login() {
           </div>
           <div>
             <h1 className="text-2xl font-semibold text-foreground">
-              <FormattedMessage id="auth.login.title" />
+              <FormattedMessage
+                id={isRegister ? "auth.register.title" : "auth.login.title"}
+              />
             </h1>
             <p className="text-sm text-muted-foreground">
               <FormattedMessage
-                id="auth.login.subtitle"
+                id={isRegister ? "auth.register.subtitle" : "auth.login.subtitle"}
                 values={{
                   appName: intl.formatMessage({ id: "app.name" }),
                 }}
@@ -77,20 +81,23 @@ export function Login() {
                 <Label htmlFor="password">
                   <FormattedMessage id="auth.login.password.label" />
                 </Label>
-                <a
-                  href="#"
-                  className="text-xs font-medium text-primary hover:text-primary-hover"
-                >
-                  <FormattedMessage id="auth.login.password.forgot" />
-                </a>
+                {!isRegister && (
+                  <a
+                    href="#"
+                    className="text-xs font-medium text-primary hover:text-primary-hover"
+                  >
+                    <FormattedMessage id="auth.login.password.forgot" />
+                  </a>
+                )}
               </div>
               <div className="relative">
                 <Lock className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
+                  autoComplete={isRegister ? "new-password" : "current-password"}
                   required
+                  minLength={8}
                   className="pl-9 pr-9"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
@@ -125,7 +132,15 @@ export function Login() {
               disabled={loading}
             >
               <FormattedMessage
-                id={loading ? "auth.login.submit.loading" : "auth.login.submit"}
+                id={
+                  isRegister
+                    ? loading
+                      ? "auth.register.submit.loading"
+                      : "auth.register.submit"
+                    : loading
+                      ? "auth.login.submit.loading"
+                      : "auth.login.submit"
+                }
               />
             </Button>
           </form>
@@ -146,17 +161,32 @@ export function Login() {
             onClick={handleGoogleSignIn}
           >
             <GoogleIcon />
-            <FormattedMessage id="auth.login.google" />
+            <FormattedMessage
+              id={isRegister ? "auth.register.google" : "auth.login.google"}
+            />
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">
-            <FormattedMessage id="auth.login.signup.prompt" />{" "}
-            <a
-              href="#"
-              className="font-medium text-primary hover:text-primary-hover"
+            <FormattedMessage
+              id={
+                isRegister
+                  ? "auth.register.login.prompt"
+                  : "auth.login.signup.prompt"
+              }
+            />{" "}
+            <button
+              type="button"
+              onClick={toggleMode}
+              className="font-medium text-primary hover:text-primary-hover underline-offset-4 hover:underline"
             >
-              <FormattedMessage id="auth.login.signup.link" />
-            </a>
+              <FormattedMessage
+                id={
+                  isRegister
+                    ? "auth.register.login.link"
+                    : "auth.login.signup.link"
+                }
+              />
+            </button>
           </p>
 
           <p className="text-center text-xs text-muted-foreground">

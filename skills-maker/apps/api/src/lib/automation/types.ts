@@ -46,8 +46,8 @@ export interface PreparedApplication {
   matchScore: number
   coverLetter: string
   coverLetterModel: string
-  /** Verified address, or — under approval only — a pattern guess flagged as such. */
-  contact: ContactCandidate
+  /** Verified address, or — under approval only — a pattern guess flagged as such, or null when applying via web url. */
+  contact: ContactCandidate | null
   /** True when the only contact found was a guess, so a human must confirm before sending. */
   needsReview: boolean
 }

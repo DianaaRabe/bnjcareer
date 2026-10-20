@@ -548,6 +548,10 @@ input CredentialsInput {
   password: String!
 }
 
+input GoogleAuthInput {
+  token: String!
+}
+
 type Cv {
   createdAt: String!
 
@@ -759,6 +763,7 @@ type Mutation {
   """
   deleteTraining(id: ID!): Boolean!
   login(input: CredentialsInput!): AuthPayload!
+  authWithGoogle(input: GoogleAuthInput!): AuthPayload!
 
   """
   Runs the ATS optimization prompt against an already-extracted CV, producing structured content. Pass jobContext to tailor it to a specific offer; omit for a general optimization.

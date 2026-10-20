@@ -9,6 +9,7 @@ import {
   AUTOMATION_DEFAULTS,
   nextRunAt,
   resolveAutomationSettings,
+  runAutomationNowForCandidate,
   type AutomationSettingsResolved,
 } from '@/lib/automation/index.js'
 
@@ -227,3 +228,33 @@ export async function cancelPreparedApplication(ctx: Context, id: string): Promi
   })
   return true
 }
+
+/**
+ * Triggers an immediate automation pipeline run on demand for the candidate.
+ */
+export async function triggerMyAutomationRun(ctx: Context): Promise<AutomationRunSummaryView> {
+  const user = requireUser(ctx)
+  const result = await runAutomationNowForCandidate(ctx, user.id)
+
+  const row = await ctx.prisma.automationRun.findUnique({
+    where: { id: result.runId },
+  })
+
+  if (!row) {
+    throw new GraphQLError('Erreur lors de la récupération du rapport d\'analyse', {
+      extensions: { code: 'INTERNAL_SERVER_ERROR' },
+    })
+  }
+
+  return {
+    id: row.id,
+    status: row.status,
+    startedAt: row.startedAt.toISOString(),
+    completedAt: row.completedAt ? row.completedAt.toISOString() : null,
+    jobsDiscovered: row.jobsDiscovered,
+    jobsMatched: row.jobsMatched,
+    applicationsPrepared: row.applicationsSent,
+    failures: row.failures,
+  }
+}
+

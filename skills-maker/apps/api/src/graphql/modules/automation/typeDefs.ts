@@ -113,5 +113,7 @@ export const automationTypeDefs = gql`
     setAutomationEnabled(enabled: Boolean!): AutomationSettings!
     "Cancels a prepared application the candidate does not want sent. Candidate-scoped: only the owner can cancel."
     cancelPreparedApplication(id: ID!): Boolean!
+    "Triggers an immediate automation search and preparation run for the signed-in candidate."
+    triggerMyAutomationRun: AutomationRunSummary!
   }
 `

@@ -66,18 +66,21 @@ const PROVIDERS: Record<string, ProviderConfig> = {
     endpoint: 'https://api.groq.com/openai/v1/chat/completions',
     getApiKeys: () => collectKeys([env.GROQ_API_KEY, env.GROQ_API_KEY_2]),
     supportsJsonMode: true,
-    // Checked against GET /v1/models — the previous llama/deepseek entries were decommissioned.
-    models: ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'qwen/qwen3.6-27b'],
+    // Verified live against this account: only the gpt-oss family is accessible
+    // (llama/qwen/deepseek slugs all 404 for these keys).
+    models: ['openai/gpt-oss-120b', 'openai/gpt-oss-20b'],
   },
   openrouter: {
     name: 'openrouter',
     endpoint: 'https://openrouter.ai/api/v1/chat/completions',
     getApiKeys: () => collectKeys([env.OPENROUTER_API_KEY]),
     supportsJsonMode: true,
+    // Verified live: the ":free" variants were discontinued (now 404). These paid
+    // slugs resolve; gpt-oss is very cheap and matches the Groq models we use.
     models: [
-      'meta-llama/llama-3.3-70b-instruct:free',
-      'qwen/qwen3-next-80b-a3b-instruct:free',
-      'openai/gpt-oss-120b:free',
+      'openai/gpt-oss-120b',
+      'openai/gpt-oss-20b',
+      'meta-llama/llama-3.1-8b-instruct',
     ],
     extraHeaders: (referer) => ({
       'HTTP-Referer': referer || 'https://bnj-skills-maker.local',
@@ -92,6 +95,26 @@ function selectProvider(): ProviderConfig {
   // Auto: prefer Groq if any of its keys is set, else OpenRouter
   if (PROVIDERS.groq.getApiKeys().length > 0) return PROVIDERS.groq
   return PROVIDERS.openrouter
+}
+
+/**
+ * Ordered list of providers to try: the selected one first, then any OTHER
+ * provider that has a key configured. This gives real cross-provider failover —
+ * a Groq rate-limit burst (429 on every key) falls over to OpenRouter instead of
+ * failing the whole call. When LLM_PROVIDER is pinned explicitly we honour it and
+ * do NOT fall through to the other provider.
+ */
+function providerChain(): ProviderConfig[] {
+  const explicit = env.LLM_PROVIDER.toLowerCase()
+  if (explicit && PROVIDERS[explicit]) return [PROVIDERS[explicit]]
+
+  const primary = selectProvider()
+  const chain = [primary]
+  for (const name of Object.keys(PROVIDERS)) {
+    const p = PROVIDERS[name]
+    if (p !== primary && p.getApiKeys().length > 0) chain.push(p)
+  }
+  return chain
 }
 
 /** Status codes that indicate "try a different key" rather than "try a different model". */
@@ -109,18 +132,20 @@ export class LLMError extends Error {
   }
 }
 
-// Iteration strategy: for each model in the fallback chain, for each API key
-// (random order) — 200 OK returns immediately; rate-limit/quota tries the next
-// key for the same model; any other error moves on to the next model.
-export async function callLLM(opts: LLMOptions): Promise<LLMResponse> {
-  const provider = selectProvider()
+// Iteration strategy within a single provider: for each model in the fallback
+// chain, for each API key (random order) — 200 OK returns immediately;
+// rate-limit/quota tries the next key for the same model; any other error moves
+// on to the next model. Returns null (and records attempts) if the provider is
+// fully exhausted, so the caller can fall over to the next provider.
+async function tryProvider(
+  provider: ProviderConfig,
+  opts: LLMOptions,
+  attempts: { model: string; error: string }[],
+): Promise<LLMResponse | null> {
   const allKeys = provider.getApiKeys()
-  if (allKeys.length === 0) {
-    throw new LLMError(`No API key configured for ${provider.name.toUpperCase()}`, [])
-  }
+  if (allKeys.length === 0) return null
 
   const models = env.LLM_MODEL ? [env.LLM_MODEL] : provider.models
-  const attempts: { model: string; error: string }[] = []
 
   for (const model of models) {
     const keys = shuffle(allKeys)
@@ -154,25 +179,49 @@ export async function callLLM(opts: LLMOptions): Promise<LLMResponse> {
           const data = (await res.json()) as { choices?: { message?: { content?: string } }[] }
           const content = data.choices?.[0]?.message?.content
           if (!content) {
-            attempts.push({ model: `${model}/${keyLabel}`, error: 'empty response content' })
+            attempts.push({ model: `${provider.name}:${model}/${keyLabel}`, error: 'empty response content' })
             break
           }
           return { content, model }
         }
 
         const errText = await res.text()
-        attempts.push({ model: `${model}/${keyLabel}`, error: `HTTP ${res.status}: ${errText.slice(0, 200)}` })
+        attempts.push({
+          model: `${provider.name}:${model}/${keyLabel}`,
+          error: `HTTP ${res.status}: ${errText.slice(0, 200)}`,
+        })
 
         if (isRateLimitOrQuota(res.status)) continue // try next key
         break // real error on this model → try next model
       } catch (err) {
-        attempts.push({ model: `${model}/${keyLabel}`, error: err instanceof Error ? err.message : String(err) })
+        attempts.push({
+          model: `${provider.name}:${model}/${keyLabel}`,
+          error: err instanceof Error ? err.message : String(err),
+        })
         break
       }
     }
   }
 
-  throw new LLMError(`All ${models.length} ${provider.name} model(s) × ${allKeys.length} key(s) failed`, attempts)
+  return null
+}
+
+// Tries each provider in the chain (primary first, then any other configured
+// provider) so a rate-limited/exhausted primary falls over instead of failing.
+export async function callLLM(opts: LLMOptions): Promise<LLMResponse> {
+  const chain = providerChain()
+  if (chain.every((p) => p.getApiKeys().length === 0)) {
+    throw new LLMError('No API key configured for any LLM provider', [])
+  }
+
+  const attempts: { model: string; error: string }[] = []
+  for (const provider of chain) {
+    const res = await tryProvider(provider, opts, attempts)
+    if (res) return res
+  }
+
+  const tried = chain.map((p) => p.name).join(' → ')
+  throw new LLMError(`All providers failed (${tried})`, attempts)
 }
 
 /** Parses JSON from an LLM response, tolerating markdown code fences. */
@@ -203,44 +252,46 @@ export function parseLLMJson<T = unknown>(raw: string): T {
  * Providers speak the OpenAI SSE dialect: `data: {json}` lines, `data: [DONE]` to close.
  */
 export async function* streamLLM(opts: Omit<LLMOptions, 'jsonMode'>): AsyncGenerator<string> {
-  const provider = selectProvider()
-  const allKeys = provider.getApiKeys()
-  if (allKeys.length === 0) {
-    throw new LLMError(`No API key configured for ${provider.name.toUpperCase()}`, [])
+  const chain = providerChain()
+  if (chain.every((p) => p.getApiKeys().length === 0)) {
+    throw new LLMError('No API key configured for any LLM provider', [])
   }
 
-  const models = env.LLM_MODEL ? [env.LLM_MODEL] : provider.models
   const attempts: { model: string; error: string }[] = []
 
-  for (const model of models) {
-    for (const apiKey of shuffle(allKeys)) {
-      const response = await fetch(provider.endpoint, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-          ...(provider.extraHeaders?.(opts.referer) ?? {}),
-        },
-        body: JSON.stringify({
-          model,
-          messages: opts.messages,
-          temperature: opts.temperature ?? 0.3,
-          max_tokens: opts.maxTokens ?? 4000,
-          stream: true,
-        }),
-      })
+  for (const provider of chain) {
+    const models = env.LLM_MODEL ? [env.LLM_MODEL] : provider.models
 
-      if (!response.ok || !response.body) {
-        attempts.push({ model, error: `HTTP ${response.status}` })
-        continue
+    for (const model of models) {
+      for (const apiKey of shuffle(provider.getApiKeys())) {
+        const response = await fetch(provider.endpoint, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+            ...(provider.extraHeaders?.(opts.referer) ?? {}),
+          },
+          body: JSON.stringify({
+            model,
+            messages: opts.messages,
+            temperature: opts.temperature ?? 0.3,
+            max_tokens: opts.maxTokens ?? 4000,
+            stream: true,
+          }),
+        })
+
+        if (!response.ok || !response.body) {
+          attempts.push({ model: `${provider.name}:${model}`, error: `HTTP ${response.status}` })
+          continue
+        }
+
+        yield* readSseDeltas(response.body)
+        return
       }
-
-      yield* readSseDeltas(response.body)
-      return
     }
   }
 
-  throw new LLMError('All models and keys failed', attempts)
+  throw new LLMError('All providers failed (stream)', attempts)
 }
 
 /** Turns a provider SSE body into the successive text deltas it carries. */

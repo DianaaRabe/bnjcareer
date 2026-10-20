@@ -1,55 +1,101 @@
 import { useState, type FormEvent } from "react";
 import { useApolloClient } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
-import { useLoginMutation } from "@/graphql/hooks/auth";
+import { useLoginMutation, useRegisterMutation } from "@/graphql/hooks/auth";
 import { useTranslate } from "@/hooks/useTranslate";
 import { getGraphQLErrorCode } from "@/lib/apollo";
 import { setToken } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
+
+export type AuthMode = "login" | "register";
 
 export function useLogin() {
+  const [mode, setMode] = useState<AuthMode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [login, { loading, error }] = useLoginMutation();
+  const [googleError, setGoogleError] = useState<string | null>(null);
+
+  const [login, { loading: loginLoading, error: loginError }] = useLoginMutation();
+  const [register, { loading: registerLoading, error: registerError }] = useRegisterMutation();
+
   const navigate = useNavigate();
   const apolloClient = useApolloClient();
   const { translate } = useTranslate();
 
-  // Server messages are not localized — map the error code to a translated string instead.
-  const errorMessage = error
-    ? translate(
-        getGraphQLErrorCode(error) === "BAD_USER_INPUT"
-          ? "auth.login.error.invalidCredentials"
-          : "auth.login.error.unexpected",
-      )
-    : null;
+  const isRegister = mode === "register";
+  const loading = isRegister ? registerLoading : loginLoading;
+  const currentError = isRegister ? registerError : loginError;
+
+  const errorMessage =
+    googleError ||
+    (currentError
+      ? translate(
+          isRegister
+            ? getGraphQLErrorCode(currentError) === "BAD_USER_INPUT"
+              ? "auth.register.error.emailExists"
+              : "auth.register.error.unexpected"
+            : getGraphQLErrorCode(currentError) === "BAD_USER_INPUT"
+              ? "auth.login.error.invalidCredentials"
+              : "auth.login.error.unexpected",
+        )
+      : null);
 
   const togglePasswordVisibility = () => setShowPassword((v) => !v);
+  const toggleMode = () => {
+    setMode((prev) => (prev === "login" ? "register" : "login"));
+    setGoogleError(null);
+  };
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    setGoogleError(null);
     try {
-      const { data } = await login({
-        variables: { input: { email, password } },
-      });
-      if (data?.login.token) {
-        setToken(data.login.token);
-        // Drop what was cached while signed out — `me` was resolved as null then, and a
-        // cache-first read would serve that null instead of fetching the new session.
-        await apolloClient.clearStore();
-        navigate("/");
+      if (isRegister) {
+        const { data } = await register({
+          variables: { input: { email, password } },
+        });
+        if (data?.register.token) {
+          setToken(data.register.token);
+          await apolloClient.clearStore();
+          navigate("/");
+        }
+      } else {
+        const { data } = await login({
+          variables: { input: { email, password } },
+        });
+        if (data?.login.token) {
+          setToken(data.login.token);
+          await apolloClient.clearStore();
+          navigate("/");
+        }
       }
     } catch {
-      // surfaced via the mutation's `error` state below
+      // surfaced via the mutation's `error` state
     }
   };
 
-  // TODO: wire to the real Google OAuth flow once the backend mutation exists.
-  const handleGoogleSignIn = () => {
-    console.warn("Google sign-in is not wired yet.");
+  const handleGoogleSignIn = async () => {
+    setGoogleError(null);
+    try {
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (oauthError) {
+        setGoogleError(oauthError.message);
+      }
+    } catch (err: unknown) {
+      setGoogleError(err instanceof Error ? err.message : "Erreur de connexion Google");
+    }
   };
 
   return {
+    mode,
+    isRegister,
+    toggleMode,
     email,
     setEmail,
     password,

@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Building2, CheckCircle2, ExternalLink, Loader2, Mail, MapPin, Send, X } from 'lucide-react'
+import { Building2, Check, CheckCircle2, Copy, ExternalLink, Globe, Loader2, Mail, MapPin, Send, X } from 'lucide-react'
 import { FormattedMessage, useIntl } from 'react-intl'
+import { toast } from 'sonner'
 
 import { EmptyState } from '@/components/common/EmptyState/EmptyState'
 import { Badge } from '@/components/ui/badge'
@@ -30,6 +31,19 @@ const PreparedCard = ({
 }) => {
   const intl = useIntl()
   const [expanded, setExpanded] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const copyLetter = async () => {
+    if (!app.coverLetter) return
+    try {
+      await navigator.clipboard.writeText(app.coverLetter)
+      setCopied(true)
+      toast.success(intl.formatMessage({ id: 'candidate.applications.review.copied', defaultMessage: 'Lettre de motivation copiée !' }))
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      toast.error('Impossible de copier la lettre')
+    }
+  }
 
   return (
     <Card size="sm">
@@ -72,11 +86,14 @@ const PreparedCard = ({
               </span>
               <span className="text-foreground">{app.recipientEmail}</span>
             </span>
-          ) : app.hasContact ? (
-            <span className="inline-flex items-center gap-1 text-emerald-600">
-              <CheckCircle2 className="size-3.5" />
-              <FormattedMessage id="candidate.applications.review.contactFound" />
-            </span>
+          ) : app.applyUrl ? (
+            <Badge variant="secondary" className="gap-1 border-blue-200 bg-blue-50 text-blue-700">
+              <Globe className="size-3" />
+              <FormattedMessage
+                id="candidate.applications.review.webApplication"
+                defaultMessage="Candidature web"
+              />
+            </Badge>
           ) : (
             <span className="text-muted-foreground">
               <FormattedMessage id="candidate.applications.review.noContact" />
@@ -93,28 +110,51 @@ const PreparedCard = ({
             >
               {app.coverLetter}
             </p>
-            <button
-              type="button"
-              onClick={() => setExpanded((v) => !v)}
-              className="self-start text-xs font-medium text-primary hover:underline"
-            >
-              <FormattedMessage
-                id={
-                  expanded
-                    ? 'candidate.applications.review.hideLetter'
-                    : 'candidate.applications.review.showLetter'
-                }
-              />
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setExpanded((v) => !v)}
+                className="text-xs font-medium text-primary hover:underline"
+              >
+                <FormattedMessage
+                  id={
+                    expanded
+                      ? 'candidate.applications.review.hideLetter'
+                      : 'candidate.applications.review.showLetter'
+                  }
+                />
+              </button>
+              <button
+                type="button"
+                onClick={copyLetter}
+                className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+              >
+                {copied ? <Check className="size-3 text-emerald-600" /> : <Copy className="size-3" />}
+                <span>
+                  {copied ? (
+                    <FormattedMessage id="common.copied" defaultMessage="Copié !" />
+                  ) : (
+                    <FormattedMessage id="common.copyLetter" defaultMessage="Copier la lettre" />
+                  )}
+                </span>
+              </button>
+            </div>
           </div>
         )}
 
         <div className="flex items-center justify-end gap-2">
           {app.applyUrl && (
-            <Button asChild variant="ghost" size="sm">
+            <Button asChild variant={app.recipientEmail ? 'ghost' : 'default'} size="sm">
               <a href={app.applyUrl} target="_blank" rel="noreferrer noopener">
                 <ExternalLink className="size-3.5" />
-                <FormattedMessage id="candidate.applications.review.viewOffer" />
+                <FormattedMessage
+                  id={
+                    app.recipientEmail
+                      ? 'candidate.applications.review.viewOffer'
+                      : 'candidate.applications.review.applyOnWeb'
+                  }
+                  defaultMessage={app.recipientEmail ? "Voir l'offre" : "Postuler sur le site web"}
+                />
               </a>
             </Button>
           )}
@@ -128,15 +168,17 @@ const PreparedCard = ({
             <X className="size-3.5" />
             <FormattedMessage id="candidate.applications.review.cancel" />
           </Button>
-          <Button
-            size="sm"
-            onClick={() => onSend(app.id)}
-            disabled={sending || !app.recipientEmail}
-            aria-label={intl.formatMessage({ id: 'candidate.applications.review.send' })}
-          >
-            {sending ? <Loader2 className="size-3.5 animate-spin" /> : <Send className="size-3.5" />}
-            <FormattedMessage id="candidate.applications.review.send" />
-          </Button>
+          {app.recipientEmail && (
+            <Button
+              size="sm"
+              onClick={() => onSend(app.id)}
+              disabled={sending}
+              aria-label={intl.formatMessage({ id: 'candidate.applications.review.send' })}
+            >
+              {sending ? <Loader2 className="size-3.5 animate-spin" /> : <Send className="size-3.5" />}
+              <FormattedMessage id="candidate.applications.review.send" />
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

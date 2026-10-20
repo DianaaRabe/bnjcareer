@@ -1,6 +1,6 @@
 import type { QueryResolvers, MutationResolvers } from '@gql/resolvers-types.js'
 import { requireUser } from '@/lib/rbac.js'
-import { login, register } from './authService.js'
+import { login, register, authWithGoogle } from './authService.js'
 import { toGraphQLUser } from './authMappers.js'
 
 // Each resolver is typed from the schema — args and return are checked at compile time.
@@ -19,9 +19,14 @@ const loginMutation: MutationResolvers['login'] = async (_parent, args, ctx) => 
   return { token, user: toGraphQLUser(user) }
 }
 
+const authWithGoogleMutation: MutationResolvers['authWithGoogle'] = async (_parent, args, ctx) => {
+  const { token, user } = await authWithGoogle(ctx, args.input)
+  return { token, user: toGraphQLUser(user) }
+}
+
 export const authResolvers = {
   Query: { me },
-  Mutation: { register: registerMutation, login: loginMutation },
+  Mutation: { register: registerMutation, login: loginMutation, authWithGoogle: authWithGoogleMutation },
 }
 
 // Re-exported for consistency; other modules may add their own local guard.

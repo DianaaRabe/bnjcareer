@@ -42,3 +42,19 @@ export const CANCEL_PREPARED_APPLICATION_MUTATION = graphql(`
     cancelPreparedApplication(id: $id)
   }
 `)
+
+export const TRIGGER_MY_AUTOMATION_RUN_MUTATION = graphql(`
+  mutation TriggerMyAutomationRun {
+    triggerMyAutomationRun {
+      id
+      status
+      startedAt
+      completedAt
+      jobsDiscovered
+      jobsMatched
+      applicationsPrepared
+      failures
+    }
+  }
+`)
+

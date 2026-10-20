@@ -7,6 +7,7 @@ import {
   useMyAutomationSettingsQuery,
   useMyPreparedApplicationsQuery,
   useSetAutomationEnabledMutation,
+  useTriggerMyAutomationRunMutation,
   useUpdateAutomationSettingsMutation,
 } from '@/graphql/hooks/automation'
 import { useSendApplicationMutation } from '@/graphql/hooks/applications'
@@ -14,6 +15,7 @@ import { AutomationFrequency, type UpdateAutomationSettingsInput } from '@/gql/g
 import { useTranslate } from '@/hooks/useTranslate'
 import { getGraphQLErrorCode } from '@/lib/apollo'
 import {
+  MY_AUTOMATION_RUNS_QUERY,
   MY_AUTOMATION_SETTINGS_QUERY,
   MY_PREPARED_APPLICATIONS_QUERY,
 } from '@/graphql/queries/automation'
@@ -47,6 +49,7 @@ export const useAutomationPanel = () => {
   const [setEnabled, { loading: togglingEnabled }] = useSetAutomationEnabledMutation()
   const [cancelPrepared] = useCancelPreparedApplicationMutation()
   const [sendApplication] = useSendApplicationMutation()
+  const [triggerRunMutation, { loading: isTriggering }] = useTriggerMyAutomationRunMutation()
   // The id currently being sent — drives the per-card spinner without blocking the others.
   const [sendingId, setSendingId] = useState<string | null>(null)
 
@@ -165,6 +168,32 @@ export const useAutomationPanel = () => {
     }
   }
 
+  const triggerRun = async () => {
+    try {
+      const { data } = await triggerRunMutation({
+        refetchQueries: [
+          MY_AUTOMATION_RUNS_QUERY,
+          MY_PREPARED_APPLICATIONS_QUERY,
+          MY_AUTOMATION_SETTINGS_QUERY,
+        ],
+      })
+      const summary = data?.triggerMyAutomationRun
+      if (summary) {
+        toast.success(translate('candidate.applications.trigger.success'), {
+          description: translate('candidate.applications.trigger.summary', {
+            discovered: summary.jobsDiscovered,
+            matched: summary.jobsMatched,
+            prepared: summary.applicationsPrepared,
+          }),
+        })
+      }
+    } catch (err) {
+      toast.error(translate('candidate.applications.trigger.error'), {
+        description: (err as Error)?.message,
+      })
+    }
+  }
+
   return {
     isLoading: settingsQuery.loading && !settings,
     hasError: Boolean(settingsQuery.error),
@@ -180,6 +209,9 @@ export const useAutomationPanel = () => {
     draft,
     patch,
     savingPrefs,
+
+    triggerRun,
+    isTriggering,
 
     prepared: preparedQuery.data?.myPreparedApplications ?? [],
     preparedLoading: preparedQuery.loading && !preparedQuery.data,
