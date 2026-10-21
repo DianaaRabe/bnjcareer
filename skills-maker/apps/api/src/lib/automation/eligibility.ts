@@ -40,16 +40,50 @@ export function matchesKeywords(job: CanonicalJob, keywords: readonly string[]):
 }
 
 /**
+ * Location tokens that express "I want to work remotely" rather than a geographic area.
+ * Normalised (accent-stripped, lowercased) so `télétravail` and `distanciel` match too.
+ */
+const REMOTE_LOCATION_TOKENS = ['remote', 'teletravail', 'télétravail', 'distanciel', 'anywhere', 'partout'].map(
+  (t) => normalizeText(t),
+)
+
+/** Does the offer text advertise remote work, even when the structured `isRemote` flag is unset? */
+function textLooksRemote(job: CanonicalJob): boolean {
+  const haystack = normalizeText([job.location, job.title, job.description, ...job.tags].join(' '))
+  return REMOTE_LOCATION_TOKENS.some((token) => haystack.includes(token))
+}
+
+/**
  * Remote vacancies satisfy any location filter: the candidate asked for an area, and a
  * remote role is reachable from it. Dropping them would hide exactly the offers a
  * location-constrained candidate benefits from most.
+ *
+ * Symmetrically, a candidate whose location filter *is itself* a remote keyword (e.g.
+ * "Remote", "télétravail") is asking for remote work — so any offer flagged remote or whose
+ * text advertises remote satisfies it, regardless of the geographic words in the posting.
  */
 export function matchesLocations(job: CanonicalJob, locations: readonly string[]): boolean {
   const wanted = locations.map((l) => normalizeText(l)).filter(Boolean)
   if (wanted.length === 0) return true
   if (job.isRemote) return true
+
+  const wantsRemote = wanted.some((location) => REMOTE_LOCATION_TOKENS.includes(location))
+  if (wantsRemote && textLooksRemote(job)) return true
+
   const haystack = normalizeText([job.location, job.title, job.description].join(' '))
   return wanted.some((location) => haystack.includes(location))
+}
+
+/**
+ * Maps a stored contract-type value onto a {@link CONTRACT_LABELS} key. The UI stores free-form
+ * strings — sometimes the enum value (`FREELANCE`), sometimes the display label (`Freelance`,
+ * `Fixed term`) — so we upper-case and collapse separators to reach the canonical key. Without
+ * this, a label like `"Freelance"` silently misses the `FREELANCE` key and its synonym list
+ * (independant, mission, contractor…) is never consulted.
+ */
+function contractLabelsFor(type: string): string[] {
+  const key = type.trim().toUpperCase().replace(/[\s-]+/g, '_')
+  return CONTRACT_LABELS[key] ?? [normalizeText(type)]
 }
 
 /**
@@ -59,9 +93,7 @@ export function matchesLocations(job: CanonicalJob, locations: readonly string[]
 export function matchesContractTypes(job: CanonicalJob, contractTypes: readonly string[]): boolean {
   if (contractTypes.length === 0) return true
   const haystack = jobText(job)
-  return contractTypes.some((type) =>
-    (CONTRACT_LABELS[type] ?? [normalizeText(type)]).some((label) => haystack.includes(label)),
-  )
+  return contractTypes.some((type) => contractLabelsFor(type).some((label) => haystack.includes(label)))
 }
 
 /** An address a real application may be sent to. Reuses the enrichment reject-list. */

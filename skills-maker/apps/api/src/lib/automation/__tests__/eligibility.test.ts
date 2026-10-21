@@ -73,6 +73,25 @@ describe('matchesLocations', () => {
   it('rejects an offer outside the requested area', () => {
     assert.equal(matchesLocations(job({ location: 'Bordeaux', tags: [] }), ['Lille']), false)
   })
+
+  it('treats a "Remote" location filter as remote-intent, matching a French télétravail offer', () => {
+    // Regression: a candidate filtering on "Remote" would reject a job advertised as
+    // "télétravail" whose isRemote flag was not set by the scraper.
+    assert.equal(
+      matchesLocations(
+        job({ isRemote: false, location: 'Lyon', tags: [], description: 'Poste en télétravail complet' }),
+        ['Remote'],
+      ),
+      true,
+    )
+  })
+
+  it('still rejects a non-remote offer when the candidate only wants remote', () => {
+    assert.equal(
+      matchesLocations(job({ isRemote: false, location: 'Lyon', tags: [], description: 'Sur site à Lyon' }), ['Remote']),
+      false,
+    )
+  })
 })
 
 describe('matchesContractTypes', () => {
@@ -90,6 +109,20 @@ describe('matchesContractTypes', () => {
 
   it('is conservative: an offer that states no contract type fails an explicit request', () => {
     assert.equal(matchesContractTypes(job({ tags: [], description: 'Nous recrutons' }), ['PERMANENT']), false)
+  })
+
+  it('maps a display label ("Freelance") onto the enum synonym list', () => {
+    // Regression: the UI stores the display label, not the enum value. Before the fix this
+    // missed the FREELANCE key and only matched the literal word "freelance".
+    assert.equal(
+      matchesContractTypes(job({ tags: [], description: 'Mission en tant quindépendant' }), ['Freelance']),
+      true,
+    )
+    assert.equal(matchesContractTypes(job({ tags: [], description: 'Poste freelance' }), ['freelance']), true)
+  })
+
+  it('maps a spaced/hyphenated label onto its enum key', () => {
+    assert.equal(matchesContractTypes(job({ tags: [], description: 'CDD 6 mois' }), ['Fixed term']), true)
   })
 })
 
