@@ -494,6 +494,42 @@ type CoachingWorkshop {
 }
 
 """
+Tokens captured from the OAuth redirect. Stored encrypted at rest; never returned to any client.
+"""
+input ConnectEmailAccountInput {
+  accessToken: String!
+  emailAddress: String!
+
+  """
+  ISO 8601 or epoch-seconds expiry of the access token, if the provider returned one.
+  """
+  expiresAt: String
+  provider: EmailAccountProvider!
+
+  """
+  Long-lived refresh token (access_type=offline). Optional: absent on some re-consents.
+  """
+  refreshToken: String
+  scopes: [String!]
+}
+
+"""
+A candidate's connected sending mailbox. OAuth tokens are NEVER exposed — only safe metadata.
+"""
+type ConnectedEmailAccount {
+  connectedAt: String!
+  emailAddress: String!
+  id: ID!
+  provider: EmailAccountProvider!
+
+  """Scopes actually granted, so an over-broad grant is visible in review."""
+  scopes: [String!]!
+
+  """ISO 8601 expiry of the stored access token, or null when unknown."""
+  tokenExpiresAt: String
+}
+
+"""
 Shared filter vocabulary — each provider translates it into its own API wording.
 """
 enum ContractType {
@@ -546,10 +582,6 @@ input CreateTrainingInput {
 input CredentialsInput {
   email: String!
   password: String!
-}
-
-input GoogleAuthInput {
-  token: String!
 }
 
 type Cv {
@@ -609,6 +641,15 @@ enum CvTemplate {
 }
 
 """
+The mailbox provider a candidate connected to send their applications from.
+"""
+enum EmailAccountProvider {
+  BREVO
+  GOOGLE
+  MICROSOFT
+}
+
+"""
 Delivery lifecycle of one outgoing application email (skill §13 — tracked apart from the application status).
 """
 enum EmailDeliveryStatus {
@@ -634,6 +675,10 @@ enum ExperienceLevel {
   ENTRY
   JUNIOR
   SENIOR
+}
+
+input GoogleAuthInput {
+  token: String!
 }
 
 scalar JSON
@@ -727,6 +772,7 @@ type Mutation {
   Scores the authenticated candidate's CV against a job offer via the LLM.
   """
   analyzeJobMatch(input: AnalyzeJobMatchInput!): JobMatchResult!
+  authWithGoogle(input: GoogleAuthInput!): AuthPayload!
 
   """
   Cancels one candidate's booking on a session owned by the authenticated coach.
@@ -738,13 +784,13 @@ type Mutation {
   """
   cancelPreparedApplication(id: ID!): Boolean!
 
-  """
-  Triggers an immediate automation pipeline run on demand for the authenticated candidate.
-  """
-  triggerMyAutomationRun: AutomationRunSummary!
-
   """Marks a session owned by the authenticated coach as canceled."""
   cancelSession(id: ID!): Boolean!
+
+  """
+  Stores the candidate's OAuth mailbox tokens (encrypted) so the platform can send on their behalf.
+  """
+  connectEmailAccount(input: ConnectEmailAccountInput!): ConnectedEmailAccount!
 
   """
   Registers an uploaded PDF and synchronously extracts its content via the LLM.
@@ -767,8 +813,12 @@ type Mutation {
   Deletes a training owned by the authenticated coach, and its curriculum with it.
   """
   deleteTraining(id: ID!): Boolean!
+
+  """
+  Wipes the stored credentials for the candidate's mailbox. The row stays, marked disconnected.
+  """
+  disconnectEmailAccount: Boolean!
   login(input: CredentialsInput!): AuthPayload!
-  authWithGoogle(input: GoogleAuthInput!): AuthPayload!
 
   """
   Runs the ATS optimization prompt against an already-extracted CV, producing structured content. Pass jobContext to tailor it to a specific offer; omit for a general optimization.
@@ -801,6 +851,11 @@ type Mutation {
   Records that the candidate applied to an offer (dashboard + coaching tracking). Idempotent per offer.
   """
   trackJobApplication(input: TrackJobApplicationInput!): Boolean!
+
+  """
+  Triggers an immediate automation search and preparation run for the signed-in candidate.
+  """
+  triggerMyAutomationRun: AutomationRunSummary!
 
   """
   Updates automation preferences. Does NOT enable automation — enabling is a separate explicit action (skill §25).
@@ -983,6 +1038,11 @@ type Query {
 
   """The authenticated candidate's most recent CV, if any."""
   myCv: Cv
+
+  """
+  The signed-in candidate's connected sending mailbox, or null when none is connected.
+  """
+  myEmailAccount: ConnectedEmailAccount
 
   """
   Automated applications prepared for the candidate and still awaiting review.

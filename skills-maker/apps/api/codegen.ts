@@ -35,6 +35,7 @@ const config: CodegenConfig = {
           BookingStatus: '@prisma/client#BookingStatus',
           ApplicationStatus: '@prisma/client#ApplicationStatus',
           AutomationFrequency: '@prisma/client#AutomationFrequency',
+          EmailAccountProvider: '@prisma/client#EmailProvider',
         },
         // The service returns its own shapes — resolvers see those, not the SDL types.
         mappers: {
@@ -55,6 +56,8 @@ const config: CodegenConfig = {
           ApplicationDelivery: '../graphql/modules/applications/applicationsMappers.js#GraphQLApplicationDelivery',
           CandidateApplicationStats:
             '../graphql/modules/applications/applicationsMappers.js#GraphQLCandidateApplicationStats',
+          ConnectedEmailAccount:
+            '../graphql/modules/emailAccounts/emailAccountsService.js#ConnectedEmailAccountView',
         },
         useIndexSignature: true,
       },

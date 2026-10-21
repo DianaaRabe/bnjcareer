@@ -35,6 +35,12 @@ const schema = z.object({
   BREVO_SENDER_EMAIL: z.string().optional().default(''),
   EMAIL_SEND_LIVE: z.string().optional().default('false'),
 
+  // Encryption key for candidate mailbox OAuth tokens (Gmail/Microsoft). A candidate's access &
+  // refresh tokens are stored encrypted at rest with AES-256-GCM; the 32-byte key is derived from
+  // this secret. Optional at boot: the token cipher throws a clear error when invoked without it,
+  // so connecting a mailbox fails loudly rather than persisting plaintext tokens.
+  EMAIL_TOKEN_ENCRYPTION_KEY: z.string().optional().default(''),
+
   // Shared secret for the internal automation-cron trigger (skill §17). The endpoint is an
   // admin/worker seam, never a candidate route: when this is empty the route refuses every
   // request (503), so automation cannot be driven in an environment that did not opt in.
