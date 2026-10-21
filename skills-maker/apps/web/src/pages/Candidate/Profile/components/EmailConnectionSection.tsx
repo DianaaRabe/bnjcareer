@@ -12,6 +12,7 @@ import {
   useMyEmailAccountQuery,
 } from '@/graphql/hooks/emailAccounts'
 import { MY_EMAIL_ACCOUNT_QUERY } from '@/graphql/queries/emailAccounts'
+import { EmailAccountProvider } from '@/gql/graphql'
 import { supabase } from '@/lib/supabase'
 
 const GMAIL_SCOPES = [
@@ -56,7 +57,7 @@ export const EmailConnectionSection = () => {
       await connectEmailAccount({
         variables: {
           input: {
-            provider: 'GOOGLE',
+            provider: EmailAccountProvider.Google,
             emailAddress: session.user?.email ?? '',
             accessToken,
             refreshToken: session.provider_refresh_token ?? null,
