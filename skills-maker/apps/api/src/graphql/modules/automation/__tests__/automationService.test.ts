@@ -230,7 +230,10 @@ describe('getMyAutomationRuns', () => {
 })
 
 describe('getMyPreparedApplications', () => {
-  it('exposes only that a contact was resolved, never the address (§8)', async () => {
+  it('surfaces the resolved recipient to the owner reviewing their own application (§8)', async () => {
+    // §8 data minimisation applies to third parties, not to the candidate deciding
+    // whether to send their OWN application: the review screen shows the recipient so
+    // they can make that call. hasContact stays for back-compat.
     const { ctx } = makeCtx({
       applications: [
         {
@@ -248,7 +251,7 @@ describe('getMyPreparedApplications', () => {
     const [app] = await getMyPreparedApplications(ctx)
 
     assert.equal(app.hasContact, true)
-    assert.equal('recipientEmail' in app, false)
+    assert.equal(app.recipientEmail, 'recruiter@acme.example')
     assert.equal(app.jobTitle, 'Dev')
   })
 

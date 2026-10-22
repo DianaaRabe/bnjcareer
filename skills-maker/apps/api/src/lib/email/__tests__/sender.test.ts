@@ -202,10 +202,12 @@ describe('sendApplicationEmail — delivery state + failure', () => {
   it('never persists a delivery row when the gate stays closed, even with live requested', async () => {
     const live = recordingProvider('BREVO')
     const store = fakeStore()
-    // live: true but allowLiveSend omitted → env gate (closed in tests) → dry-run fallback.
+    // live: true but the gate is explicitly closed → dry-run fallback. Passing
+    // allowLiveSend: false keeps the test deterministic regardless of the ambient
+    // EMAIL_SEND_LIVE value in the developer's local .env.
     const result = await sendApplicationEmail(
       { applicationId: 'app-1', email: email(), live: true },
-      { providers: { live }, store, from: 'f@bnjteammaker.fr' },
+      { providers: { live }, store, from: 'f@bnjteammaker.fr', allowLiveSend: false },
     )
     assert.equal(result.provider, 'DRY_RUN')
     assert.equal(live.sent.length, 0)
