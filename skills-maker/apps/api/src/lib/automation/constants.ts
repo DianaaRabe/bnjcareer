@@ -38,6 +38,14 @@ export const AUTOMATION_INTERVAL_MS: Record<AutomationFrequency, number> = {
 /** A worker whose heartbeat is older than this is considered dead; its run can be reclaimed. */
 export const RUN_STALE_AFTER_MS = 15 * 60 * 1000
 
+/**
+ * Minimum spacing between two consecutive LLM calls in a single run (matching + letter).
+ * The free provider tiers rate-limit aggressively; pacing the loop keeps a burst of jobs from
+ * tripping 429s on every key at once. It is a floor, not a hard sleep — a slow call that already
+ * took longer than this incurs no extra wait.
+ */
+export const MATCH_PACING_MS = 350
+
 export interface AutomationSettingsRow {
   enabled: boolean
   frequency: AutomationFrequency

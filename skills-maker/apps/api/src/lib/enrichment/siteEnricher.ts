@@ -103,15 +103,17 @@ export const siteEnricher: ContactEnricher = {
       }))
     }
 
-    // Nothing published. The pattern is a guess and is labelled as one, so the
-    // application engine routes it to review instead of sending blind (skill §8).
-    return [
-      {
-        email: `contact@${domain}`,
-        contactName: null,
-        source: CONTACT_SOURCE.site,
-        confidence: CONTACT_CONFIDENCE.guessed,
-      },
-    ]
+    // Nothing published. Fall back to the conventional shared mailboxes built from the
+    // company domain — but only once the domain's MX records prove it can actually receive
+    // mail, so we never fabricate an undeliverable address. These are labelled `guessed`, so
+    // the engine routes them to review instead of sending blind (skill §8).
+    if (!(await canReceiveMail(domain))) return []
+
+    return ['contact', 'info'].map((localPart) => ({
+      email: `${localPart}@${domain}`,
+      contactName: null,
+      source: CONTACT_SOURCE.site,
+      confidence: CONTACT_CONFIDENCE.guessed,
+    }))
   },
 }

@@ -116,17 +116,100 @@ export function parseCoverLetter(raw: string): string {
   return content.slice(0, MAX_COVER_LETTER_LENGTH)
 }
 
-/** Generates one vacancy-specific letter. `llm` defaults to the sanctioned client. */
+/** Model id stamped on a letter produced by the deterministic template fallback (no LLM). */
+export const TEMPLATE_COVER_LETTER_MODEL = 'template-fallback'
+
+export interface GeneratedCoverLetter {
+  content: string
+  model: string
+  /** True when the letter is the generic template fallback — forces the application into review. */
+  degraded?: boolean
+}
+
+/**
+ * Deterministic, offline cover letter. No LLM, no network: it only substitutes variables
+ * (candidate name, professional title, company, job title) into a neutral professional body.
+ *
+ * This is the continuity guarantee of skill §26: when the model is unreachable (rate-limited,
+ * malformed), preparation never dead-ends — a usable, fact-safe letter is always produced and the
+ * application is routed to review so the candidate can refine it. It asserts no CV-specific fact
+ * beyond the professional title, so it can never fabricate an experience or a diploma.
+ */
+export function buildTemplateCoverLetter(context: CoverLetterContext, job: CanonicalJob): string {
+  const contact = extractImmutableContact(context.extractedData, context.profile)
+  const name = contact.name?.trim() || ''
+  const professionalTitle = ((context.extractedData as any)?.professionalTitle as string | undefined)?.trim() || ''
+  const company = job.company?.trim() || ''
+  const position = job.title?.trim() || ''
+  const language = context.language ?? 'fr'
+
+  if (language === 'en') {
+    const intro = position
+      ? `I am writing to apply for the ${position} position${company ? ` at ${company}` : ''}.`
+      : `I am writing to express my interest in joining${company ? ` ${company}` : ' your company'}.`
+    const background = professionalTitle
+      ? `As a ${professionalTitle}, I am confident that my background and skills match what your team is looking for.`
+      : `I am confident that my background and skills match what your team is looking for.`
+    return [
+      'Dear Hiring Manager,',
+      '',
+      intro,
+      '',
+      `${background} I would be glad to discuss how I can contribute to your projects during an interview.`,
+      '',
+      'Thank you for considering my application. I look forward to hearing from you.',
+      '',
+      'Kind regards,',
+      name || 'The candidate',
+    ].join('\n')
+  }
+
+  const intro = position
+    ? `Je me permets de vous adresser ma candidature au poste de ${position}${company ? ` au sein de ${company}` : ''}.`
+    : `Je me permets de vous adresser ma candidature pour rejoindre${company ? ` ${company}` : ' votre entreprise'}.`
+  const background = professionalTitle
+    ? `Fort(e) de mon expérience en tant que ${professionalTitle}, je suis convaincu(e) que mon profil et mes compétences répondent aux besoins de votre équipe.`
+    : `Je suis convaincu(e) que mon profil et mes compétences répondent aux besoins de votre équipe.`
+  return [
+    'Madame, Monsieur,',
+    '',
+    intro,
+    '',
+    `${background} Je serais ravi(e) d'échanger avec vous lors d'un entretien afin de vous présenter plus en détail ma motivation et ma valeur ajoutée.`,
+    '',
+    'Dans l’attente de votre retour, je vous prie d’agréer, Madame, Monsieur, l’expression de mes salutations distinguées.',
+    '',
+    name,
+  ]
+    .join('\n')
+    .trimEnd()
+}
+
+/**
+ * Generates one vacancy-specific letter. `llm` defaults to the sanctioned client.
+ *
+ * Never throws: if the model fails (rate limit, malformed payload, too-short answer), it falls
+ * back to {@link buildTemplateCoverLetter} and flags the result `degraded` so the caller can force
+ * the application into review. Preparation must always have a letter to persist (skill §26).
+ */
 export async function generateCoverLetter(
   context: CoverLetterContext,
   job: CanonicalJob,
   llm: LlmCaller = callLLM,
-): Promise<{ content: string; model: string }> {
-  const response = await llm({
-    messages: buildCoverLetterMessages(context, job),
-    temperature: 0.4,
-    maxTokens: 1500,
-    jsonMode: true,
-  })
-  return { content: parseCoverLetter(response.content), model: response.model }
+): Promise<GeneratedCoverLetter> {
+  try {
+    const response = await llm({
+      messages: buildCoverLetterMessages(context, job),
+      temperature: 0.4,
+      maxTokens: 1500,
+      jsonMode: true,
+    })
+    return { content: parseCoverLetter(response.content), model: response.model }
+  } catch {
+    return {
+      content: buildTemplateCoverLetter(context, job),
+      model: TEMPLATE_COVER_LETTER_MODEL,
+      degraded: true,
+    }
+  }
 }

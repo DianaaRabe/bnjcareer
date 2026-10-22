@@ -4,6 +4,7 @@ import type { ContactCandidate } from '@/lib/enrichment/types.js'
 import type { ContactResolution } from '@/lib/enrichment/resolveContact.js'
 import { JOB_SOURCE, type JobProvider, type NormalizedJob } from '@/lib/jobs/types.js'
 import { resolveAutomationSettings, type AutomationSettingsRow } from '../constants.js'
+import { TEMPLATE_COVER_LETTER_MODEL } from '../coverLetter.js'
 import { buildSearchQuery, runApplicationPipeline, startOfDayUtc, type CvContext, type EngineDependencies } from '../engine.js'
 import type { AutomationStore, SavePreparedInput } from '../store.js'
 import type { CanonicalJob } from '../types.js'
@@ -115,6 +116,8 @@ const deps = (overrides: Partial<EngineDependencies> = {}): EngineDependencies =
   match: async () => 90,
   resolveContact: async () => resolution([contact('recrutement@acme.fr', 'VERIFIED')]),
   generateLetter: async () => ({ content: 'Lettre. '.repeat(50), model: 'test-model' }),
+  // Tests must never actually sleep between LLM calls — the real pacer is exercised in production.
+  pacer: async () => {},
   ...overrides,
 })
 
@@ -280,7 +283,9 @@ describe('runApplicationPipeline — source and model failures', () => {
     assert.equal(outcome.failures.length, 1)
   })
 
-  it('routes a job to review when the letter cannot be generated', async () => {
+  it('falls back to the template letter (flagged for review) when generation throws', async () => {
+    // Continuity (skill §26): a letter generator that throws must not dead-end preparation.
+    // The engine substitutes the deterministic template and routes the row to review.
     const store = fakeStore()
     const outcome = await runApplicationPipeline(
       { candidateId: 'candidate-a', settings: settings(), cv },
@@ -292,10 +297,11 @@ describe('runApplicationPipeline — source and model failures', () => {
       }),
     )
 
-    assert.equal(outcome.prepared.length, 0)
-    assert.equal(outcome.skipped[0].reason, 'REQUIRES_REVIEW')
-    assert.equal(outcome.skipped[0].detail, 'letter_failed')
-    assert.equal(store.saved.length, 0)
+    assert.equal(outcome.prepared.length, 1)
+    assert.equal(outcome.prepared[0].needsReview, true)
+    assert.equal(outcome.prepared[0].coverLetterModel, TEMPLATE_COVER_LETTER_MODEL)
+    assert.equal(store.saved.length, 1)
+    assert.equal(store.saved[0].coverLetterModel, TEMPLATE_COVER_LETTER_MODEL)
   })
 })
 
@@ -342,25 +348,32 @@ describe('runApplicationPipeline — limits', () => {
 })
 
 describe('runApplicationPipeline — contact handling', () => {
-  it('skips a vacancy whose only address is a machine mailbox', async () => {
+  it('prepares for review when the only address is a machine mailbox (no verified recipient)', async () => {
+    // Continuity: a no-reply address is not a valid recipient, so no contact is attached — but the
+    // application is still prepared (with its letter) and flagged for review rather than dropped.
     const store = fakeStore()
     const outcome = await runApplicationPipeline(
       { candidateId: 'candidate-a', settings: settings(), cv },
       deps({ store, resolveContact: async () => resolution([contact('no-reply@acme.fr', 'VERIFIED')]) }),
     )
 
-    assert.equal(outcome.prepared.length, 0)
-    assert.equal(outcome.skipped[0].reason, 'NO_CONTACT')
-    assert.equal(store.saved.length, 0)
+    assert.equal(outcome.prepared.length, 1)
+    assert.equal(outcome.prepared[0].needsReview, true)
+    assert.equal(outcome.prepared[0].contact, null, 'a machine mailbox is never attached as the recipient')
+    assert.equal(store.saved.length, 1)
+    assert.equal(store.contacts.length, 0, 'no recipient address is persisted')
   })
 
-  it('skips a vacancy with no contact at all', async () => {
+  it('prepares for review when there is no contact at all', async () => {
+    const store = fakeStore()
     const outcome = await runApplicationPipeline(
       { candidateId: 'candidate-a', settings: settings(), cv },
-      deps({ resolveContact: async () => resolution() }),
+      deps({ store, resolveContact: async () => resolution() }),
     )
 
-    assert.equal(outcome.skipped[0].reason, 'NO_CONTACT')
+    assert.equal(outcome.prepared.length, 1)
+    assert.equal(outcome.prepared[0].needsReview, true)
+    assert.equal(outcome.prepared[0].contact, null)
   })
 
   it('prepares a guessed contact for review when approval is on', async () => {
@@ -371,18 +384,21 @@ describe('runApplicationPipeline — contact handling', () => {
 
     assert.equal(outcome.prepared.length, 1)
     assert.equal(outcome.prepared[0].needsReview, true)
+    assert.equal(outcome.prepared[0].contact?.email, 'contact@acme.fr')
   })
 
-  it('refuses a guessed contact outright when automation would send without review', async () => {
+  it('never auto-sends a guessed contact: without approval it parks at PREPARING for review', async () => {
+    // A guess is attached so the candidate sees a usable address on review, but under automatic
+    // mode the row stays at PREPARING — which the send path refuses — so it can never go out blind.
     const store = fakeStore()
     const outcome = await runApplicationPipeline(
       { candidateId: 'candidate-a', settings: settings({ approvalMode: false }), cv },
       deps({ store, resolveContact: async () => resolution([], [contact('contact@acme.fr', 'GUESSED')]) }),
     )
 
-    assert.equal(outcome.prepared.length, 0)
-    assert.equal(outcome.skipped[0].reason, 'NO_CONTACT')
-    assert.equal(store.saved.length, 0, 'a guess must never become an automatic send')
+    assert.equal(outcome.prepared.length, 1)
+    assert.equal(outcome.prepared[0].needsReview, true)
+    assert.equal(store.saved[0].stage, 'PREPARING', 'a guess under automatic mode is not sendable')
   })
 })
 

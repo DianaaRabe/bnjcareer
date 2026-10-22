@@ -25,8 +25,15 @@ import { canonicalJobKey, dedupeJobs } from '@/lib/jobs/canonical.js'
 import { getConfiguredProviders } from '@/lib/jobs/index.js'
 import { CONTRACT_TYPE, type JobProvider, type JobSearchOutcome, type JobSearchQuery, type NormalizedJob } from '@/lib/jobs/types.js'
 import { scoreJobOffer } from '@/graphql/modules/matching/matchingService.js'
-import { generateCoverLetter, type CoverLetterContext, type LetterLanguage } from './coverLetter.js'
-import { resolveAutomationSettings, type AutomationSettingsResolved } from './constants.js'
+import {
+  buildTemplateCoverLetter,
+  generateCoverLetter,
+  TEMPLATE_COVER_LETTER_MODEL,
+  type CoverLetterContext,
+  type GeneratedCoverLetter,
+  type LetterLanguage,
+} from './coverLetter.js'
+import { MATCH_PACING_MS, resolveAutomationSettings, type AutomationSettingsResolved } from './constants.js'
 import { evaluateJobEligibility, isValidRecipient, remainingBudget } from './eligibility.js'
 import { createPrismaAutomationStore, type AutomationStore } from './store.js'
 import type {
@@ -56,9 +63,15 @@ export interface EngineDependencies {
   /** Returns the match score, or null when the model could not produce a usable one. */
   match?: (job: CanonicalJob, cv: CvContext) => Promise<number | null>
   resolveContact?: (job: CanonicalJob) => Promise<ContactResolution>
-  generateLetter?: (context: CoverLetterContext, job: CanonicalJob) => Promise<{ content: string; model: string }>
+  generateLetter?: (context: CoverLetterContext, job: CanonicalJob) => Promise<GeneratedCoverLetter>
   now?: () => Date
   runId?: string | null
+  /**
+   * Awaited once before every LLM call (matching, then each letter) so a burst of jobs does not
+   * trip the free providers' rate limits all at once. Defaults to a short {@link MATCH_PACING_MS}
+   * sleep; tests inject a no-op so the suite never actually waits.
+   */
+  pacer?: () => Promise<void>
   /**
    * Called a handful of times across the run so a supervising worker can refresh its run
    * heartbeat; a slow pipeline then stays "live" and is not reclaimed as stale. A failure here
@@ -83,6 +96,11 @@ export function startOfDayUtc(date: Date): Date {
 function describeError(error: unknown): string {
   if (error instanceof Error) return `${error.name}: ${error.message}`.slice(0, 200)
   return String(error).slice(0, 200)
+}
+
+/** A cancellable-free delay used by the default pacer. */
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 function toCanonical(job: NormalizedJob, discoveredAt: string): CanonicalJob {
@@ -130,6 +148,7 @@ export async function runApplicationPipeline(
         description: job.description,
       }))
   const generateLetter = deps.generateLetter ?? generateCoverLetter
+  const pace = deps.pacer ?? (() => sleep(MATCH_PACING_MS))
   const match =
     deps.match ??
     (async (job: CanonicalJob, context: CvContext) => {
@@ -209,6 +228,7 @@ export async function runApplicationPipeline(
   const matched: MatchedJob[] = []
   for (const job of fresh) {
     try {
+      await pace()
       const score = await match(job, cv)
       if (score == null) {
         skipped.push({ job, reason: 'REQUIRES_REVIEW', detail: 'matching_failed' })
@@ -264,6 +284,7 @@ export async function runApplicationPipeline(
         runId: deps.runId ?? null,
         resolveContact,
         generateLetter,
+        pace,
         store: deps.store,
       })
       if ('prepared' in outcome) prepared.push(outcome.prepared)
@@ -298,13 +319,17 @@ async function prepareOne(
     language: LetterLanguage
     runId: string | null
     resolveContact: (job: CanonicalJob) => Promise<ContactResolution>
-    generateLetter: (context: CoverLetterContext, job: CanonicalJob) => Promise<{ content: string; model: string }>
+    generateLetter: (context: CoverLetterContext, job: CanonicalJob) => Promise<GeneratedCoverLetter>
+    pace: () => Promise<void>
     store: AutomationStore
   },
 ): Promise<PrepareOutcome> {
   const { job } = entry
 
   // ── Contact resolution ────────────────────────────────────────────────────
+  // Continuity (skill §26): preparation never dead-ends on a missing contact. A verified
+  // address is sendable; a pattern guess, or no address at all, prepares the application but
+  // flags it for review so it is never sent blind (skill §8) — the candidate completes it.
   const resolution = await deps.resolveContact(job)
   const verified = resolution.verified.find((candidate) => isValidRecipient(candidate.email)) ?? null
 
@@ -312,41 +337,36 @@ async function prepareOne(
   let needsReview = false
 
   if (!contact) {
+    // A pattern guess is never auto-sent (skill §8). We still attach it so the candidate sees a
+    // ready-to-use address on review, regardless of approval mode — but the row is flagged
+    // `needsReview`, and under automatic mode its stage stays PREPARING (not sendable).
     const guess = resolution.guessed.find((candidate) => isValidRecipient(candidate.email)) ?? null
-    // A pattern guess is never auto-sent (skill §8): under approval it can be *shown* to the
-    // candidate, otherwise it is treated as no contact at all.
-    if (guess && deps.settings.approvalMode) {
-      contact = guess
-      needsReview = true
-    }
-  }
-
-  if (!contact) {
-    // Si aucun e-mail direct n'est trouvé, mais que l'offre a un lien pour postuler (applyUrl)
-    // ou qu'on est en mode relecture (approvalMode), on prépare quand même l'offre !
-    // Cela permet au candidat d'avoir sa lettre de motivation générée et de postuler en un clic.
-    if (!job.applyUrl && !deps.settings.approvalMode) {
-      return {
-        skipped: {
-          job,
-          reason: 'NO_CONTACT',
-          detail: resolution.failures.map((failure) => failure.source).join(',') || undefined,
-        },
-      }
-    }
+    if (guess) contact = guess
     needsReview = true
   }
 
-  // ── Cover letter ──────────────────────────────────────────────────────────
-  let letter: { content: string; model: string }
+  // ── Cover letter (never throws — falls back to the deterministic template) ──
+  await deps.pace()
+  let letter: GeneratedCoverLetter
   try {
     letter = await deps.generateLetter(
       { profile: deps.cv.profile, extractedData: deps.cv.extractedData, language: deps.language },
       job,
     )
   } catch {
-    return { skipped: { job, reason: 'REQUIRES_REVIEW', detail: 'letter_failed' } }
+    // Defensive: the sanctioned generator already falls back internally, but a substitute
+    // injected via deps may still throw. Preparation must continue with a usable letter.
+    letter = {
+      content: buildTemplateCoverLetter(
+        { profile: deps.cv.profile, extractedData: deps.cv.extractedData, language: deps.language },
+        job,
+      ),
+      model: TEMPLATE_COVER_LETTER_MODEL,
+      degraded: true,
+    }
   }
+  // A template/degraded letter is generic — route it to review so the candidate refines it.
+  if (letter.degraded) needsReview = true
 
   // ── Preparation (a row awaiting approval or the send phase — never a send) ─
   const stage = deps.settings.approvalMode ? 'READY_TO_SEND' : 'PREPARING'

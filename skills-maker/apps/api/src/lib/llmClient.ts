@@ -122,6 +122,35 @@ function isRateLimitOrQuota(status: number): boolean {
   return status === 429 || status === 402 || status === 403
 }
 
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
+
+/** Back-off bounds for a 429 on a single key: retry the same key a couple of times, briefly. */
+const BASE_BACKOFF_MS = 500
+const MAX_BACKOFF_MS = 8000
+const MAX_RATE_LIMIT_RETRIES = 2
+
+/**
+ * Turns a `Retry-After` header into milliseconds. The spec allows either a number of seconds or an
+ * HTTP-date; both are honoured. Returns null when the header is absent or unparseable, so the
+ * caller falls back to exponential back-off. A value past {@link MAX_BACKOFF_MS} is capped by the
+ * caller rather than here, so an absurd server hint cannot stall the whole run.
+ */
+function parseRetryAfterMs(header: string | null): number | null {
+  if (!header) return null
+  const trimmed = header.trim()
+  if (/^\d+$/.test(trimmed)) return Number(trimmed) * 1000
+  const date = Date.parse(trimmed)
+  if (!Number.isNaN(date)) return Math.max(0, date - Date.now())
+  return null
+}
+
+/** Exponential back-off with jitter for retry attempt `n` (0-based), honouring a server hint. */
+function backoffDelayMs(attempt: number, retryAfter: number | null): number {
+  const base = retryAfter ?? BASE_BACKOFF_MS * 2 ** attempt
+  const jitter = Math.floor(Math.random() * BASE_BACKOFF_MS)
+  return Math.min(MAX_BACKOFF_MS, base + jitter)
+}
+
 export class LLMError extends Error {
   constructor(
     message: string,
@@ -147,58 +176,67 @@ async function tryProvider(
 
   const models = env.LLM_MODEL ? [env.LLM_MODEL] : provider.models
 
-  for (const model of models) {
+  modelLoop: for (const model of models) {
     const keys = shuffle(allKeys)
 
-    for (let i = 0; i < keys.length; i++) {
+    keyLoop: for (let i = 0; i < keys.length; i++) {
       const apiKey = keys[i]
       const keyLabel = `key#${i + 1}`
 
-      try {
-        const body: Record<string, unknown> = {
-          model,
-          messages: opts.messages,
-          temperature: opts.temperature ?? 0.3,
-          max_tokens: opts.maxTokens ?? 4000,
-        }
-        if (opts.jsonMode && provider.supportsJsonMode) {
-          body.response_format = { type: 'json_object' }
-        }
-
-        const res = await fetch(provider.endpoint, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            'Content-Type': 'application/json',
-            ...(provider.extraHeaders?.(opts.referer) ?? {}),
-          },
-          body: JSON.stringify(body),
-        })
-
-        if (res.ok) {
-          const data = (await res.json()) as { choices?: { message?: { content?: string } }[] }
-          const content = data.choices?.[0]?.message?.content
-          if (!content) {
-            attempts.push({ model: `${provider.name}:${model}/${keyLabel}`, error: 'empty response content' })
-            break
+      // Retry the SAME key a bounded number of times on 429 (rate limit), backing off between
+      // attempts. 402/403 (quota/forbidden) are not transient — they fall straight through to the
+      // next key. Any other HTTP/network error moves on to the next model.
+      for (let attempt = 0; ; attempt++) {
+        try {
+          const body: Record<string, unknown> = {
+            model,
+            messages: opts.messages,
+            temperature: opts.temperature ?? 0.3,
+            max_tokens: opts.maxTokens ?? 4000,
           }
-          return { content, model }
+          if (opts.jsonMode && provider.supportsJsonMode) {
+            body.response_format = { type: 'json_object' }
+          }
+
+          const res = await fetch(provider.endpoint, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${apiKey}`,
+              'Content-Type': 'application/json',
+              ...(provider.extraHeaders?.(opts.referer) ?? {}),
+            },
+            body: JSON.stringify(body),
+          })
+
+          if (res.ok) {
+            const data = (await res.json()) as { choices?: { message?: { content?: string } }[] }
+            const content = data.choices?.[0]?.message?.content
+            if (!content) {
+              attempts.push({ model: `${provider.name}:${model}/${keyLabel}`, error: 'empty response content' })
+              continue modelLoop // empty body → try next model
+            }
+            return { content, model }
+          }
+
+          const errText = await res.text()
+          attempts.push({
+            model: `${provider.name}:${model}/${keyLabel}`,
+            error: `HTTP ${res.status}: ${errText.slice(0, 200)}`,
+          })
+
+          if (res.status === 429 && attempt < MAX_RATE_LIMIT_RETRIES) {
+            await sleep(backoffDelayMs(attempt, parseRetryAfterMs(res.headers.get('retry-after'))))
+            continue // retry the same key
+          }
+          if (isRateLimitOrQuota(res.status)) continue keyLoop // exhausted/quota → next key
+          continue modelLoop // real error on this model → try next model
+        } catch (err) {
+          attempts.push({
+            model: `${provider.name}:${model}/${keyLabel}`,
+            error: err instanceof Error ? err.message : String(err),
+          })
+          continue modelLoop
         }
-
-        const errText = await res.text()
-        attempts.push({
-          model: `${provider.name}:${model}/${keyLabel}`,
-          error: `HTTP ${res.status}: ${errText.slice(0, 200)}`,
-        })
-
-        if (isRateLimitOrQuota(res.status)) continue // try next key
-        break // real error on this model → try next model
-      } catch (err) {
-        attempts.push({
-          model: `${provider.name}:${model}/${keyLabel}`,
-          error: err instanceof Error ? err.message : String(err),
-        })
-        break
       }
     }
   }
