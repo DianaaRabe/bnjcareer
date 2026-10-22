@@ -1,7 +1,14 @@
 import { parseLLMJson } from '@/lib/llmClient.js'
 
 export interface JobMatchResult {
-  score: number
+  /**
+   * null means the model returned analysis but no usable score — NOT a 0% match. The two must
+   * stay distinct: a fabricated 0 silently fails every `minMatchScore` gate, which is exactly how
+   * a degraded LLM can make the whole automation pipeline prepare nothing while still reporting the
+   * jobs as "matched". Callers decide what an unscored result means (the engine routes it to
+   * review; the interactive path rejects it).
+   */
+  score: number | null
   summary: string
   strengths: string[]
   gaps: string[]
@@ -40,7 +47,8 @@ export function parseJobMatchResult(raw: string): JobMatchResult {
 
   const score = toScore(parsed.score)
   const result: JobMatchResult = {
-    score: score ?? 0,
+    // Preserve the null: never fabricate a 0 here (see JobMatchResult.score).
+    score,
     summary: typeof parsed.summary === 'string' ? parsed.summary.trim() : '',
     strengths: toStringList(parsed.strengths),
     gaps: toStringList(parsed.gaps),

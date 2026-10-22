@@ -24,7 +24,10 @@ export async function scoreJobOffer(extractedData: unknown, offer: JobOfferConte
   return parseJobMatchResult(content)
 }
 
-export async function analyzeJobMatch(ctx: Context, input: unknown): Promise<JobMatchResult> {
+export async function analyzeJobMatch(
+  ctx: Context,
+  input: unknown,
+): Promise<JobMatchResult & { score: number }> {
   const offer = parseAnalyzeJobMatchInput(input)
 
   const cv = await getMyCv(ctx)
@@ -36,6 +39,14 @@ export async function analyzeJobMatch(ctx: Context, input: unknown): Promise<Job
 
   try {
     const result = await scoreJobOffer(cv.extractedData, offer)
+
+    // The interactive mutation exposes `score: Int!`: a result with no usable score is an LLM
+    // failure for this path, not a 0% verdict. The engine, by contrast, keeps the null and routes
+    // the job to review instead of raising.
+    if (result.score === null) {
+      throw new LLMError('matching returned no usable score', [])
+    }
+    const score = result.score
 
     // Persist so the candidate dashboard and coaching journey reflect this real action.
     // Best-effort: a write failure must never turn a successful analysis into an error.
@@ -50,10 +61,10 @@ export async function analyzeJobMatch(ctx: Context, input: unknown): Promise<Job
             source: 'MATCHING',
             url: offer.jobUrl,
           },
-          { status: 'PENDING', matchScore: result.score },
+          { status: 'PENDING', matchScore: score },
         )
         await recordMatchAnalysis(ctx, application.id, {
-          score: result.score,
+          score,
           gaps: result.gaps,
           suggestions: result.tips,
         })
@@ -62,7 +73,7 @@ export async function analyzeJobMatch(ctx: Context, input: unknown): Promise<Job
       }
     }
 
-    return result
+    return { ...result, score }
   } catch (err) {
     const detail = err instanceof LLMError ? err.attempts.map((a) => a.error).join('; ') : String(err)
     console.error('[matchingService] analysis failed:', detail)

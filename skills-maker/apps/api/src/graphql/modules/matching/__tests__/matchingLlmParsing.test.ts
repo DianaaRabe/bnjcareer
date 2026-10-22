@@ -61,4 +61,16 @@ describe('parseJobMatchResult', () => {
     assert.equal(result.score, 0)
     assert.equal(result.summary, 'Métier sans rapport avec le CV')
   })
+
+  it('reports an unusable score as null, never a fabricated 0, when analysis is present', () => {
+    // A degraded model that answers with text but no parseable score must NOT be read as a 0%
+    // match: a 0 would silently fail every minMatchScore gate and make the engine prepare nothing
+    // while still counting the job as "matched". null is the signal that routes it to review.
+    const missing = parseJobMatchResult('{"summary": "Analyse partielle", "gaps": ["Expérience"]}')
+    assert.equal(missing.score, null)
+    assert.equal(missing.summary, 'Analyse partielle')
+
+    const unparseable = parseJobMatchResult('{"score": "N/A", "summary": "Analyse partielle"}')
+    assert.equal(unparseable.score, null)
+  })
 })
