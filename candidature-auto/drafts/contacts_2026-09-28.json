@@ -1,0 +1,67 @@
+[
+  {
+    "id": "apollo-actinvision-jens-birmann",
+    "entreprise": "Actinvision",
+    "intitule": "Data Analyst",
+    "lieu": "Paris",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "jbirmann@actinvision.com",
+    "contact_nom": "Jens",
+    "contact_titre": "Charge de recrutement BI / Big Data",
+    "url_offre": "https://www.actinvision.com",
+    "score": 92
+  },
+  {
+    "entreprise": "Catalina Marketing France",
+    "id": "apollo-catalina-charlotte-baudet",
+    "intitule": "Data Analyst",
+    "lieu": "Boulogne-Billancourt (92)",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "charlotte.baudet@catalina.com",
+    "contact_nom": "Charlotte",
+    "contact_titre": "Human Resources Manager",
+    "url_offre": "https://www.catalinamarketing.fr",
+    "score": 88
+  },
+  {
+    "id": "apollo-blissim-elodie-pinoy",
+    "entreprise": "Blissim",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 9e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "elodie.pinoy@blissim.fr",
+    "contact_nom": "Elodie",
+    "contact_titre": "Human Resources Manager",
+    "url_offre": "https://www.blissim.fr",
+    "score": 86
+  },
+  {
+    "id": "apollo-monmarche-loick-macquart",
+    "entreprise": "Mon Marche",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 9e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "loick.macquart-moulin@mon-marche.fr",
+    "contact_nom": "Loick",
+    "contact_titre": "Responsable RH",
+    "url_offre": "https://www.mon-marche.fr",
+    "score": 84
+  },
+  {
+    "id": "apollo-agryco-flora-kouache",
+    "entreprise": "Agryco",
+    "intitule": "Data Analyst",
+    "lieu": "Le Kremlin-Bicetre (94)",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "flora.kouache@agryco.com",
+    "contact_nom": "Flora",
+    "contact_titre": "Responsable Ressources Humaines",
+    "url_offre": "https://www.agryco.com",
+    "score": 82
+  }
+]

@@ -1,0 +1,67 @@
+[
+  {
+    "id": "apollo-633d2bfe23ae8a000162ee22",
+    "entreprise": "Bigblue",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 9e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "estelle.avantario@bigblue.io",
+    "contact_nom": "Estelle",
+    "contact_titre": "Talent Acquisition Manager",
+    "url_offre": "https://www.bigblue.co",
+    "score": 88
+  },
+  {
+    "id": "apollo-66fb28f9d060a00001cb20e6",
+    "entreprise": "Sézane",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 2e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "c.bussy@sezane.com",
+    "contact_nom": "Clara",
+    "contact_titre": "Responsable Talent Acquisition",
+    "url_offre": "https://www.sezane.com",
+    "score": 86
+  },
+  {
+    "id": "apollo-60a8f5895f228d0001ee2c2d",
+    "entreprise": "Doctrine",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 18e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "quentin.bibet@doctrine.fr",
+    "contact_nom": "Quentin",
+    "contact_titre": "Talent Acquisition Manager",
+    "url_offre": "https://www.doctrine.fr",
+    "score": 84
+  },
+  {
+    "id": "apollo-5acd578ea6da98d9e34a33c9",
+    "entreprise": "Payplug",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 13e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "telmouatassim@payplug.com",
+    "contact_nom": "Toufik",
+    "contact_titre": "Talent Acquisition Lead",
+    "url_offre": "https://www.payplug.com",
+    "score": 82
+  },
+  {
+    "id": "apollo-637e321360a5f20001a73c18",
+    "entreprise": "Cheerz",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 9e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "manon@cheerz.com",
+    "contact_nom": "Manon",
+    "contact_titre": "Talent Acquisition & HR Projects Manager",
+    "url_offre": "https://www.cheerz.com",
+    "score": 80
+  }
+]

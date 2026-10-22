@@ -1,0 +1,1070 @@
+[{
+  "title": "Cloud ML DevRel Engineer - EMEA remote",
+  "companyName": "Hugging Face",
+  "location": {
+    "city": "Paris",
+    "postalCode": null,
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "Paris (75)",
+    "formattedAddressShort": "Paris (75)",
+    "latitude": 48.85341,
+    "longitude": 2.3488,
+    "streetAddress": null,
+    "fullAddress": "Paris (75)"
+  },
+  "age": "4 days ago",
+  "datePublished": "2026-05-29",
+  "jobType": [
+    "Temps plein",
+    "Télétravail"
+  ],
+  "companyUrl": "https://fr.indeed.com/cmp/Hugging-Face",
+  "rating": {
+    "rating": 5,
+    "count": 1
+  },
+  "descriptionText": "At Hugging Face, we're on a journey to democratize good AI. We are building the fastest growing platform for AI builders with over 11 million users who collectively shared over 4 million models, 1 million datasets & 1.5 million Gradio apps. Our open-source libraries have more than 700,000 stars on Github.\n\nAbout the Role\n\nAs a Cloud ML DevRel Engineer, your goal is to grow the impact of the Hugging Face ML Cloud team by teaching the community of ML practitioners how to accelerate their training and inference workloads.\n\nThe ML Cloud team works through strategic collaborations with the most widely used clouds (AWS, GCP, Azure, Cloudflare), AI accelerators (NVIDIA, AMD, Intel Gaudi, AWS Inferentia, TPU), and systems partners (Dell, Nutanix), to make it easy for the community to run Hugging Face models and libraries on these platforms. These partnerships sit at the core of our strategy as an open platform with no customer lock-in, and of how we drive usage and revenue for our partners.\n\nThis is a solid engineering role with a strong flavor of education and community. Your impact comes from driving visibility and usage of partner integrations, through work like:\n\nPublishing technical blog posts\nContributing documentation and code examples\nSpeaking to business and technical audiences at partner conferences\nProducing and running webinars\nBuilding and showing off demos\nLeading go-to-market conversations with strategic partners\n\nYou'll work at the front edge of generative AI and open source, hand in hand with some of the most important companies in the field. You'll have a lot of autonomy and full creative control, with the goal of having 10x the impact of a similar role at a big tech company.\n\nAbout You\n\nYou're already an active voice in the ML community. You publish, you teach, and people follow your work on LinkedIn and X.\n\nYou care about ML engineering, building practical AI applications, shipping them to production, and squeezing the most out of the cloud to accelerate them. You like learning hard engineering concepts and talking them through with other engineers, and you take pride in code that's easy to read. You're a strong communicator and educator, and you enjoy engaging with the ML community in a positive, helpful way.\n\nWhat you'll need\n3+ years in developer relations or developer advocacy, specifically for ML or AI products, tools, or platforms\nAn established public presence as a technical voice, with a track record of regularly publishing ML/AI content and a demonstrable, engaged audience on LinkedIn and X (Twitter)\nA portfolio of developer-facing content you can point to: technical blog posts, conference talks, demos, code examples, or documentation\nComfort and experience with public speaking to technical audiences (conferences, webinars, workshops)\n3+ years of hands-on ML or software engineering experience, including taking models to production\nExperience training or deploying ML models on at least one major cloud (AWS, GCP, or Azure)\nProficiency in Python\nPractical experience with the Hugging Face stack (Transformers, the Hub, Inference Endpoints) or comparable open-source ML libraries\nWorking knowledge of GPUs or AI accelerators (NVIDIA, AMD, Intel Gaudi, AWS Inferentia, or TPU) and of training and inference optimization\nFluent written and spoken English\nNice to have\nOpen-source maintainer or contributor experience\nAn active presence in other developer communities (GitHub, Reddit, YouTube, Discord)\nFamiliarity with containers and orchestration (Docker, Kubernetes)\nExperience with distributed training or inference-serving frameworks (for example vLLM, TGI, or Ray)\nOne more thing\n\nAt Hugging Face we believe great AI shouldn't require a massive cluster, we build for everyone, especially the GPU-poor. And because we read every application, here's a small sign that you read this one too: start your answer to the first application question with the words “GPU-poor and proud ”. No trick, no catch, it just tells us a real person is on the other side.\n\nMore about Hugging Face\n\nWe are actively working to build a culture that values diversity, equity, and inclusivity. We are intentionally building a workplace where people feel respected and supported—regardless of who you are or where you come from. We believe this is foundational to building a great company and community. Hugging Face is an equal opportunity employer and we do not discriminate on the basis of race, religion, color, national origin, gender, sexual orientation, age, marital status, veteran status, or disability status.\n\nWe value development.You will work with some of the smartest people in our industry. We are an organization that has a bias for impact and is always challenging ourselves to continuously grow. We provide all employees with reimbursement for relevant conferences, training, and education.\n\nWe care about your well-being. We offer flexible working hours and remote options. We offer health, dental, and vision benefits for employees and their dependents. We also offer parental leave and flexible paid time off.\n\nWe support our employees wherever they are. While we have office spaces in NYC and Paris, we’re very distributed and all remote employees have the opportunity to visit our offices. If needed, we’ll also outfit your workstation to ensure you succeed.\n\nWe want our teammates to be shareholders. All employees have company equity as part of their compensation package. If we succeed in becoming a category-defining platform in machine learning and artificial intelligence, everyone enjoys the upside.\n\nWe support the community. We believe major scientific advancements are the result of collaboration across the field. Join a community supporting the ML/AI community.",
+  "descriptionHtml": "<div><p>At Hugging Face, we're on a journey to democratize good AI. We are building the fastest growing platform for AI builders with over 11 million users who collectively shared over 4 million models, 1 million datasets &amp; 1.5 million Gradio apps. Our open-source libraries have more than 700,000 stars on Github.</p>\nAbout the Role<p>\nAs a Cloud ML DevRel Engineer, your goal is to grow the impact of the Hugging Face ML Cloud team by teaching the community of ML practitioners how to accelerate their training and inference workloads.</p><p>\nThe ML Cloud team works through strategic collaborations with the most widely used clouds (AWS, GCP, Azure, Cloudflare), AI accelerators (NVIDIA, AMD, Intel Gaudi, AWS Inferentia, TPU), and systems partners (Dell, Nutanix), to make it easy for the community to run Hugging Face models and libraries on these platforms. These partnerships sit at the core of our strategy as an open platform with no customer lock-in, and of how we drive usage and revenue for our partners.</p><p>\nThis is a solid engineering role with a strong flavor of education and community. Your impact comes from driving visibility and usage of partner integrations, through work like:</p><ul><li>\nPublishing technical blog posts</li><li>\nContributing documentation and code examples</li><li>\nSpeaking to business and technical audiences at partner conferences</li><li>\nProducing and running webinars</li><li>\nBuilding and showing off demos</li><li>\nLeading go-to-market conversations with strategic partners</li></ul><p>\nYou'll work at the front edge of generative AI and open source, hand in hand with some of the most important companies in the field. You'll have a lot of autonomy and full creative control, with the goal of having 10x the impact of a similar role at a big tech company.</p>\nAbout You<p>\nYou're already an active voice in the ML community. You publish, you teach, and people follow your work on LinkedIn and X.</p><p>\nYou care about ML engineering, building practical AI applications, shipping them to production, and squeezing the most out of the cloud to accelerate them. You like learning hard engineering concepts and talking them through with other engineers, and you take pride in code that's easy to read. You're a strong communicator and educator, and you enjoy engaging with the ML community in a positive, helpful way.</p>\nWhat you'll need<ul><li>\n3+ years in developer relations or developer advocacy, specifically for ML or AI products, tools, or platforms</li><li>\nAn established public presence as a technical voice, with a track record of regularly publishing ML/AI content and a demonstrable, engaged audience on LinkedIn and X (Twitter)</li><li>\nA portfolio of developer-facing content you can point to: technical blog posts, conference talks, demos, code examples, or documentation</li><li>\nComfort and experience with public speaking to technical audiences (conferences, webinars, workshops)</li><li>\n3+ years of hands-on ML or software engineering experience, including taking models to production</li><li>\nExperience training or deploying ML models on at least one major cloud (AWS, GCP, or Azure)</li><li>\nProficiency in Python</li><li>\nPractical experience with the Hugging Face stack (Transformers, the Hub, Inference Endpoints) or comparable open-source ML libraries</li><li>\nWorking knowledge of GPUs or AI accelerators (NVIDIA, AMD, Intel Gaudi, AWS Inferentia, or TPU) and of training and inference optimization</li><li>\nFluent written and spoken English</li></ul>\nNice to have<ul><li>\nOpen-source maintainer or contributor experience</li><li>\nAn active presence in other developer communities (GitHub, Reddit, YouTube, Discord)</li><li>\nFamiliarity with containers and orchestration (Docker, Kubernetes)</li><li>\nExperience with distributed training or inference-serving frameworks (for example vLLM, TGI, or Ray)</li></ul>\nOne more thing<p>\nAt Hugging Face we believe great AI shouldn't require a massive cluster, we build for everyone, especially the GPU-poor. And because we read every application, here's a small sign that you read this one too: start your answer to the first application question with the words &ldquo;<b>GPU-poor and proud </b>&rdquo;. No trick, no catch, it just tells us a real person is on the other side.\n</p><p></p><p><b>More about Hugging Face</b></p><p><b><i>\nWe are actively working to build a culture that values diversity, equity, and inclusivity. </i></b>We are intentionally building a workplace where people feel respected and supported&mdash;regardless of who you are or where you come from. We believe this is foundational to building a great company and community. Hugging Face is an equal opportunity employer and we do not discriminate on the basis of race, religion, color, national origin, gender, sexual orientation, age, marital status, veteran status, or disability status.</p><p><b><i>\nWe value development.</i></b>You will work with some of the smartest people in our industry. We are an organization that has a bias for impact and is always challenging ourselves to continuously grow. We provide all employees with reimbursement for relevant conferences, training, and education.</p><p><b><i>\nWe care about your well-being.</i></b> We offer flexible working hours and remote options. We offer health, dental, and vision benefits for employees and their dependents. We also offer parental leave and flexible paid time off.</p><p><b><i>\nWe support our employees wherever they are.</i></b> While we have office spaces in NYC and Paris, we&rsquo;re very distributed and all remote employees have the opportunity to visit our offices. If needed, we&rsquo;ll also outfit your workstation to ensure you succeed.</p><p><b><i>\nWe want our teammates to be shareholders.</i></b> All employees have company equity as part of their compensation package. If we succeed in becoming a category-defining platform in machine learning and artificial intelligence, everyone enjoys the upside.</p><p><b><i>\nWe support the community.</i></b> We believe major scientific advancements are the result of collaboration across the field. Join a community supporting the ML/AI community.</p></div>",
+  "benefits": [],
+  "occupation": [
+    "Commerciaux/les",
+    "Métiers de la vente et du développement commercial",
+    "Métiers de la vente, du commerce et du service client",
+    "Technico-commerciaux/les"
+  ],
+  "attributes": [
+    "Azure",
+    "Kubernetes",
+    "Temps plein",
+    "Anglais",
+    "Google Cloud Platform",
+    "Télétravail",
+    "Docker",
+    "GitHub",
+    "Production",
+    "Intelligence artificielle",
+    "Python"
+  ],
+  "workingSystem": [],
+  "source": "Hugging Face",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {},
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 10,
+  "jobKey": "aa9173670bd82939",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=aa9173670bd82939",
+  "emails": [],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [],
+  "applyUrl": "https://apply.workable.com/j/AFDF0AE1BC",
+  "requirements": []
+},
+{
+  "title": "Consultant Performance Commerciale (H/F)",
+  "companyLogoUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/8f0557b115feea749cb1d5d911fdd414",
+  "companyName": "UPTOO",
+  "location": {
+    "city": "Paris",
+    "postalCode": "75002",
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "75002 Paris",
+    "formattedAddressShort": "Paris (75)",
+    "latitude": 48.8655,
+    "longitude": 2.3426,
+    "streetAddress": null,
+    "fullAddress": "75002 Paris"
+  },
+  "age": "7 days ago",
+  "datePublished": "2026-05-26",
+  "jobType": [
+    "CDI",
+    "Temps plein",
+    "Télétravail"
+  ],
+  "companyHeaderUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_headerimage/1960x400/239fa61805841932ceccf5bcc2230e28",
+  "companyUrl": "https://fr.indeed.com/cmp/Uptoo-1",
+  "rating": {
+    "rating": 4.6,
+    "count": 93
+  },
+  "descriptionText": "Effet waouh: Labels rh / prix d'entreprises, Locaux en plein centre ville, Leader sur son marché\n\nCe qu’on va accomplir ensemble\n\nUPTOO, c’est l’agence spécialiste de la vente. Depuis 20 ans, on aide les entreprises françaises à dépasser leurs objectifs commerciaux avec des équipes bien recrutées, bien formées, bien outillées et bien managées.\n\nNotre marché : celui du Sales Enablement, qui explose aux US et que nous construisons en France, avec l’acquisition en plus d’un intégrateur CRM de premier plan cet été au sein du groupe Uptoo nous permettant d’ajouter cette corde à notre arc !\n\nChez Uptoo on ne vend pas de produits ou de services, on vend une transformation, on vend de la performance ! On est au coeur des sujets stratégiques des entreprises et ce qui nous permet d'adresser les C Level sur 100% de nos projets.\n\nVotre rôle\n\nVous souhaitez mettre votre expérience commerciale et managériale au service de projets stratégiques auprès de directions commerciales ambitieuses ? Rejoignez l’équipe Conseil Uptoo pour identifier et lever les freins à la performance commerciale et accompagner vos clients dans leur transformation.\n\nPartie 1 – Conduire des missions d’audit et de conseil (60%)\n\nRéaliser des entretiens, immersions terrain et ateliers de travail\nIdentifier les blocages liés au management, aux compétences ou aux process internes\nFormuler des recommandations précises et bâtir des plans d’action détaillés\n\nPartie 2 – Animer des formations commerciales ou managériales (20%)\n\nAnimer des formations commerciales (découverte, closing…) ou managériales\nTransmettre des méthodes concrètes pour renforcer l’efficacité des équipes\nIdentifier d’autres leviers de croissance au-delà des compétences commerciales\n\nPartie 3 – Appuyer les équipes Commerce d’Uptoo (20%)\n\nSoutenir les Sales dans l’identification de besoins et la revente de missions (sans rôle commercial direct)\nRenforcer la crédibilité et l’expertise d’Uptoo auprès de nos clients\n\nCe poste est fait pour vous si\n\nVous avez 10 à 15 ans d’expérience commerciale, dont une partie en management d’équipes\n\nVous maîtrisez les leviers de structuration commerciale et de pilotage de la performance\n\nVous êtes à l’aise pour animer des ateliers, prendre la parole et accompagner des managers\n\nVous êtes disponible pour des déplacements ponctuels chez les clients\n\nPourquoi nous rejoindre\n\nChez Uptoo, vous intégrez une équipe passionnée qui accompagne les directions commerciales les plus exigeantes du marché. Vous travaillez sur des missions à fort impact, vous développez une expertise reconnue, et vous contribuez à construire la référence du conseil en performance commerciale.\n\nCe que nous offrons\n\nUne organisation hybride (Bureau + Télétravail)\n\nUne rémunération attractive\n\nTélétravail 2 jours / semaine",
+  "descriptionHtml": "<div>Effet waouh: Labels rh / prix d'entreprises, Locaux en plein centre ville, Leader sur son march&eacute;<br>\n<br>\n<b>Ce qu&rsquo;on va accomplir ensemble</b><br>\n<p>UPTOO, c&rsquo;est <b>l&rsquo;agence sp&eacute;cialiste de la vente</b>. Depuis 20 ans, on aide les entreprises fran&ccedil;aises &agrave; d&eacute;passer leurs objectifs commerciaux avec des &eacute;quipes <b>bien recrut&eacute;es, bien form&eacute;es, bien outill&eacute;es et bien manag&eacute;es.</b></p><p></p><p>\nNotre march&eacute; : celui du <b>Sales Enablement</b>, qui explose aux US et que nous construisons en France, avec l&rsquo;acquisition en plus d&rsquo;un int&eacute;grateur CRM de premier plan cet &eacute;t&eacute; au sein du groupe Uptoo nous permettant d&rsquo;ajouter cette corde &agrave; notre arc !\n</p><p></p><p>Chez Uptoo on ne vend pas de produits ou de services, on vend une transformation, on vend de la performance ! On est au coeur des sujets strat&eacute;giques des entreprises et ce qui nous permet d'adresser les C Level sur 100% de nos projets.</p><p></p><b><br>\nVotre r&ocirc;le</b><br>\n<p>Vous souhaitez mettre votre exp&eacute;rience commerciale et manag&eacute;riale au service de projets strat&eacute;giques aupr&egrave;s de directions commerciales ambitieuses ? Rejoignez l&rsquo;&eacute;quipe Conseil Uptoo pour identifier et lever les freins &agrave; la performance commerciale et accompagner vos clients dans leur transformation.</p><p></p><p><b>\nPartie 1 &ndash; Conduire des missions d&rsquo;audit et de conseil (60%)</b></p><ul><li>\nR&eacute;aliser des entretiens, immersions terrain et ateliers de travail</li><li>\nIdentifier les blocages li&eacute;s au management, aux comp&eacute;tences ou aux process internes</li><li>\nFormuler des recommandations pr&eacute;cises et b&acirc;tir des plans d&rsquo;action d&eacute;taill&eacute;s</li></ul><p></p><p><b>\nPartie 2 &ndash; Animer des formations commerciales ou manag&eacute;riales (20%)</b></p><ul><li>\nAnimer des formations commerciales (d&eacute;couverte, closing&hellip;) ou manag&eacute;riales</li><li>\nTransmettre des m&eacute;thodes concr&egrave;tes pour renforcer l&rsquo;efficacit&eacute; des &eacute;quipes</li><li>\nIdentifier d&rsquo;autres leviers de croissance au-del&agrave; des comp&eacute;tences commerciales</li></ul><p></p><p><b>\nPartie 3 &ndash; Appuyer les &eacute;quipes Commerce d&rsquo;Uptoo (20%)</b></p><ul><li>\nSoutenir les Sales dans l&rsquo;identification de besoins et la revente de missions (sans r&ocirc;le commercial direct)</li><li>\nRenforcer la cr&eacute;dibilit&eacute; et l&rsquo;expertise d&rsquo;Uptoo aupr&egrave;s de nos clients</li></ul><p></p><b><br>\nCe poste est fait pour vous si</b><br>\n<p>Vous avez 10 &agrave; 15 ans d&rsquo;exp&eacute;rience commerciale, dont une partie en management d&rsquo;&eacute;quipes</p><p></p><p>\nVous ma&icirc;trisez les leviers de structuration commerciale et de pilotage de la performance</p><p></p><p>\nVous &ecirc;tes &agrave; l&rsquo;aise pour animer des ateliers, prendre la parole et accompagner des managers</p><p></p><p>\nVous &ecirc;tes disponible pour des d&eacute;placements ponctuels chez les clients</p><p></p><p><b>\nPourquoi nous rejoindre</b></p><p>\nChez Uptoo, vous int&eacute;grez une &eacute;quipe passionn&eacute;e qui accompagne les directions commerciales les plus exigeantes du march&eacute;. Vous travaillez sur des missions &agrave; fort impact, vous d&eacute;veloppez une expertise reconnue, et vous contribuez &agrave; construire la r&eacute;f&eacute;rence du conseil en performance commerciale.</p><p></p><b><br>\nCe que nous offrons</b><p><br>\nUne organisation hybride (Bureau + T&eacute;l&eacute;travail)</p><p>\nUne r&eacute;mun&eacute;ration attractive</p><br>\nT&eacute;l&eacute;travail 2 jours / semaine</div>",
+  "benefits": [],
+  "occupation": [
+    "Conseillers/ères en gestion",
+    "Métiers de la stratégie et de la direction d'entreprise",
+    "Métiers de la gestion des organisations et de l'administration"
+  ],
+  "attributes": [
+    "CDI",
+    "Expérience en gestion d'équipe",
+    "Temps plein",
+    "Télétravail",
+    "Gestion d'équipe"
+  ],
+  "workingSystem": [],
+  "source": "Uptoo (Internal)",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {
+    "salaryCurrency": "EUR",
+    "salaryMax": 90000,
+    "salaryMin": 75000,
+    "salarySource": "EXTRACTION",
+    "salaryText": "De 75 000 € à 90 000 € par an",
+    "salaryType": "yearly"
+  },
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 15,
+  "jobKey": "5bd371b555bfd66b",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=5bd371b555bfd66b",
+  "emails": [],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [],
+  "applyUrl": "https://uptoo.fr/emploi/offre/49412/consultant-performance-commerciale?utm_source=indeed&utm_medium=affiliate&utm_campaign=Fonction non commerciale",
+  "requirements": []
+},
+{
+  "title": "Commercial(e) Itinérant(e) – Hauts-de-Seine (F/H)",
+  "companyName": "Le Cèdre",
+  "location": {
+    "city": "Paris",
+    "postalCode": null,
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "Paris (75)",
+    "formattedAddressShort": "Paris (75)",
+    "latitude": 48.85341,
+    "longitude": 2.3488,
+    "streetAddress": null,
+    "fullAddress": "Paris (75)"
+  },
+  "age": "4 days ago",
+  "datePublished": "2026-05-29",
+  "jobType": [
+    "Temps plein",
+    "Télétravail"
+  ],
+  "companyUrl": "https://fr.indeed.com/cmp/Le-C%C3%A8dre-1",
+  "rating": {
+    "rating": 0,
+    "count": 0
+  },
+  "descriptionText": "Commercial(e) Itinérant(e) – Hauts-de-Seine (F/H)\nLe poste : Accompagnez le développement des structures associatives et chrétiennes en optimisant leurs ressources.\n\nLe Cèdre n'est pas un groupement d’achat ordinaire. Nous accompagnons 8000 structures d’inspiration chrétienne et associations (enseignement, médico-social, caritatif) pour leur permettre de générer des économies durables.\n\nRattaché(e) à un responsable régional, votre mission est d'apporter des solutions concrètes à ces structures pour qu'elles puissent consacrer plus de ressources à leur mission de cœur.\n\nVos Objectifs & Résultats (La culture de la performance au service du sens) :\nExpansion du Réseau : Vous prospectez activement pour faire entrer de nouveaux établissements (notamment dans le secteur médico-social) au sein du groupement.\nObjectif : Transformer des prospects en adhérents engagés.\nOptimisation des Résultats Adhérents : Vous réalisez des diagnostics achats complets. Votre succès se mesure par les économies réelles et l'optimisation budgétaire que vous apportez à vos interlocuteurs.\nDéveloppement de l’Activité : Vous maîtrisez une offre complexe pour permettre aux adhérents un accompagnement sur la majorité de leurs dépenses éligibles. Plus ils achètent avec nous, plus ils sont performants.\nCe que nous vous offrons :\nRémunération globale : 45 à 52 K€/an (Fixe 36-42K€)\nPrime IDF : d’un montant de 344€/mois\nCadre de travail : Statut cadre, forfait 215 jours, véhicule de fonction, pack informatique complet.\nImpact Social : Un job où chaque vente réussie aide une association ou un établissement scolaire à mieux fonctionner.\nAvantages : PEE abondé à 300 %, intéressement et participation (jusqu’à 3 mois de salaire).\n\nLe profil : Une expertise commerciale au service de nos valeurs :\nÉcoute active : Avant de convaincre, vous savez entendre. Votre curiosité sincère pour les projets de vos adhérents vous permet de proposer des solutions de mutualisation qui font sens pour eux.\nTempérament \"Chasseur\" : Vous avez une expérience commerciale significative. Vous aimez convaincre, prospecter et relever des défis chiffrés.\nSensibilité Sectorielle : Vous comprenez les spécificités et les valeurs des structures chrétiennes et associatives. Vous savez créer une relation de confiance avec des directeurs d'établissements et des responsables associatifs.\nAutonomie & Synergie : Organisé(e) et tenace, vous pilotez votre secteur Centre Est avec une rigueur orientée résultats. Vous agissez en véritable binôme avec votre manager et collaborez étroitement avec les équipes marchés pour transformer les besoins du terrain en succès commerciaux.\nLocalisation : Idéalement basé(e) à Paris ou dans l’Ouest Parisien.\n\nPrêt(e) à mettre votre talent commercial au service du bien commun ?\n\nParlez-nous de vous et de votre motivation !\n Postulez ici :https://www.lecedre.fr/recrutements/",
+  "descriptionHtml": "<p></p><div><h3 class=\"jobSectionHeader\"><b>Commercial(e) Itin&eacute;rant(e) &ndash; Hauts-de-Seine (F/H)</b></h3><h4 class=\"jobSectionHeader\"><b>\nLe poste : Accompagnez le d&eacute;veloppement des structures associatives et chr&eacute;tiennes en optimisant leurs ressources.</b></h4><p></p><p>\nLe C&egrave;dre n'est pas un groupement d&rsquo;achat ordinaire. Nous accompagnons <b>8000 structures d&rsquo;inspiration chr&eacute;tienne et associations</b> (enseignement, m&eacute;dico-social, caritatif) pour leur permettre de g&eacute;n&eacute;rer des &eacute;conomies durables.</p><p>\nRattach&eacute;(e) &agrave; un responsable r&eacute;gional, votre mission est d'apporter des solutions concr&egrave;tes &agrave; ces structures pour qu'elles puissent consacrer plus de ressources &agrave; leur mission de c&oelig;ur.</p><p></p><h4 class=\"jobSectionHeader\"><b>\nVos Objectifs &amp; R&eacute;sultats (La culture de la performance au service du sens) :</b></h4><ul><li><b>\nExpansion du R&eacute;seau :</b> Vous prospectez activement pour faire entrer de nouveaux &eacute;tablissements (notamment dans le secteur m&eacute;dico-social) au sein du groupement.</li><li><b>\nObjectif :</b> Transformer des prospects en adh&eacute;rents engag&eacute;s.</li><li><b>\nOptimisation des R&eacute;sultats Adh&eacute;rents :</b> Vous r&eacute;alisez des diagnostics achats complets. Votre succ&egrave;s se mesure par les &eacute;conomies r&eacute;elles et l'optimisation budg&eacute;taire que vous apportez &agrave; vos interlocuteurs.</li><li><b>\nD&eacute;veloppement de l&rsquo;Activit&eacute; :</b> Vous ma&icirc;trisez une offre complexe pour permettre aux adh&eacute;rents un accompagnement sur la majorit&eacute; de leurs d&eacute;penses &eacute;ligibles. Plus ils ach&egrave;tent avec nous, plus ils sont performants.</li></ul><h4 class=\"jobSectionHeader\"><b>\nCe que nous vous offrons :</b></h4><ul><li><b>\nR&eacute;mun&eacute;ration globale :</b> 45 &agrave; 52 K&euro;/an (Fixe 36-42K&euro;)</li><li><b>\nPrime IDF :</b> d&rsquo;un montant de 344&euro;/mois</li><li><b>\nCadre de travail :</b> Statut cadre, forfait 215 jours, v&eacute;hicule de fonction, pack informatique complet.</li><li><b>\nImpact Social :</b> Un job o&ugrave; chaque vente r&eacute;ussie aide une association ou un &eacute;tablissement scolaire &agrave; mieux fonctionner.</li><li><b>\nAvantages :</b> PEE abond&eacute; &agrave; 300 %, int&eacute;ressement et participation (jusqu&rsquo;&agrave; 3 mois de salaire).</li></ul><h4 class=\"jobSectionHeader\"><b><br>\nLe profil : Une expertise commerciale au service de nos valeurs :</b></h4><ul><li><b>\n&Eacute;coute active : Avant de convaincre, vous savez entendre. Votre curiosit&eacute; sinc&egrave;re pour les projets de vos adh&eacute;rents vous permet de proposer des solutions de mutualisation qui font sens pour eux.</b></li><li><b>\nTemp&eacute;rament &quot;Chasseur&quot; :</b> Vous avez une exp&eacute;rience commerciale significative. Vous aimez convaincre, prospecter et relever des d&eacute;fis chiffr&eacute;s.</li><li><b>\nSensibilit&eacute; Sectorielle :</b> Vous comprenez les sp&eacute;cificit&eacute;s et les valeurs des <b>structures chr&eacute;tiennes et associatives</b>. Vous savez cr&eacute;er une relation de confiance avec des directeurs d'&eacute;tablissements et des responsables associatifs.</li><li><b>\nAutonomie &amp; Synergie :</b> Organis&eacute;(e) et tenace, vous pilotez votre secteur Centre Est avec une rigueur orient&eacute;e <b>r&eacute;sultats</b>. Vous agissez en v&eacute;ritable bin&ocirc;me avec votre manager et collaborez &eacute;troitement avec les &eacute;quipes march&eacute;s pour transformer les besoins du terrain en succ&egrave;s commerciaux.</li><li><b>\nLocalisation :</b> Id&eacute;alement bas&eacute;(e) &agrave; <b>Paris</b> ou dans <b>l&rsquo;Ouest Parisien</b>.</li></ul><p><b>\nPr&ecirc;t(e) &agrave; mettre votre talent commercial au service du bien commun ?</b></p><p><b>\nParlez-nous de vous et de votre motivation !</b><br>\n<b> Postulez ici :</b>https://www.lecedre.fr/recrutements/</p></div>",
+  "benefits": [
+    "Véhicule de fonction",
+    "Participation",
+    "Intéressement"
+  ],
+  "occupation": [
+    "Commerciaux/les",
+    "Métiers de la vente et du développement commercial",
+    "Métiers de la vente, du commerce et du service client"
+  ],
+  "attributes": [
+    "Temps plein",
+    "Véhicule de fonction",
+    "Télétravail",
+    "Primes",
+    "Participation",
+    "Intéressement"
+  ],
+  "workingSystem": [],
+  "source": "le Cèdre",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {
+    "salaryCurrency": "EUR",
+    "salaryMax": 42000,
+    "salaryMin": 36000,
+    "salarySource": "EXTRACTION",
+    "salaryText": "De 36 000 € à 42 000 € par an",
+    "salaryType": "yearly"
+  },
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 2,
+  "jobKey": "0b2198ab390482d4",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=0b2198ab390482d4",
+  "emails": [],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [],
+  "applyUrl": "https://lecedre1.recruitee.com/o/commerciale-itinerante-hauts-de-seine-fh?source=Indeed",
+  "requirements": []
+},
+{
+  "title": "Chargé.e de Développement Commercial - Cyberassurance / Paris & IdF (H/F)",
+  "companyName": "Coalition - France",
+  "location": {
+    "city": "Paris",
+    "postalCode": null,
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "Paris (75)",
+    "formattedAddressShort": "Paris (75)",
+    "latitude": 48.85341,
+    "longitude": 2.3488,
+    "streetAddress": null,
+    "fullAddress": "Paris (75)"
+  },
+  "age": "6 days ago",
+  "datePublished": "2026-05-27",
+  "jobType": [
+    "CDI",
+    "Temps plein",
+    "Télétravail"
+  ],
+  "companyUrl": "https://fr.indeed.com/cmp/Coalition---France",
+  "rating": {
+    "rating": 0,
+    "count": 0
+  },
+  "descriptionText": "Qui sommes-nous ?\n\nCoalition est le premier fournisseur d'Assurance Active au monde, ayant été créé pour aider à prévenir les cyber risques avant qu'ils ne surviennent. Fondée en 2017, Coalition combine une couverture d'assurance intégrale avec des outils de cybersécurité innovants pour aider les entreprises à gérer et limiter les cyberattaques potentielles.\n\nUn esprit audacieux trouvera chez Coalition des opportunités quotidiennes d'avoir un impact réel.\n\nÀ propos du poste\n\nEn tant que Chargé.e de Développement Commercial chez Coalition, nous vous invitons à rejoindre une équipe en pleine croissance, pour partager les efforts qui visent à créer et entretenir des relations de qualité avec nos partenaires courtiers d'assurance et nos clients. Nous recherchons un.e professionnel.le de la vente d'assurance commerciale, pour contribuer activement au développement de notre clientèle et favoriser le succès de nos partenaires : le/la candidat.e idéal.e aidera à aligner les meilleures idées, innovations et capacités de Coalition avec les objectifs commerciaux d'un courtier.\n\nSous la direction de notre Directeur du Développement Commercial pour la France, vous ne vous contenterez pas de générer des ventes, mais vous ferez également partie des premiers membres d'une équipe en plein essor, rejoignant nos autres professionnels du développement commercial à travers l'Europe: vous collaborerez ensemble pour atteindre les objectifs de vente stratégiques sur le marché français de la cyberassurance. Le poste priorisera le développement commercial sur le perimetre de la region parisienne et l'Ile-de-France mais ne s'y limitera pas.\n\nCoalition favorise l'innovation jusque dans son approche du travail, grâce à une culture authentique de collaboration, ainsi que de feedback positif, direct et empathique, afin de s'assurer que les personnes qui rejoignent nos équipes disposent des ressources et de l'environnement nécessaires pour se concentrer sur le développement, l'excellence et l'investissement dans la mission à long terme de l'entreprise.\n\nLe poste est basé à Paris ou région parisienne, mais est entièrement à distance, vous laissant la possibilité de votre lieu d'activité sur cette zone.\n\nSee this job in English\n\nResponsabilités\n\nParticiper au développement de nouvelles relations avec les courtiers à partir de prospects entrants et de démarchages stratégiques.\nContribuer aux stratégies de développement du réseau et identifier les courtiers et clients cibles pour de nouvelles campagnes de prospection;\nParticiper activement à l'atteinte des quotas cibles, des opportunités qualifiées, de la valeur du pipeline de ventes et des affaires conclues.\nReporter votre activité et les résultats des ventes, afin de contribuer au système de suivi du développement commercial et d'assurer des prévisions précises.\nSoutenir le Directeur du Développement Commercial dans les activités post-vente avec les partenaires courtiers (moyens et grands acteurs du courtage) de Coalition et contribuer à la gestion stratégique des relations avec la clientèle.\nPartager la responsabilité de la satisfaction globale des courtiers avec les services de Coalition, en améliorant l'expérience client.\nCultiver une compréhension approfondie de nos solutions (tant du point de vue de l'assurance que des aspects technologiques) pour répondre efficacement aux besoins des courtiers, et savoir la transmettre aux futurs membres de l'équipe.\nIdentifier et résoudre de manière proactive les risques ayant un impact sur les objectifs commerciaux des courtiers.\nContribuer à la mesure et à l'amélioration du service et être force de proposition, en faisant remonter les feedbacks des courtiers.courtiers.\n\nCompétences et Qualifications\n\nUn esprit d'entreprise autonome et un bon instinct commercial.\n5 ans d'expérience minimum dans la vente de produits de cyber assurance, avec une capacité démontrée en développement commercial.\nUn réseau de relations établi avec des courtiers dans la région de Paris et d'Île-de-France.\nVous possédez d'excellentes compétences en communication interpersonnelle (verbales et écrites).\nVous avez une capacité avancée à apprendre et à transmettre rapidement des concepts et des termes techniques.\nLa capacité à s'épanouir dans un environnement dynamique, multiculturel, en évolution rapide et dans un contexte de travail virtuel / distanciel.\nVous avez les compétences requises pour gérer plusieurs tâches/projets simultanément et contribuer à la réussite collective de l'équipe.\nUne maîtrise parfaite du français est requise, et une aisance avancée en anglais est nécessaire.\n\nPoints Bonus\n\nToute expérience supplémentaire avec d'autres produits d'assurance en lignes financières.\nDes relations déjà établies avec des partenaires courtiers locaux et/ou européens.\n\nAvantages\n\nContrat à durée indéterminée (CDI) ;\nPoste basé à Paris / région parisienne, avec télétravail à temps complet ;\nContribution à l'aménagement de l'espace de travail à domicile, et accès à notre réseaux d'espaces de co-working ;\n25 jours de congés payés + jours de RTT ;\nMutuelle et complémentaire d'entreprise, avec prise en charge à 70% par l'employeur ;\nRégime de retraite légal, et prévoyance ;\nProgrammes de bien-être physique et mental ;\nRémunération compétitive et opportunités d'avancement.\n\nPourquoi Coalition ?\n\nTravailler chez Coalition, c'est partager notre mission commune : Protéger les Non Protégés. Nous avons construit une culture hautement inclusive, accueillant des personnes d'horizons divers, et fondée sur le télétravail généralisé. Au sein de nos équipes, nous nous faisons mutuellement confiance pour assumer nos responsabilités, partager nos apports dans les résultats et travailler ensemble pour protéger les entreprises contre les cyber risques. La croissance exceptionnelle de Coalition provient de sa capacité à résoudre des problèmes réels pour des organisations de toutes tailles, tout en restant fidèle à nos valeurs fondatrices que sont le caractère, l'humilité, la responsabilité, la détermination, l'authenticité et l'inclusion.\n\nNous sommes toujours à la recherche de personnes collaboratives et curieuses pour rejoindre #NotreCoalition.\n\nVisitez notre espace média >\n\nAvis de confidentialité\n\nCoalition s'engage à protéger votre vie privée et à traiter vos informations personnelles de manière responsable. Nous collectons, utilisons et conservons les informations personnelles nécessaires au processus de recrutement et conformément aux lois et réglementations locales applicables en matière de confidentialité, dans toutes les régions où nous exerçons nos activités.\n\nNous souhaitons que vous compreniez quelles informations personnelles nous collectons, comment nous les utilisons et quels sont vos droits concernant l'accès, la rectification et la suppression de vos données, le cas échéant. Les informations soumises, collectées et traitées dans le cadre de votre candidature sont soumises à la politique de confidentialité de la Coalition. Pour plus de détails, nous vous invitons à consulter notre politique de confidentialité complète, ou à nous contacter pour toute question concernant la façon dont vos informations sont traitées.\n\nNotre politique de confidentialité >\n\nAvis contre la discrimination\nCoalition est fier d'être un employeur garantissant l'égalité des chances. Notre politique est d'offrir des opportunités d'emploi égales à tous les individus, sans discrimination ni harcèlement sur la base de toute caractéristique protégée par les lois applicables dans chaque pays où nous exerçons nos activités. Cet engagement comprend, sans toutefois s'y limiter, la garantie de l'égalité de traitement en matière de recrutement, de sélection, de formation, de promotion, de transfert, de rémunération et de tous les autres aspects de l'emploi. Coalition ne tolère aucune forme de discrimination ou de harcèlement, et nous nous engageons à favoriser un environnement de travail inclusif et solidaire.\n\nAménagements raisonnables\nAménagements raisonnables Coalition s'engage à fournir des aménagements raisonnables aux personnes en situations de handicap qualifiées, y compris les candidats et les employés, conformément aux lois et réglementations applicables dans chaque pays où nous exerçons nos activités. Notre politique consiste à soutenir l'égalité des chances dans le processus d'embauche en considérant les candidats qualifiés indépendamment de leur handicap ou d'autres caractéristiques protégées, à moins que des aménagements n'imposent une contrainte excessive ou des besoins disproportionnés. Si vous avez besoin d'aménagements pour remplir une candidature, effectuer un entretien, compléter un test préalable à l'emploi ou participer au processus de sélection, veuillez nous contacter à candidataccommodations@coalitioninc.com.\n\nNous prenons également en compte tous.tes les candidat.e.s qualifié.e.s, y compris celles et ceux ayant des antécédents criminels, conformément aux lois et réglementations applicables dans chaque juridiction.\n\nÀ toutes les agences de recrutement : Coalition n'accepte pas les CV non sollicités des agences. Veuillez ne pas envoyer de CV à notre alias e-mail, aux employés ou à d'autres emplacements physiques ou virtuels de l'organisation. Coalition n'est pas responsable des frais liés aux CV non sollicités.",
+  "descriptionHtml": "<div><div><p><b>Qui sommes-nous ?</b></p>\n<p>\nCoalition est le premier fournisseur d'Assurance Active au monde, ayant &eacute;t&eacute; cr&eacute;&eacute; pour aider &agrave; pr&eacute;venir les cyber risques avant qu'ils ne surviennent. Fond&eacute;e en 2017, Coalition combine une couverture d'assurance int&eacute;grale avec des outils de cybers&eacute;curit&eacute; innovants pour aider les entreprises &agrave; g&eacute;rer et limiter les cyberattaques potentielles.</p>\n<p>\nUn esprit audacieux trouvera chez Coalition des opportunit&eacute;s quotidiennes d'avoir un impact r&eacute;el.</p></div><p></p><p><b><br>\n&Agrave; propos du poste</b></p>\n<p>\nEn tant que Charg&eacute;.e de D&eacute;veloppement Commercial chez Coalition, nous vous invitons &agrave; rejoindre une &eacute;quipe en pleine croissance, pour partager les efforts qui visent &agrave; cr&eacute;er et entretenir des relations de qualit&eacute; avec nos partenaires courtiers d'assurance et nos clients. Nous recherchons un.e professionnel.le de la vente d'assurance commerciale, pour contribuer activement au d&eacute;veloppement de notre client&egrave;le et favoriser le succ&egrave;s de nos partenaires : le/la candidat.e id&eacute;al.e aidera &agrave; aligner les meilleures id&eacute;es, innovations et capacit&eacute;s de Coalition avec les objectifs commerciaux d'un courtier.</p>\n<p>\nSous la direction de notre Directeur du D&eacute;veloppement Commercial pour la France, vous ne vous contenterez pas de g&eacute;n&eacute;rer des ventes, mais vous ferez &eacute;galement partie des premiers membres d'une &eacute;quipe en plein essor, rejoignant nos autres professionnels du d&eacute;veloppement commercial &agrave; travers l'Europe: vous collaborerez ensemble pour atteindre les objectifs de vente strat&eacute;giques sur le march&eacute; fran&ccedil;ais de la cyberassurance. Le poste priorisera le d&eacute;veloppement commercial sur le perimetre de la region parisienne et l'Ile-de-France mais ne s'y limitera pas.\n</p><p>Coalition favorise l'innovation jusque dans son approche du travail, gr&acirc;ce &agrave; une culture authentique de collaboration, ainsi que de feedback positif, direct et empathique, afin de s'assurer que les personnes qui rejoignent nos &eacute;quipes disposent des ressources et de l'environnement n&eacute;cessaires pour se concentrer sur le d&eacute;veloppement, l'excellence et l'investissement dans la mission &agrave; long terme de l'entreprise.</p>\n<p>\nLe poste est bas&eacute; &agrave; Paris ou r&eacute;gion parisienne, mais est enti&egrave;rement &agrave; distance, vous laissant la possibilit&eacute; de votre lieu d'activit&eacute; sur cette zone.</p>\n<p><b>\nSee this job in</b><b> </b><b>English</b></p><br>\n<p></p>\n<p><b>\nResponsabilit&eacute;s</b></p>\n<ul>\n<li>Participer au d&eacute;veloppement de nouvelles relations avec les courtiers &agrave; partir de prospects entrants et de d&eacute;marchages strat&eacute;giques.</li>\n<li>Contribuer aux strat&eacute;gies de d&eacute;veloppement du r&eacute;seau et identifier les courtiers et clients cibles pour de nouvelles campagnes de prospection;</li>\n<li>Participer activement &agrave; l'atteinte des quotas cibles, des opportunit&eacute;s qualifi&eacute;es, de la valeur du pipeline de ventes et des affaires conclues.</li>\n<li>Reporter votre activit&eacute; et les r&eacute;sultats des ventes, afin de contribuer au syst&egrave;me de suivi du d&eacute;veloppement commercial et d'assurer des pr&eacute;visions pr&eacute;cises.</li>\n<li>Soutenir le Directeur du D&eacute;veloppement Commercial dans les activit&eacute;s post-vente avec les partenaires courtiers (moyens et grands acteurs du courtage) de Coalition et contribuer &agrave; la gestion strat&eacute;gique des relations avec la client&egrave;le.</li>\n<li>Partager la responsabilit&eacute; de la satisfaction globale des courtiers avec les services de Coalition, en am&eacute;liorant l'exp&eacute;rience client.</li>\n<li>Cultiver une compr&eacute;hension approfondie de nos solutions (tant du point de vue de l'assurance que des aspects technologiques) pour r&eacute;pondre efficacement aux besoins des courtiers, et savoir la transmettre aux futurs membres de l'&eacute;quipe.</li>\n<li>Identifier et r&eacute;soudre de mani&egrave;re proactive les risques ayant un impact sur les objectifs commerciaux des courtiers.</li>\n<li>Contribuer &agrave; la mesure et &agrave; l'am&eacute;lioration du service et &ecirc;tre force de proposition, en faisant remonter les feedbacks des courtiers.courtiers.</li></ul><br>\n<p></p>\n<p><b>\nComp&eacute;tences et Qualifications</b></p>\n<ul>\n<li>Un esprit d'entreprise autonome et un bon instinct commercial.</li>\n<li>5 ans d'exp&eacute;rience minimum dans la vente de produits de cyber assurance, avec une capacit&eacute; d&eacute;montr&eacute;e en d&eacute;veloppement commercial.</li>\n<li>Un r&eacute;seau de relations &eacute;tabli avec des courtiers dans la r&eacute;gion de Paris et d'&Icirc;le-de-France.</li>\n<li>Vous poss&eacute;dez d'excellentes comp&eacute;tences en communication interpersonnelle (verbales et &eacute;crites).</li>\n<li>Vous avez une capacit&eacute; avanc&eacute;e &agrave; apprendre et &agrave; transmettre rapidement des concepts et des termes techniques.</li>\n<li>La capacit&eacute; &agrave; s'&eacute;panouir dans un environnement dynamique, multiculturel, en &eacute;volution rapide et dans un contexte de travail virtuel / distanciel.</li>\n<li>Vous avez les comp&eacute;tences requises pour g&eacute;rer plusieurs t&acirc;ches/projets simultan&eacute;ment et contribuer &agrave; la r&eacute;ussite collective de l'&eacute;quipe.</li>\n<li>Une ma&icirc;trise parfaite du fran&ccedil;ais est requise, et une aisance avanc&eacute;e en anglais est n&eacute;cessaire.</li></ul><br>\n<p></p>\n<p><b>\nPoints Bonus</b></p>\n<ul>\n<li>Toute exp&eacute;rience suppl&eacute;mentaire avec d'autres produits d'assurance en lignes financi&egrave;res.</li>\n<li>Des relations d&eacute;j&agrave; &eacute;tablies avec des partenaires courtiers locaux et/ou europ&eacute;ens.</li>\n</ul>\n<p><b>Avantages</b></p>\n<ul>\n<li>Contrat &agrave; dur&eacute;e ind&eacute;termin&eacute;e (CDI) ;</li>\n<li>Poste bas&eacute; &agrave; Paris / r&eacute;gion parisienne, avec t&eacute;l&eacute;travail &agrave; temps complet ;</li>\n<li>Contribution &agrave; l'am&eacute;nagement de l'espace de travail &agrave; domicile, et acc&egrave;s &agrave; notre r&eacute;seaux d'espaces de co-working ;</li>\n<li>25 jours de cong&eacute;s pay&eacute;s + jours de RTT ;</li>\n<li>Mutuelle et compl&eacute;mentaire d'entreprise, avec prise en charge &agrave; 70% par l'employeur ;</li>\n<li>R&eacute;gime de retraite l&eacute;gal, et pr&eacute;voyance ;</li>\n<li>Programmes de bien-&ecirc;tre physique et mental ;</li>\n<li>R&eacute;mun&eacute;ration comp&eacute;titive et opportunit&eacute;s d'avancement.</li></ul><p></p><div><br>\n<p><b>\nPourquoi Coalition ?</b></p>\n<p>\nTravailler chez Coalition, c'est partager notre mission commune : Prot&eacute;ger les Non Prot&eacute;g&eacute;s. Nous avons construit une culture hautement inclusive, accueillant des personnes d'horizons divers, et fond&eacute;e sur le t&eacute;l&eacute;travail g&eacute;n&eacute;ralis&eacute;. Au sein de nos &eacute;quipes, nous nous faisons mutuellement confiance pour assumer nos responsabilit&eacute;s, partager nos apports dans les r&eacute;sultats et travailler ensemble pour prot&eacute;ger les entreprises contre les cyber risques. La croissance exceptionnelle de Coalition provient de sa capacit&eacute; &agrave; r&eacute;soudre des probl&egrave;mes r&eacute;els pour des organisations de toutes tailles, tout en restant fid&egrave;le &agrave; nos valeurs fondatrices que sont le caract&egrave;re, l'humilit&eacute;, la responsabilit&eacute;, la d&eacute;termination, l'authenticit&eacute; et l'inclusion.</p>\n<p>\nNous sommes toujours &agrave; la recherche de personnes collaboratives et curieuses pour rejoindre #NotreCoalition.</p>\n<p>\nVisitez notre espace m&eacute;dia &gt;</p><br>\n<p></p>\n<p><b>\nAvis de confidentialit&eacute;</b></p>\n<p>\nCoalition s'engage &agrave; prot&eacute;ger votre vie priv&eacute;e et &agrave; traiter vos informations personnelles de mani&egrave;re responsable. Nous collectons, utilisons et conservons les informations personnelles n&eacute;cessaires au processus de recrutement et conform&eacute;ment aux lois et r&eacute;glementations locales applicables en mati&egrave;re de confidentialit&eacute;, dans toutes les r&eacute;gions o&ugrave; nous exer&ccedil;ons nos activit&eacute;s.</p>\n<p>\nNous souhaitons que vous compreniez quelles informations personnelles nous collectons, comment nous les utilisons et quels sont vos droits concernant l'acc&egrave;s, la rectification et la suppression de vos donn&eacute;es, le cas &eacute;ch&eacute;ant. Les informations soumises, collect&eacute;es et trait&eacute;es dans le cadre de votre candidature sont soumises &agrave; la politique de confidentialit&eacute; de la Coalition. Pour plus de d&eacute;tails, nous vous invitons &agrave; consulter notre politique de confidentialit&eacute; compl&egrave;te, ou &agrave; nous contacter pour toute question concernant la fa&ccedil;on dont vos informations sont trait&eacute;es.</p>\n<p>\nNotre politique de confidentialit&eacute; &gt;</p><br>\n<p></p>\n<p><b>\nAvis contre la discrimination</b><br>\nCoalition est fier d'&ecirc;tre un employeur garantissant l'&eacute;galit&eacute; des chances. Notre politique est d'offrir des opportunit&eacute;s d'emploi &eacute;gales &agrave; tous les individus, sans discrimination ni harc&egrave;lement sur la base de toute caract&eacute;ristique prot&eacute;g&eacute;e par les lois applicables dans chaque pays o&ugrave; nous exer&ccedil;ons nos activit&eacute;s. Cet engagement comprend, sans toutefois s'y limiter, la garantie de l'&eacute;galit&eacute; de traitement en mati&egrave;re de recrutement, de s&eacute;lection, de formation, de promotion, de transfert, de r&eacute;mun&eacute;ration et de tous les autres aspects de l'emploi. Coalition ne tol&egrave;re aucune forme de discrimination ou de harc&egrave;lement, et nous nous engageons &agrave; favoriser un environnement de travail inclusif et solidaire.</p><br>\n<p></p>\n<p><b>\nAm&eacute;nagements raisonnables</b><br>\nAm&eacute;nagements raisonnables Coalition s'engage &agrave; fournir des am&eacute;nagements raisonnables aux personnes en situations de handicap qualifi&eacute;es, y compris les candidats et les employ&eacute;s, conform&eacute;ment aux lois et r&eacute;glementations applicables dans chaque pays o&ugrave; nous exer&ccedil;ons nos activit&eacute;s. Notre politique consiste &agrave; soutenir l'&eacute;galit&eacute; des chances dans le processus d'embauche en consid&eacute;rant les candidats qualifi&eacute;s ind&eacute;pendamment de leur handicap ou d'autres caract&eacute;ristiques prot&eacute;g&eacute;es, &agrave; moins que des am&eacute;nagements n'imposent une contrainte excessive ou des besoins disproportionn&eacute;s. Si vous avez besoin d'am&eacute;nagements pour remplir une candidature, effectuer un entretien, compl&eacute;ter un test pr&eacute;alable &agrave; l'emploi ou participer au processus de s&eacute;lection, veuillez nous contacter &agrave; candidataccommodations@coalitioninc.com.</p>\n<p>\nNous prenons &eacute;galement en compte tous.tes les candidat.e.s qualifi&eacute;.e.s, y compris celles et ceux ayant des ant&eacute;c&eacute;dents criminels, conform&eacute;ment aux lois et r&eacute;glementations applicables dans chaque juridiction.</p><br>\n<p></p>\n<p><b>\n&Agrave; toutes les agences de recrutement :</b> Coalition n'accepte pas les CV non sollicit&eacute;s des agences. Veuillez ne pas envoyer de CV &agrave; notre alias e-mail, aux employ&eacute;s ou &agrave; d'autres emplacements physiques ou virtuels de l'organisation. Coalition n'est pas responsable des frais li&eacute;s aux CV non sollicit&eacute;s.</p></div></div>",
+  "benefits": [
+    "Programme de bien-être",
+    "RTT",
+    "20 jours ou plus de congés payés"
+  ],
+  "occupation": [
+    "Commerciaux/les",
+    "Métiers de la vente et du développement commercial",
+    "Métiers de la vente, du commerce et du service client",
+    "Commerciaux/les en assurances"
+  ],
+  "attributes": [
+    "Français",
+    "Programme de bien-être",
+    "CDI",
+    "Vente",
+    "Temps plein",
+    "Anglais",
+    "Télétravail",
+    "Développement commercial",
+    "RTT",
+    "Vente d'assurance",
+    "Compétences en communication",
+    "20 jours ou plus de congés payés"
+  ],
+  "workingSystem": [],
+  "source": "Coalition - France",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {},
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 5,
+  "jobKey": "cc540e0f0518439d",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=cc540e0f0518439d",
+  "emails": [
+    "candidataccommodations@coalitioninc.com"
+  ],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [],
+  "applyUrl": "https://grnh.se/e8ywx64u5us",
+  "requirements": []
+},
+{
+  "title": "Business Developer, Paris & IdF region (M/W)",
+  "companyLogoUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/517168f4472467afeee540bed017ed73",
+  "companyName": "Coalition Inc.",
+  "location": {
+    "city": "Paris",
+    "postalCode": null,
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "Paris (75)",
+    "formattedAddressShort": "Paris (75)",
+    "latitude": 48.85341,
+    "longitude": 2.3488,
+    "streetAddress": null,
+    "fullAddress": "Paris (75)"
+  },
+  "age": "6 days ago",
+  "datePublished": "2026-05-27",
+  "jobType": [
+    "CDI",
+    "Temps plein",
+    "Télétravail"
+  ],
+  "companyHeaderUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_headerimage/1960x400/6f837ecce16a92ae2257966326dba326",
+  "companyUrl": "https://fr.indeed.com/cmp/Coalition-Inc.-1",
+  "rating": {
+    "rating": 0,
+    "count": 0
+  },
+  "descriptionText": "About us\n\nCoalition is the world's first Active Insurance provider designed to help prevent digital risk before it strikes. Founded in 2017, Coalition combines comprehensive insurance coverage and innovative cybersecurity tools to help businesses manage and mitigate potential cyberattacks.\n\nOpportunities to make an impact with bold thinking are real—and happening daily at Coalition.\n\nAbout the role\n\nAs a Business Developer at Coalition, you will join a fast growing team and share the efforts to create and maintain relationships with our insurance brokerage partners and customers. We are looking for an insurance sales professional to actively contribute to the development of our customer base and empower the success of our partners: the ideal candidate will help to align Coalition's best ideas, innovations, and capabilities with a broker's business goals.\n\nReporting directly to our Business Development Director for France, you will not only drive sales but also be an early member of Coalition's quickly expanding team of EU business development professionals, collaborating together to achieve strategic sales objectives in the cyber insurance French market. The position will prioritize business development within the perimeter of the Paris region and Ile-de-France, but will not be limited to it.\n\nCoalition fosters innovation all the way into its approach to work, through a culture of genuine collaboration, positive intent and empathetic direct feedback, to ensure that people who join our teams have the resources and environment needed to focus on growth, high standards, and an ownership mentality driven by the company's long-term mission.\n\nThe role is based in Paris / the parisian region but is fully remote within that territory.\n\nVoir ce poste en français\n\nResponsibilities\nDrive the development of new broker relationships from inbound leads and strategic outreach.\nContribute to the sales strategy and help identify target brokers and clients for new outbound campaigns.\nActively participate in achieving target quotas, qualified opportunities, sales pipeline value, and closed business.\nReport on sales activities and results, to contribute to the BD tracking system and ensure accurate forecasting.\nSupport the BD Director on post-sales activities for Coalition's broker partners (mid to large level brokers) and contribute to strategic relationship management.\nShare ownership of overall broker satisfaction with Coalition's services, enhancing the customer experience.\nCultivate a deep understanding of our solutions (insurance and technology) to effectively address broker needs, and share it with future team members.\nIdentify and proactively resolve risks impacting brokers' business goals.\nAssist in the monitoring and analysis efforts of performance trends in Coalition adoption and utilization, providing strategic guidance as part of brokers' Success Reviews.\nSkills and Qualifications\nSelf-motivated, entrepreneurial spirit with a commercial instinct.\nMinimum 5 years of experience in cyber insurance, with demonstrated ability in sales management.\nEstablished broker relationships in the Paris & Ile-de-France area.\nExcellent interpersonal communication skills (verbal & written).\nCapacity to quickly learn and relay technical concepts and terms.\nAbility to thrive in a fast-paced, multicultural, dynamic, virtual environment.\nProven ability to manage multiple tasks/projects simultaneously and drive team success.\nFluent in French, proficient in English.\nBonus Points\nExperience within other Financial Lines of insurance\nEstablished relationships with additional European broker partners.\nBenefits\nCDI contract (full time employment contract in France)\nPosition based in Paris area or Ile-de-France, in full remote work\nAnnual home office stipend + access to coworking spaces\n25 paid holidays + RTT days\nPrivate Medical Coverage (Mutuelle et complémentaire santé) covered by employer at 70% for medical, dental, and vision coverage, including out-patient treatment\nLife & Disability Insurance (Prévoyance) + Statutory pension\nMental & physical health wellness programs\nCompetitive compensation and opportunity for advancement\nWhy Coalition?\n\nWork at Coalition is centered on the joint mission to Protect the Unprotected. We have built a remote-first, highly inclusive culture that welcomes people from diverse backgrounds. We trust each other to take responsibility, share ownership of outcomes, and put in the work together to protect businesses from digital risk. Coalition's exceptional growth stems from its ability to address real-world problems for organizations of all sizes while remaining true to our founding values of character, humility, responsibility, purpose, authenticity, and inclusion.\n\nWe're always looking for collaborative, inquisitive individuals to join #OurCoalition.\n\nVisit our Newsroom >\n\nPrivacy Notice\n\nCoalition is committed to protecting your privacy and handling your personal information responsibly. We collect, use, and store personal information as necessary for the recruitment process and in compliance with applicable privacy laws and regulations in all regions where we operate. We want you to understand what personal information we collect, how we use it, and your rights regarding access, correction, and deletion of your data where applicable. Information submitted, collected, and processed as part of your application is subject to Coalition's Privacy Policy. For further details, please review our full Privacy Policy or contact us with any questions regarding how your information is handled.\n\nOur Privacy Policy >\n\nSafe Hiring Notice\n\nAll legitimate communication from Coalition comes from @coalitioninc.com emails, and open roles are listed only on our Careers page. We never ask for payment, banking details, or personal identification before an offer is accepted through our secure systems. If you believe you've been a victim of fraudulent recruiting, follow guidance from the Federal Trade Commission (FTC).\n\nAnti-Discrimination Notice\n\nCoalition is proud to be an Equal Opportunity employer. Our policy is to provide equal employment opportunities to all individuals, without discrimination or harassment on the basis of any characteristic protected by applicable laws in each country where we operate. This commitment includes, but is not limited to, ensuring equal treatment in recruitment, selection, training, promotion, transfer, compensation, and all other aspects of employment. Coalition does not tolerate discrimination or harassment of any kind, and we are dedicated to fostering an inclusive and supportive workplace.\n\nAccommodations\n\nCoalition is committed to providing reasonable accommodations to qualified individuals with disabilities, including applicants and employees, in accordance with applicable laws and regulations in each country where we operate. Our policy is to support equal opportunity in the hiring process by considering qualified applicants regardless of disability or other protected characteristics, unless providing accommodation would impose an undue hardship or disproportionate burden. If you require accommodation to complete an application, interview, pre-employment testing, or participate in the selection process, please contact us at candidateaccommodations@coalitioninc.com. We also consider all qualified applicants, including those with criminal histories, in line with applicable laws and regulations in each jurisdiction.\n\nTo all recruitment agencies: Coalition does not accept unsolicited agency resumes. Do not forward resumes to our email alias, employees, or other physical or virtual organization locations. Coalition is not responsible for any fees related to unsolicited resumes.",
+  "descriptionHtml": "<div><div><h4 class=\"jobSectionHeader\"><b>About us</b></h4>\n<p>\nCoalition is the world's first Active Insurance provider designed to help prevent digital risk before it strikes. Founded in 2017, Coalition combines comprehensive insurance coverage and innovative cybersecurity tools to help businesses manage and mitigate potential cyberattacks.\n</p><p>Opportunities to make an impact with bold thinking are real&mdash;and happening daily at Coalition.</p></div><h4 class=\"jobSectionHeader\"><b>\nAbout the role</b></h4>\n<div>\n<p>As a Business Developer at Coalition, you will join a fast growing team and share the efforts to create and maintain relationships with our insurance brokerage partners and customers. We are looking for an insurance sales professional to actively contribute to the development of our customer base and empower the success of our partners: the ideal candidate will help to align Coalition's best ideas, innovations, and capabilities with a broker's business goals.</p>\n<p>\nReporting directly to our Business Development Director for France, you will not only drive sales but also be an early member of Coalition's quickly expanding team of EU business development professionals, collaborating together to achieve strategic sales objectives in the cyber insurance French market. The position will prioritize business development within the perimeter of the Paris region and Ile-de-France, but will not be limited to it.\n</p><p>Coalition fosters innovation all the way into its approach to work, through a culture of genuine collaboration, positive intent and empathetic direct feedback, to ensure that people who join our teams have the resources and environment needed to focus on growth, high standards, and an ownership mentality driven by the company's long-term mission.</p>\n<p><i>\nThe role is based in Paris / the parisian region but is fully remote within that territory.</i></p>\n<p><b>\nVoir ce poste en </b><b>fran&ccedil;ais</b></p>\n</div>\n<h4 class=\"jobSectionHeader\"><b>Responsibilities</b></h4>\n<ul><li>Drive the development of new broker relationships from inbound leads and strategic outreach.</li>\n<li>Contribute to the sales strategy and help identify target brokers and clients for new outbound campaigns.</li>\n<li>Actively participate in achieving target quotas, qualified opportunities, sales pipeline value, and closed business.</li>\n<li>Report on sales activities and results, to contribute to the BD tracking system and ensure accurate forecasting.</li>\n<li>Support the BD Director on post-sales activities for Coalition's broker partners (mid to large level brokers) and contribute to strategic relationship management.</li>\n<li>Share ownership of overall broker satisfaction with Coalition's services, enhancing the customer experience.</li>\n<li>Cultivate a deep understanding of our solutions (insurance and technology) to effectively address broker needs, and share it with future team members.</li>\n<li>Identify and proactively resolve risks impacting brokers' business goals.</li>\n<li>Assist in the monitoring and analysis efforts of performance trends in Coalition adoption and utilization, providing strategic guidance as part of brokers' Success Reviews.</li>\n</ul><h4 class=\"jobSectionHeader\"><b>Skills and Qualifications</b></h4>\n<ul><li>Self-motivated, entrepreneurial spirit with a commercial instinct.</li>\n<li>Minimum 5 years of experience in cyber insurance, with demonstrated ability in sales management.</li>\n<li>Established broker relationships in the Paris &amp; Ile-de-France area.</li>\n<li>Excellent interpersonal communication skills (verbal &amp; written).</li>\n<li>Capacity to quickly learn and relay technical concepts and terms.</li>\n<li>Ability to thrive in a fast-paced, multicultural, dynamic, virtual environment.</li>\n<li>Proven ability to manage multiple tasks/projects simultaneously and drive team success.</li>\n<li>Fluent in French, proficient in English.</li>\n</ul><h4 class=\"jobSectionHeader\"><b>Bonus Points</b></h4>\n<ul><li>Experience within other Financial Lines of insurance</li>\n<li>Established relationships with additional European broker partners.</li>\n</ul><h4 class=\"jobSectionHeader\"><b>Benefits</b></h4>\n<ul><li><i>CDI </i>contract (full time employment contract in France)</li>\n<li>Position based in Paris area or Ile-de-France, in full remote work</li>\n<li>Annual home office stipend + access to coworking spaces</li>\n<li>25 paid holidays + RTT days</li>\n<li>Private Medical Coverage (<i>Mutuelle et compl&eacute;mentaire sant&eacute;</i>) covered by employer at 70% for medical, dental, and vision coverage, including out-patient treatment</li>\n<li>Life &amp; Disability Insurance (<i>Pr&eacute;voyance</i>) + Statutory pension</li>\n<li>Mental &amp; physical health wellness programs</li>\n<li>Competitive compensation and opportunity for advancement</li>\n</ul><div><h4 class=\"jobSectionHeader\"><b>Why Coalition?</b></h4>\n<p>\nWork at Coalition is centered on the joint mission to Protect the Unprotected. We have built a remote-first, highly inclusive culture that welcomes people from diverse backgrounds. We trust each other to take responsibility, share ownership of outcomes, and put in the work together to protect businesses from digital risk. Coalition's exceptional growth stems from its ability to address real-world problems for organizations of all sizes while remaining true to our founding values of character, humility, responsibility, purpose, authenticity, and inclusion.</p>\n<p>\nWe're always looking for collaborative, inquisitive individuals to join #OurCoalition.</p>\n<p>\nVisit our Newsroom &gt;</p>\n<h4 class=\"jobSectionHeader\"><b>\nPrivacy Notice</b></h4>\n<p>\nCoalition is committed to protecting your privacy and handling your personal information responsibly. We collect, use, and store personal information as necessary for the recruitment process and in compliance with applicable privacy laws and regulations in all regions where we operate. We want you to understand what personal information we collect, how we use it, and your rights regarding access, correction, and deletion of your data where applicable. Information submitted, collected, and processed as part of your application is subject to Coalition's Privacy Policy. For further details, please review our full Privacy Policy or contact us with any questions regarding how your information is handled.</p>\n<p>\nOur Privacy Policy &gt;</p>\n<h4 class=\"jobSectionHeader\"><b>\nSafe Hiring Notice</b></h4>\n<p>\nAll legitimate communication from Coalition comes from @coalitioninc.com emails, and open roles are listed only on our Careers page. We never ask for payment, banking details, or personal identification before an offer is accepted through our secure systems. If you believe you've been a victim of fraudulent recruiting, follow guidance from the Federal Trade Commission (FTC).</p>\n<h4 class=\"jobSectionHeader\"><b>\nAnti-Discrimination Notice</b></h4>\n<p>\nCoalition is proud to be an Equal Opportunity employer. Our policy is to provide equal employment opportunities to all individuals, without discrimination or harassment on the basis of any characteristic protected by applicable laws in each country where we operate. This commitment includes, but is not limited to, ensuring equal treatment in recruitment, selection, training, promotion, transfer, compensation, and all other aspects of employment. Coalition does not tolerate discrimination or harassment of any kind, and we are dedicated to fostering an inclusive and supportive workplace.</p>\n<h4 class=\"jobSectionHeader\"><b>\nAccommodations</b></h4>\n<p>\nCoalition is committed to providing reasonable accommodations to qualified individuals with disabilities, including applicants and employees, in accordance with applicable laws and regulations in each country where we operate. Our policy is to support equal opportunity in the hiring process by considering qualified applicants regardless of disability or other protected characteristics, unless providing accommodation would impose an undue hardship or disproportionate burden. If you require accommodation to complete an application, interview, pre-employment testing, or participate in the selection process, please contact us at candidateaccommodations@coalitioninc.com. We also consider all qualified applicants, including those with criminal histories, in line with applicable laws and regulations in each jurisdiction.</p>\n<p><b>\nTo all recruitment agencies:</b> Coalition does not accept unsolicited agency resumes. Do not forward resumes to our email alias, employees, or other physical or virtual organization locations. Coalition is not responsible for any fees related to unsolicited resumes.</p></div></div>",
+  "benefits": [
+    "RTT"
+  ],
+  "occupation": [
+    "Commerciaux/les",
+    "Métiers de la vente et du développement commercial",
+    "Métiers de la vente, du commerce et du service client",
+    "Commerciaux/les en assurances"
+  ],
+  "attributes": [
+    "Français",
+    "CDI",
+    "Temps plein",
+    "Anglais",
+    "Télétravail",
+    "RTT"
+  ],
+  "workingSystem": [],
+  "source": "Coalition, Inc.",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {},
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 11,
+  "jobKey": "81dc75a529d1c8a5",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=81dc75a529d1c8a5",
+  "emails": [
+    "candidateaccommodations@coalitioninc.com"
+  ],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [],
+  "applyUrl": "https://grnh.se/x885bngk5us",
+  "requirements": []
+},
+{
+  "title": "Conseiller Commercial Service APV (H/F)",
+  "companyLogoUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/cdce24c52a8955b06ab88ef14efdeaff",
+  "companyName": "Stellantis",
+  "location": {
+    "city": "Montgeron",
+    "postalCode": "91230",
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "91230 Montgeron",
+    "formattedAddressShort": "Montgeron (91)",
+    "latitude": 48.7,
+    "longitude": 2.45,
+    "streetAddress": "129 AVENUE CHARLES DE GAULLE,91230 MONTGERON",
+    "fullAddress": "91230 Montgeron"
+  },
+  "age": "4 days ago",
+  "datePublished": "2026-05-29",
+  "jobType": [
+    "CDI",
+    "Temps plein",
+    "Télétravail"
+  ],
+  "companyHeaderUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_headerimage/1960x400/91202d86f9c0e168a50a73a06df1e562",
+  "companyUrl": "https://fr.indeed.com/cmp/Stellantis",
+  "rating": {
+    "rating": 3.9,
+    "count": 9706
+  },
+  "descriptionText": "Le Groupe Priod, acteur majeur de la distribution automobile en Île-de-France, partenaire historique de Citroën, recherche un(e) Conseiller(ère) Commercial(e) Service Après-Vente (APV) afin de renforcer ses équipes. Le groupe distribue plusieurs marques automobiles et possède plusieurs concessions en région parisienne.\n\nAvantages :\n\nRemboursement des transports à 50%\n\nAccueillir et conseiller les clients en concession et par téléphone\n\nIdentifier les besoins d’entretien et de réparation des véhicules\n\nPlanifier les rendez-vous atelier\n\nÉtablir les ordres de réparation et devis\n\nAssurer le suivi des interventions avec l’atelier\n\nDévelopper les ventes additionnelles (contrats d’entretien, accessoires, prestations complémentaires)\n\nGarantir une qualité de service irréprochable et la satisfaction client\n\nParticiper à la fidélisation de la clientèle de la marque Citroën\n\nExpérience dans l’automobile ou dans un service après-vente appréciée\n\nExcellent relationnel et sens du commerce\n\nOrganisation, rigueur et esprit d’équipe\n\nBonne maîtrise des outils informatiques\n\nDynamique et orienté(e) satisfaction client\n\nPermis B indispensable",
+  "descriptionHtml": "<div><p>Le Groupe Priod, acteur majeur de la distribution automobile en &Icirc;le-de-France, partenaire historique de Citro&euml;n, recherche un(e) Conseiller(&egrave;re) Commercial(e) Service Apr&egrave;s-Vente (APV) afin de renforcer ses &eacute;quipes. Le groupe distribue plusieurs marques automobiles et poss&egrave;de plusieurs concessions en r&eacute;gion parisienne.</p><p>\nAvantages :</p><ul><li>\nRemboursement des transports &agrave; 50%</li></ul><ul><li><p><br>\nAccueillir et conseiller les clients en concession et par t&eacute;l&eacute;phone</p></li><li><p>\nIdentifier les besoins d&rsquo;entretien et de r&eacute;paration des v&eacute;hicules</p></li><li><p>\nPlanifier les rendez-vous atelier</p></li><li><p>\n&Eacute;tablir les ordres de r&eacute;paration et devis</p></li><li><p>\nAssurer le suivi des interventions avec l&rsquo;atelier</p></li><li><p>\nD&eacute;velopper les ventes additionnelles (contrats d&rsquo;entretien, accessoires, prestations compl&eacute;mentaires)</p></li><li><p>\nGarantir une qualit&eacute; de service irr&eacute;prochable et la satisfaction client</p></li><li><p>\nParticiper &agrave; la fid&eacute;lisation de la client&egrave;le de la marque Citro&euml;n</p></li></ul><ul><li><p><br>\nExp&eacute;rience dans l&rsquo;automobile ou dans un service apr&egrave;s-vente appr&eacute;ci&eacute;e</p></li><li><p>\nExcellent relationnel et sens du commerce</p></li><li><p>\nOrganisation, rigueur et esprit d&rsquo;&eacute;quipe</p></li><li><p>\nBonne ma&icirc;trise des outils informatiques</p></li><li><p>\nDynamique et orient&eacute;(e) satisfaction client</p></li><li><p>\nPermis B indispensable</p></li></ul></div>",
+  "benefits": [
+    "Prise en charge du transport quotidien"
+  ],
+  "occupation": [
+    "Métiers de la maintenance de véhicules et de moteurs",
+    "Réceptionnaires après-vente",
+    "Métiers de l'installation et de la maintenance"
+  ],
+  "attributes": [
+    "CDI",
+    "Prise en charge du transport quotidien",
+    "Temps plein",
+    "Télétravail",
+    "Permis B",
+    "Bureautique"
+  ],
+  "workingSystem": [],
+  "source": "Stellantis",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {
+    "salaryCurrency": "EUR",
+    "salaryMax": 30000,
+    "salaryMin": 26000,
+    "salarySource": "EXTRACTION",
+    "salaryText": "De 26 000 € à 30 000 € par an",
+    "salaryType": "yearly"
+  },
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 0,
+  "jobKey": "d31d8153f72d386d",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=d31d8153f72d386d",
+  "emails": [],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [],
+  "applyUrl": "https://careers.flatchr.io/vacancy/vq1xlprxzq6n6zem-conseiller-commercial-service-apv-h-f?partner=32&source=Indeed",
+  "requirements": []
+},
+{
+  "title": "Security Business Partner - Cybersécurité - Ile-de-France",
+  "companyLogoUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/8d17cd7785fe56e7e52e9527a8e41a51",
+  "companyName": "Sopra Steria",
+  "location": {
+    "city": "Courbevoie",
+    "postalCode": "92400",
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "92400 Courbevoie",
+    "formattedAddressShort": "Courbevoie (92)",
+    "latitude": 48.8967,
+    "longitude": 2.2567,
+    "streetAddress": "1 Rue Serpentines",
+    "fullAddress": "92400 Courbevoie"
+  },
+  "age": "12 days ago",
+  "datePublished": "2026-05-21",
+  "jobType": [
+    "Temps plein",
+    "Télétravail"
+  ],
+  "companyHeaderUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_headerimage/1960x400/63ef3cd0e14af70c8a2e664a6cfd6b38",
+  "companyUrl": "https://fr.indeed.com/cmp/Sopra-Steria",
+  "rating": {
+    "rating": 3.4,
+    "count": 990
+  },
+  "descriptionText": "Description de l'entreprise\n\nÀ propos de Sopra Steria\n\nSopra Steria, acteur majeur de la Tech en Europe, avec 51 000 collaborateurs dans près de 30 pays, est reconnu pour ses activités de conseil, de services et solutions numériques. Il aide ses clients à mener leur transformation digitale et à obtenir des bénéfices concrets et durables. Le Groupe apporte une réponse globale aux enjeux de compétitivité des grandes entreprises et organisations, en combinant une connaissance approfondie des secteurs d’activité et des technologies à une approche collaborative. Sopra Steria place l’humain au cœur de son action et s’engage auprès de ses clients à tirer le meilleur parti du numérique pour construire un avenir positif. En 2024, le Groupe a réalisé un chiffre d’affaires de 5,8 milliards d’euros.\n\nThe world is how we shape it*\n\nSopra Steria (SOP) est coté sur Euronext Paris (Compartiment A) - Code ISIN : FR0000050809\n\nPour plus d'informations, retrouvez-nous sur www.soprasteria.com/fr\n\n*Le monde est tel que nous le façonnons\n\nLa Business Line Cybersécurité de Sopra Steria est présente en Europe avec plus de 2500 experts - dont plus de la moitié en France -, notre mission est d’apporter des solutions et des services de confiance aux acteurs publics et privés les plus exposés pour assurer la résilience de leurs systèmes critiques et protéger leur patrimoine numérique sensible.\n\nAu-delà de la forte présence européenne, la division cybersécurité se positionne et se développe en Amérique du nord (Toronto), ainsi qu’en Asie Pacifique (Singapour).\n\nNous proposons 3 domaines d’offres : Prévention, Protection & détection et réponse. Ces 3 domaines s’articulent les uns avec les autres pour apporter à nos clients une information homogène et des capacités de décisions éclairées par la réalité opérationnelle. Cette approche s’appuie sur notre méthodologie transverse centrée sur Mitre Att&ck.\n\nSopra Steria se base sur des capacités souveraines éprouvées et reconnues pour renforcer votre résilience face aux cyberattaques et accélérer votre transformation digitale.\n\nUne solution de confiance de bout-en-bout\nUne approche « security by design » centrée sur les risques métiers et transverse à l’organisation.\nUn engagement dans le développement de solutions souveraines innovantes.\n\nChaque individu peut avoir un impact sur la réponse à ces nouveaux défis en matière de cyber risques. Chacun contribue à la fois individuellement et collectivement à sécuriser nos clients et la société tout en maintenant sa croissance personnelle et professionnelle.\n\nDescription du poste\n\nVotre futur environnement de travail :\n\nAu sein de la division Cybersécurité de Sopra Steria, vous intégrez l'équipe commerciale en tant que Security Business Partner. Votre rôle est de définir et développer notre stratégie de développement par le biais de nos catalogues de services.\n\nVotre rôle et vos missions :\n\nEn immersion totale au sein de l'équipe commerciale, vos activités s'articulent autour des sujets suivants :\n\nVous participez aux gains de projets en Cyber Securité selon la stratégie de développement fixée par la Direction\nVous échangez avec nos clients sur leur problématique technique et métier\nVous analysez les besoins clients et promouvoir le catalogue de services du groupe\nVous élaborez des offres commerciales en fonction de l'analyse des besoins, avec un appui de la Direction Technique et commerciale\nVous négociez et vous gérez les offres commerciales\nVous faites le suivi le client une fois le contrat signé pour assurer la satisfaction du client et la pérennité de la relation établie\n\nCe que nous vous proposons :\n\nUn accord télétravail pour télétravailler jusqu’à 2 jours par semaine selon vos missions.\nUn package avantages intéressants : une mutuelle, un CSE, des titres restaurants, un accord d’intéressement, des primes vacances et cooptation.\nDes opportunités de carrières multiples : plus de 30 familles de métiers, autant de passerelles à imaginer ensemble.\nDes centaines de formations pour développer vos compétences et évoluer au sein du Groupe.\nDes plateformes de formations en autonomie pour préparer vos certifications et accompagner votre développement personnel.\nLa possibilité de s'engager auprès de notre fondation ou de notre partenaire « Vendredi ».\nL'opportunité de rejoindre le collectif Tech'Me UP (formations, conférences, veille, et bien plus encore…).\n\nQualifications\n\nVotre profil :\n\nDiplômé(e) d'une école d'Ingénieurs ou équivalent, vous justifiez d'une expérience significative d'au moins 8 ans dans la vente de services auprès de clients grands comptes cybersécurité.\nVous avez cette capacité à appréhender le contexte et les interlocuteurs du client (sponsors, décisionnaire, structure de compte, etc.).\nVous avez un niveau d'anglais courant, à l'écrit comme à l'oral.\n\nInformations supplémentaires\n\nEmployeur inclusif et engagé, notre société œuvre chaque jour pour lutter contre toute forme de discrimination et favoriser un environnement de travail respectueux. C’est pourquoi, attachés à la mixité et à la diversité, nous encourageons toutes les candidatures et tous les profils.\n\nhttps://www.soprasteria.fr/nous-connaitre/nos-engagements",
+  "descriptionHtml": "<div><b>Description de l'entreprise</b><p><b><br>\n&Agrave; propos de Sopra Steria</b>\n</p><p>Sopra Steria, acteur majeur de la Tech en Europe, avec 51 000 collaborateurs dans pr&egrave;s de 30 pays, est reconnu pour ses activit&eacute;s de conseil, de services et solutions num&eacute;riques. Il aide ses clients &agrave; mener leur transformation digitale et &agrave; obtenir des b&eacute;n&eacute;fices concrets et durables. Le Groupe apporte une r&eacute;ponse globale aux enjeux de comp&eacute;titivit&eacute; des grandes entreprises et organisations, en combinant une connaissance approfondie des secteurs d&rsquo;activit&eacute; et des technologies &agrave; une approche collaborative. Sopra Steria place l&rsquo;humain au c&oelig;ur de son action et s&rsquo;engage aupr&egrave;s de ses clients &agrave; tirer le meilleur parti du num&eacute;rique pour construire un avenir positif. En 2024, le Groupe a r&eacute;alis&eacute; un chiffre d&rsquo;affaires de 5,8 milliards d&rsquo;euros.<br>\n</p><p><br>\n<b><i>The world is how we shape it*</i></b>\n</p><p>Sopra Steria (SOP) est cot&eacute; sur Euronext Paris (Compartiment A) - Code ISIN : FR0000050809\n</p><p>Pour plus d'informations, retrouvez-nous sur www.soprasteria.com/fr\n</p><ul><li>Le monde est tel que nous le fa&ccedil;onnons</li></ul><p><i>\nLa Business Line Cybers&eacute;curit&eacute; de Sopra Steria est pr&eacute;sente en Europe avec plus de 2500 experts - dont plus de la moiti&eacute; en France -, notre mission est d&rsquo;apporter des solutions et des services de confiance aux acteurs publics et priv&eacute;s les plus expos&eacute;s pour assurer la r&eacute;silience de leurs syst&egrave;mes critiques et prot&eacute;ger leur patrimoine num&eacute;rique sensible.</i><i>\n</i></p><p><i>Au-del&agrave; de la forte pr&eacute;sence europ&eacute;enne, la division cybers&eacute;curit&eacute; se positionne et se d&eacute;veloppe en Am&eacute;rique du nord (Toronto), ainsi qu&rsquo;en Asie Pacifique (Singapour).</i><i>\n</i></p><p><i>Nous proposons 3 domaines d&rsquo;offres : Pr&eacute;vention, Protection &amp; d&eacute;tection et r&eacute;ponse. Ces 3 domaines s&rsquo;articulent les uns avec les autres pour apporter &agrave; nos clients une information homog&egrave;ne et des capacit&eacute;s de d&eacute;cisions &eacute;clair&eacute;es par la r&eacute;alit&eacute; op&eacute;rationnelle. Cette approche s&rsquo;appuie sur notre m&eacute;thodologie transverse centr&eacute;e sur Mitre Att&amp;ck.</i><i>\n</i></p><p><i>Sopra Steria se base sur des capacit&eacute;s souveraines &eacute;prouv&eacute;es et reconnues pour renforcer votre r&eacute;silience face aux cyberattaques et acc&eacute;l&eacute;rer votre transformation digitale.</i><i>\n</i></p><ul><li><i>Une solution de confiance de bout-en-bout</i><i>\n</i></li><li><i>Une approche &laquo; security by design &raquo; centr&eacute;e sur les risques m&eacute;tiers et transverse &agrave; l&rsquo;organisation.</i><i>\n</i></li><li><i>Un engagement dans le d&eacute;veloppement de solutions souveraines innovantes.</i><i>\n</i></li></ul><p><i>Chaque individu peut avoir un impact sur la r&eacute;ponse &agrave; ces nouveaux d&eacute;fis en mati&egrave;re de cyber risques. Chacun contribue &agrave; la fois individuellement et collectivement &agrave; s&eacute;curiser nos clients et la soci&eacute;t&eacute; tout en maintenant sa croissance personnelle et professionnelle.</i></p><b><br>\nDescription du poste</b><p><b><br>\nVotre futur environnement de travail :</b></p><p>\nAu sein de la division Cybers&eacute;curit&eacute; de Sopra Steria, vous int&eacute;grez l'&eacute;quipe commerciale en tant que Security Business Partner. Votre r&ocirc;le est de d&eacute;finir et d&eacute;velopper notre strat&eacute;gie de d&eacute;veloppement par le biais de nos catalogues de services.<br>\n<br>\n<b>Votre r&ocirc;le et vos missions :</b><br>\n<br>\nEn immersion totale au sein de l'&eacute;quipe commerciale, vos activit&eacute;s s'articulent autour des sujets suivants :</p><ul><li>\nVous participez aux gains de projets en Cyber Securit&eacute; selon la strat&eacute;gie de d&eacute;veloppement fix&eacute;e par la Direction</li><li>\nVous &eacute;changez avec nos clients sur leur probl&eacute;matique technique et m&eacute;tier</li><li>\nVous analysez les besoins clients et promouvoir le catalogue de services du groupe</li><li>\nVous &eacute;laborez des offres commerciales en fonction de l'analyse des besoins, avec un appui de la Direction Technique et commerciale</li><li>\nVous n&eacute;gociez et vous g&eacute;rez les offres commerciales</li><li>\nVous faites le suivi le client une fois le contrat sign&eacute; pour assurer la satisfaction du client et la p&eacute;rennit&eacute; de la relation &eacute;tablie</li></ul><p><b>\nCe que nous vous proposons :</b></p><ul><li>\nUn accord t&eacute;l&eacute;travail pour t&eacute;l&eacute;travailler jusqu&rsquo;&agrave; 2 jours par semaine selon vos missions.</li><li>\nUn package avantages int&eacute;ressants : une mutuelle, un CSE, des titres restaurants, un accord d&rsquo;int&eacute;ressement, des primes vacances et cooptation.</li><li>\nDes opportunit&eacute;s de carri&egrave;res multiples : plus de 30 familles de m&eacute;tiers, autant de passerelles &agrave; imaginer ensemble.</li><li>\nDes centaines de formations pour d&eacute;velopper vos comp&eacute;tences et &eacute;voluer au sein du Groupe.</li><li>\nDes plateformes de formations en autonomie pour pr&eacute;parer vos certifications et accompagner votre d&eacute;veloppement personnel.</li><li>\nLa possibilit&eacute; de s'engager aupr&egrave;s de notre fondation ou de notre partenaire &laquo; Vendredi &raquo;.</li><li>\nL'opportunit&eacute; de rejoindre le collectif Tech'Me UP (formations, conf&eacute;rences, veille, et bien plus encore&hellip;).</li></ul><br>\n<b>\nQualifications</b><p><b><br>\nVotre profil :</b></p><ul><li>\nDipl&ocirc;m&eacute;(e) d'une &eacute;cole d'Ing&eacute;nieurs ou &eacute;quivalent, vous justifiez d'une exp&eacute;rience significative d'au moins 8 ans dans la vente de services aupr&egrave;s de clients grands comptes cybers&eacute;curit&eacute;.</li><li>\nVous avez cette capacit&eacute; &agrave; appr&eacute;hender le contexte et les interlocuteurs du client (sponsors, d&eacute;cisionnaire, structure de compte, etc.).</li><li>\nVous avez un niveau d'anglais courant, &agrave; l'&eacute;crit comme &agrave; l'oral.</li></ul><br>\n<b>\nInformations suppl&eacute;mentaires</b><div></div><p><br>\nEmployeur inclusif et engag&eacute;, notre soci&eacute;t&eacute; &oelig;uvre chaque jour pour lutter contre toute forme de discrimination et favoriser un environnement de travail respectueux. C&rsquo;est pourquoi, attach&eacute;s &agrave; la mixit&eacute; et &agrave; la diversit&eacute;, nous encourageons toutes les candidatures et tous les profils.</p><p>\nhttps://www.soprasteria.fr/nous-connaitre/nos-engagements</p></div><p></p>",
+  "benefits": [
+    "Titre restaurant",
+    "Comité d’entreprise (CE)",
+    "Intéressement"
+  ],
+  "occupation": [
+    "Commerciaux/les",
+    "Métiers de la vente et du développement commercial",
+    "Métiers de la vente, du commerce et du service client",
+    "Technico-commerciaux/les"
+  ],
+  "attributes": [
+    "Temps plein",
+    "Anglais",
+    "Télétravail",
+    "Titre restaurant",
+    "Master",
+    "Primes",
+    "Comité d’entreprise (CE)",
+    "Intéressement"
+  ],
+  "workingSystem": [],
+  "source": "Sopra Steria",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {},
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 14,
+  "jobKey": "c48cfdeb63dbd9ee",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=c48cfdeb63dbd9ee",
+  "emails": [],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [],
+  "applyUrl": "https://jobs.smartrecruiters.com/SopraSteria1/744000127604164-security-business-partner-cybersecurite-ile-de-france",
+  "requirements": []
+},
+{
+  "title": "SUPERVISEUR / VISITEUR MÉDICAL À DISTANCE – 100% TÉLÉTRAVAIL (H/F)",
+  "companyLogoUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/9089a7a2d245e7c1f2ec6b0943a64297",
+  "companyName": "GMG SANTÉ",
+  "location": {
+    "city": "Paris",
+    "postalCode": null,
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "Paris (75)",
+    "formattedAddressShort": "Paris (75)",
+    "latitude": 48.85341,
+    "longitude": 2.3488,
+    "streetAddress": null,
+    "fullAddress": "Paris (75)"
+  },
+  "age": "6 days ago",
+  "datePublished": "2026-05-27",
+  "jobType": [
+    "Télétravail",
+    "CDD"
+  ],
+  "companyUrl": "https://fr.indeed.com/cmp/Gmg-Sant%C3%A9",
+  "rating": {
+    "rating": 2.1,
+    "count": 9
+  },
+  "descriptionText": "Prise de poste : 28/05/2026 Diplôme de visiteur médical (VM) Paris\nNombre de postes : 5 CDD Rémunération non définie\nDescription du poste et des missions\n\nDiplôme de la Visite Médicale obligatoire\n\nGMG Santé recrute des profils Visite Médicale à Distance dans le cadre du développement de ses activités en France.\n\nDepuis plus de 20 ans, GMG Santé accompagne les laboratoires pharmaceutiques grâce à des solutions innovantes et sur mesure dans les domaines de la promotion médicale, de la relation patients/professionnels de santé, de la pharmacovigilance, de l’information médicale et des services hospitaliers.\n\nPrésent en France, Espagne et Portugal, notre groupe compte aujourd’hui plus de 200 collaborateurs engagés dans une dynamique humaine, innovante et tournée vers l’excellence.\n\nVos missions\n\nAu sein de nos équipes dédiées à la relation professionnels de santé, vous aurez pour missions :\n\nRéaliser des visites médicales à distance auprès des professionnels de santé\n\nPrésenter et promouvoir les produits et services de nos laboratoires partenaires\n\nDévelopper une relation de confiance avec les interlocuteurs santé\n\nAssurer le suivi des échanges et la remontée d’informations terrain\n\nParticiper activement aux campagnes de communication et d’information médicale\n\nAtteindre les objectifs qualitatifs et quantitatifs définis\n\nProfil recherché\n\nDiplôme de la Visite Médicale indispensable\n\nExcellente aisance relationnelle et téléphonique\n\nBonne capacité d’écoute et de communication\n\nAutonomie, rigueur et sens de l’organisation\n\nMaîtrise des outils informatiques et du travail à distance\n\nUne expérience en visite médicale ou en relation client santé est appréciée\n\nCe que nous proposons\n\n100% télétravail\n\nFormation et accompagnement dès l’intégration\n\nParcours d’évolution structuré vers la Visite Médicale à Distance\n\nCDI à la clé après période d’intégration\n\nEnvironnement de travail dynamique et bienveillant\n\nHoraires fixes du lundi au vendredi : 9h30 – 18h30\n\nTemps plein\n\nSalaire à définir selon expériencel + évolution possible selon profil et performance\n\nPourquoi rejoindre GMG Santé ?\n\nGMG Santé est aujourd’hui :\n\nLeader de la visite médicale à distance\n\nExpert en accompagnement patient\n\nActeur majeur des services hospitaliers et de la formation santé\n\nStructure innovante intégrant l’intelligence artificielle dans les services de santé\n\nRéférence en pharmacovigilance et information médicale externalisée\n\nLieu du poste : 100% Télétravail",
+  "descriptionHtml": "<div><div>Prise de poste : 28/05/2026 Dipl&ocirc;me de visiteur m&eacute;dical (VM) Paris\n</div><div>Nombre de postes : 5 CDD R&eacute;mun&eacute;ration non d&eacute;finie</div></div>\n<br><div><div><h2 class=\"jobSectionHeader\"><b>Description du poste et des missions</b></h2>\n<p><b>Dipl&ocirc;me de la Visite M&eacute;dicale obligatoire</b></p><p><br>\nGMG Sant&eacute; recrute des profils Visite M&eacute;dicale &agrave; Distance dans le cadre du d&eacute;veloppement de ses activit&eacute;s en France.</p><p><br>\nDepuis plus de 20 ans, GMG Sant&eacute; accompagne les laboratoires pharmaceutiques gr&acirc;ce &agrave; des solutions innovantes et sur mesure dans les domaines de la promotion m&eacute;dicale, de la relation patients/professionnels de sant&eacute;, de la pharmacovigilance, de l&rsquo;information m&eacute;dicale et des services hospitaliers.</p><p><br>\nPr&eacute;sent en France, Espagne et Portugal, notre groupe compte aujourd&rsquo;hui plus de 200 collaborateurs engag&eacute;s dans une dynamique humaine, innovante et tourn&eacute;e vers l&rsquo;excellence.</p><p><b><br>\nVos missions</b></p><p><br>\nAu sein de nos &eacute;quipes d&eacute;di&eacute;es &agrave; la relation professionnels de sant&eacute;, vous aurez pour missions :</p><br>\n<ul>\n<li>R&eacute;aliser des visites m&eacute;dicales &agrave; distance aupr&egrave;s des professionnels de sant&eacute;</li><br>\n<li>Pr&eacute;senter et promouvoir les produits et services de nos laboratoires partenaires</li><br>\n<li>D&eacute;velopper une relation de confiance avec les interlocuteurs sant&eacute;</li><br>\n<li>Assurer le suivi des &eacute;changes et la remont&eacute;e d&rsquo;informations terrain</li><br>\n<li>Participer activement aux campagnes de communication et d&rsquo;information m&eacute;dicale</li><br>\n<li>Atteindre les objectifs qualitatifs et quantitatifs d&eacute;finis</li></ul><br>\n<p><b>\nProfil recherch&eacute;</b></p><br>\n<ul>\n<li>Dipl&ocirc;me de la Visite M&eacute;dicale indispensable</li><br>\n<li>Excellente aisance relationnelle et t&eacute;l&eacute;phonique</li><br>\n<li>Bonne capacit&eacute; d&rsquo;&eacute;coute et de communication</li><br>\n<li>Autonomie, rigueur et sens de l&rsquo;organisation</li><br>\n<li>Ma&icirc;trise des outils informatiques et du travail &agrave; distance</li><br>\n<li>Une exp&eacute;rience en visite m&eacute;dicale ou en relation client sant&eacute; est appr&eacute;ci&eacute;e</li></ul><br>\n<p><b>\nCe que nous proposons</b></p><br>\n<ul>\n<li>100% t&eacute;l&eacute;travail</li><br>\n<li>Formation et accompagnement d&egrave;s l&rsquo;int&eacute;gration</li><br>\n<li>Parcours d&rsquo;&eacute;volution structur&eacute; vers la Visite M&eacute;dicale &agrave; Distance</li><br>\n<li>CDI &agrave; la cl&eacute; apr&egrave;s p&eacute;riode d&rsquo;int&eacute;gration</li><br>\n<li>Environnement de travail dynamique et bienveillant</li><br>\n<li>Horaires fixes du lundi au vendredi : 9h30 &ndash; 18h30</li><br>\n<li>Temps plein</li><br>\n<li>Salaire &agrave; d&eacute;finir selon exp&eacute;riencel + &eacute;volution possible selon profil et performance</li></ul><br>\n<p>\nPourquoi rejoindre GMG Sant&eacute; ?</p><p><br>\nGMG Sant&eacute; est aujourd&rsquo;hui :</p><br>\n<ul>\n<li>Leader de la visite m&eacute;dicale &agrave; distance</li><br>\n<li>Expert en accompagnement patient</li><br>\n<li>Acteur majeur des services hospitaliers et de la formation sant&eacute;</li><br>\n<li>Structure innovante int&eacute;grant l&rsquo;intelligence artificielle dans les services de sant&eacute;</li><br>\n<li>R&eacute;f&eacute;rence en pharmacovigilance et information m&eacute;dicale externalis&eacute;e</li></ul><br>\n<p>\nLieu du poste : 100% T&eacute;l&eacute;travail</p></div></div>",
+  "benefits": [
+    "Possibilité de CDI à la clé"
+  ],
+  "occupation": [
+    "Commerciaux/les",
+    "Délégués/es médicaux/les",
+    "Métiers de la vente et du développement commercial",
+    "Métiers de la vente, du commerce et du service client"
+  ],
+  "attributes": [
+    "Possibilité de CDI à la clé",
+    "Service client",
+    "Télétravail",
+    "Sens de l'organisation",
+    "Bureautique",
+    "Du lundi au vendredi",
+    "CDD",
+    "Compétences en communication"
+  ],
+  "workingSystem": [],
+  "source": "La bourse de l'Emploi des Entreprises du Médicament",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {},
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 1,
+  "jobKey": "91d64a25b1e36ed8",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=91d64a25b1e36ed8",
+  "emails": [],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [
+    "Du lundi au vendredi"
+  ],
+  "applyUrl": "https://www.emploi.leem.org/offres/87180",
+  "requirements": []
+},
+{
+  "title": "Account Manager/Cardiology Education Specialist",
+  "companyName": "Corcym",
+  "location": {
+    "city": "Paris",
+    "postalCode": null,
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "Paris (75)",
+    "formattedAddressShort": "Paris (75)",
+    "latitude": 48.85341,
+    "longitude": 2.3488,
+    "streetAddress": null,
+    "fullAddress": "Paris (75)"
+  },
+  "age": "13 days ago",
+  "datePublished": "2026-05-20",
+  "jobType": [
+    "Temps plein",
+    "Télétravail"
+  ],
+  "companyUrl": "https://fr.indeed.com/cmp/Corcym",
+  "rating": {
+    "rating": 1,
+    "count": 1
+  },
+  "descriptionText": "Join us today and take life to heart!\n\nCORCYM is a global, independent, medical device company entirely focused on state-of-the-art surgical solutions to fight structural heart disease. CORCYM has a presence in more than 100 countries with approximately 850 employees and ensures strong continuous support to patients, healthcare professionals, and healthcare systems worldwide.\n\nWho We Are:\nCorcym offers a complete portfolio of surgical solutions with a heritage spanning more than 50 years, leveraging a complete and distinctive set of technologies, capabilities and infrastructure.\n\nOur Vision:\nis to become the leading company dedicated to Heart Surgeons and their Patients by providing the best solutions to fight structural heart disease.\n\nOur Mission:\nis to help Heart Surgeons treat Patients better today and in the future.\n\nAccount Manager/Cardiology Education Specialist\n\nThe primary responsibility of this role is to deliver exceptional sales and service to end-users of Corcym's Heart Valve product line. The incumbent will be accountable for setting and meeting sales goals in terms of units sold and revenue generated across designated territories. Continuous assessment of market dynamics, reporting on market trends, and devising effective strategies for the assigned territory will also be integral to the role.\n\nThe second responsibility of this role is to promote and provide technical and clinical presentations of our products to hospital cardiologists.\n\nThe candidate should speak about our products, but also about therapies (SAVR Vs TAVR) and present the real world evidence and provide unbiased messages.\n\nAs an ideal candidate, you will have recent exposure to the clinical field and/or experience with the sales of medical devices to deliver clients quality service. You are willing to learn and work to maintain amicable relations with current clients, as well as grow accounts in the assigned territories.\n\nEssential Functions\n\nAttain sales targets for both volume and revenue, as well as pricing objectives.\nAchieve Key Performance Indicators (KPIs) aligned with corporate goals.\nContinuously assess the market landscape in assigned areas, regularly reporting market insights and trends to management.\nRegularly propose sales objectives and strategic initiatives to management, supported by written reports and recommendations.\nFormulate promotional initiatives such as symposia, seminars, and webinars to drive sales goals in designated territories.\nEnsure adherence to company compliance policies and ethical standards in all sales and marketing endeavours.\nMaintain frequent customer engagement through product education, sharing clinical evidence, and regular visits.\nUphold the company's image and visibility within assigned territories through consistent customer interactions, attendance at trade shows, and engagement with surgeons.\nManage consignment inventories in accordance with company policies.\nProvide timely submission of monthly sales reports, expense reports, account profiles, and other required documentation.\nMaintain the accuracy and integrity of the sales database through continuous updates.\nPrepare necessary reports and customer presentations as needed.\nEffectively manage territory expense budgets.\nOrganization of referral meetings.\nCreation or reinforce a network between surgeons and cardiologists.\n\nKnowledge, Skills, and Abilities:\n\nExceptional interpersonal abilities and adept at managing multiple tasks concurrently.\nProficiency in sales techniques and strategies to optimize revenue growth.\nDemonstrates professionalism in attire, communication, and customer service etiquette.\nCapable of articulating thoughts effectively and fostering professional connections.\nStrong proficiency in both written and verbal communication.\nCompetent in operating personal computers and utilizing company software.\nSkilled in using spreadsheet, graphics, word processing, and other business applications.\nFlexible availability for travel and willingness to work beyond regular hours, including being on-call.\nProficiency in the English language.\nCar driving license\n\nEducation & Experience:\n\nEssential experience includes working within the Medical Device industry, preferably with Cardiovascular-related business.\nExperience in the hospital operating theatre environment.\nProven track record of meeting or exceeding sales targets.\nUnderstanding and application of compliance topics.\nStrong history of leading and motivating teams to develop and implement commercial growth strategies in a matrix environment.\nExceptional customer focus with ability to build relationships.\nProven strategic selling skills necessary to achieve growth and sales objectives.\nOutstanding interpersonal and relationship management skills, coupled with strong leadership abilities.\nProficient in negotiation and communication, with a talent for influencing and building trust.\n3 years of experience working within the Medical Device.\nAt least scientific or commercial Bachelor’s degree and/or at least 5 years' experience in a similar position.\n\nAt Corcym, we uphold a set of Non-Negotiable behaviors that define how we work:\n\nWe never compromise on patient safety and our integrity. Patients are at the heart of everything we do.\nWe act like Founders and Owners We take ownership, we try new things, and we take results personally.\nWe always look for a better way. We do not accept “we have always done it this way” as a reason not to improve.\nWe eliminate all unnecessary complexity. Simplicity and common sense are better than unnecessary complexity and bureaucracy.\nWe focus on what matters. Concentration of energy is key to our success.\nWe enable the Surgeon of the Future (SOF). Our focus, insights, innovations, and loyalty are to the surgeons who can be the Surgeon of the Future.\nWe always aim for the highest Quality of Revenue (QOR). Our choices on accounts, actions and investments are driven by improving QOR.\nWe never let another CORCYMer fail. We are all responsible for each other’s success.",
+  "descriptionHtml": "<div><p><b>Join us today and take life to heart!</b></p><br>\n<p></p>\n<p>\nCORCYM is a global, independent, medical device company entirely focused on state-of-the-art surgical solutions to fight structural heart disease. CORCYM has a presence in more than 100 countries with approximately 850 employees and ensures strong continuous support to patients, healthcare professionals, and healthcare systems worldwide.</p><br>\n<p></p>\n<p><b>\nWho We Are:</b><br>\nCorcym offers a complete portfolio of surgical solutions with a heritage spanning more than 50 years, leveraging a complete and distinctive set of technologies, capabilities and infrastructure.</p><br>\n<p></p>\n<p><b>\nOur Vision:</b><br>\nis to become the leading company dedicated to Heart Surgeons and their Patients by providing the best solutions to fight structural heart disease.</p><br>\n<p></p>\n<p><b>\nOur Mission:</b><br>\nis to help Heart Surgeons treat Patients better today and in the future.</p><p></p><p><b><br>\nAccount Manager/Cardiology Education Specialist</b></p>\n<p>\nThe primary responsibility of this role is to deliver exceptional sales and service to end-users of Corcym's Heart Valve product line. The incumbent will be accountable for setting and meeting sales goals in terms of units sold and revenue generated across designated territories. Continuous assessment of market dynamics, reporting on market trends, and devising effective strategies for the assigned territory will also be integral to the role.</p>\n<p>\nThe second responsibility of this role is to promote and provide technical and clinical presentations of our products to hospital cardiologists.</p>\n<p>\nThe candidate should speak about our products, but also about therapies (SAVR Vs TAVR) and present the real world evidence and provide unbiased messages.</p>\n<p>\nAs an ideal candidate, you will have recent exposure to the clinical field and/or experience with the sales of medical devices to deliver clients quality service. You are willing to learn and work to maintain amicable relations with current clients, as well as grow accounts in the assigned territories.</p><p></p><p><b><br>\nEssential Functions</b></p><br>\n<p></p>\n<ul>\n<li>Attain sales targets for both volume and revenue, as well as pricing objectives.</li>\n<li>Achieve Key Performance Indicators (KPIs) aligned with corporate goals.</li>\n<li>Continuously assess the market landscape in assigned areas, regularly reporting market insights and trends to management.</li>\n<li>Regularly propose sales objectives and strategic initiatives to management, supported by written reports and recommendations.</li>\n<li>Formulate promotional initiatives such as symposia, seminars, and webinars to drive sales goals in designated territories.</li>\n<li>Ensure adherence to company compliance policies and ethical standards in all sales and marketing endeavours.</li>\n<li>Maintain frequent customer engagement through product education, sharing clinical evidence, and regular visits.</li>\n<li>Uphold the company's image and visibility within assigned territories through consistent customer interactions, attendance at trade shows, and engagement with surgeons.</li>\n<li>Manage consignment inventories in accordance with company policies.</li>\n<li>Provide timely submission of monthly sales reports, expense reports, account profiles, and other required documentation.</li>\n<li>Maintain the accuracy and integrity of the sales database through continuous updates.</li>\n<li>Prepare necessary reports and customer presentations as needed.</li>\n<li>Effectively manage territory expense budgets.</li>\n<li>Organization of referral meetings.</li>\n<li>Creation or reinforce a network between surgeons and cardiologists.</li></ul><br>\n<p></p>\n<p><b>\nKnowledge, Skills, and Abilities:</b></p><br>\n<p></p>\n<ul>\n<li>Exceptional interpersonal abilities and adept at managing multiple tasks concurrently.</li>\n<li>Proficiency in sales techniques and strategies to optimize revenue growth.</li>\n<li>Demonstrates professionalism in attire, communication, and customer service etiquette.</li>\n<li>Capable of articulating thoughts effectively and fostering professional connections.</li>\n<li>Strong proficiency in both written and verbal communication.</li>\n<li>Competent in operating personal computers and utilizing company software.</li>\n<li>Skilled in using spreadsheet, graphics, word processing, and other business applications.</li>\n<li>Flexible availability for travel and willingness to work beyond regular hours, including being on-call.</li>\n<li>Proficiency in the English language.</li>\n<li>Car driving license</li></ul><br>\n<p></p>\n<p><b>\nEducation &amp; Experience:</b></p>\n<ul>\n<li>Essential experience includes working within the Medical Device industry, preferably with Cardiovascular-related business.</li>\n<li>Experience in the hospital operating theatre environment.</li>\n<li>Proven track record of meeting or exceeding sales targets.</li>\n<li>Understanding and application of compliance topics.</li>\n<li>Strong history of leading and motivating teams to develop and implement commercial growth strategies in a matrix environment.</li>\n<li>Exceptional customer focus with ability to build relationships.</li>\n<li>Proven strategic selling skills necessary to achieve growth and sales objectives.</li>\n<li>Outstanding interpersonal and relationship management skills, coupled with strong leadership abilities.</li>\n<li>Proficient in negotiation and communication, with a talent for influencing and building trust.</li>\n<li>3 years of experience working within the Medical Device.</li>\n<li>At least scientific or commercial Bachelor&rsquo;s degree and/or at least 5 years' experience in a similar position.</li></ul><br>\n<p></p>\n<p>\nAt Corcym, we uphold a set of <b>Non-Negotiable</b> behaviors that define how we work:</p>\n<ul>\n<li><b>We never compromise on patient safety and our integrity. </b>Patients are at the heart of everything we do.</li>\n</ul><ul><li><b>We act like Founders and Owners </b>We take ownership, we try new things, and we take results personally.</li>\n</ul><ul><li><b>We always look for a better way</b><b>.</b> We do not accept &ldquo;we have always done it this way&rdquo; as a reason not to improve.</li>\n</ul><ul><li><b>We </b><b>eliminate</b><b> all unnecessary complexity</b><b>.</b> Simplicity and common sense are better than unnecessary complexity and bureaucracy.</li>\n</ul><ul><li><b>We focus on what matters</b><b>.</b> Concentration of energy is key to our success.</li>\n</ul><ul><li><b>We enable the Surgeon of the Future (SOF)</b><b>.</b> Our focus, insights, innovations, and loyalty are to the surgeons who can be the Surgeon of the Future.</li>\n</ul><ul><li><b>We always aim for the highest Quality of Revenue (QOR)</b><b>.</b> Our choices on accounts, actions and investments are driven by improving QOR.</li>\n</ul><ul><li><b>We never let another </b><b>CORCYMer</b><b> fail</b><b>.</b> We are all responsible for each other&rsquo;s success.</li></ul></div>",
+  "benefits": [],
+  "occupation": [
+    "Commerciaux/les",
+    "Délégués/es médicaux/les",
+    "Métiers de la vente et du développement commercial",
+    "Métiers de la vente, du commerce et du service client"
+  ],
+  "attributes": [
+    "Temps plein",
+    "Anglais",
+    "Télétravail",
+    "Niveau Licence",
+    "Leadership",
+    "Négociation"
+  ],
+  "workingSystem": [],
+  "source": "Corcym",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {},
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 13,
+  "jobKey": "a50f09137ae3b143",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=a50f09137ae3b143",
+  "emails": [],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [],
+  "applyUrl": "https://corcym.bamboohr.com/careers/124?source=indeed&src=indeed&postedDate=2026-05-20",
+  "requirements": []
+},
+{
+  "title": "Spécialiste Application Chromatographie LC, LC/MS/MS (H/F/X)",
+  "companyName": "PerkinElmer",
+  "location": {
+    "city": "Villepinte",
+    "postalCode": null,
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "Villepinte (93)",
+    "formattedAddressShort": "Villepinte (93)",
+    "latitude": 48.96667,
+    "longitude": 2.53333,
+    "streetAddress": null,
+    "fullAddress": "Villepinte (93)"
+  },
+  "age": "7 days ago",
+  "datePublished": "2026-05-26",
+  "jobType": [
+    "Télétravail"
+  ],
+  "companyUrl": "https://fr.indeed.com/cmp/Perkinelmer",
+  "rating": {
+    "rating": 3.6,
+    "count": 482
+  },
+  "descriptionText": "Le(a) Spécialiste Application, en tant que référent technique et scientifique pour les applications, collabore avec l’ensemble des équipes sur le terrain pour développer, promouvoir et déployer des systèmes et des outils de rang mondial.\n\nIl/elle est l’interlocuteur des équipes de Vente et de Services de la phase de prospection jusqu’à l’après-vente. Par sa connaissance technique, le(a) Spécialiste Application concourt à la croissance du chiffre d’affaires en identifiant les opportunités d’évolution des produits afin de répondre au besoin du marché avec des solutions à forte valeur ajoutée et différenciantes.\n\nPrincipales activités\n\nCréer les contenus et animer les formations auprès des équipes terrain (marketing & vente) lorsque de nouvelles caractéristiques/fonctionnalités sont disponibles sur les applications LC et LC/MS/MS.\n\nSoutenir techniquement et scientifiquement les Responsables de Comptes lors des visites clients en avant-vente.\n\nEffectuer des démonstrations de produits (LC et LC/MS/MS) pour les clients sur leurs sites ou au sein de notre centre de démonstration.\n\nSoutenir le développement commercial en créant/identifiant et coordonnant la mise en œuvre des opportunités de solutions de Try and Buy/collaborations sur des applications innovantes ou des cas critiques d'entreprise.\n\nFormer les utilisateurs clients aux solutions MatChar vendues (sur site client ou au sein du centre de démonstration).\n\nDévelopper des applications clients et mettre en œuvre les solutions Perkin Elmer LC et LC/MS/MS sur les sites des clients.\n\nAssurer la formation et le support pour les responsables de comptes d'Europe du Sud et le revendeur HTDS.\n\nCollaborer avec les Responsables Produits et Services pour identifier, communiquer et incorporer les nouvelles améliorations de produits visant à fournir aux clients des solutions compétitives différenciantes.\n\nCaractériser le marché externe en effectuant une analyse et des évaluations concurrentielles sur le territoire et les segments spécifiques de marché.\n\nIdentifier et développer une stratégie de mise en réseau avec tous les VIP/décideurs français pour tous les segments de marché auxquels nous pouvons nous adresser.\n\nParticiper à des réunions régionales et/ou nationales en présentant aux clients les solutions PerkinElmer et en aidant le service des ventes à répondre aux demandes de renseignements.\n\nParticiper aux conférences traitant des innovations et du marché et qui favorisent le développement des réseaux professionnels et des collaborations.\n\nConnaissances professionnelles spécifiques\n\nConnaissances spécialisées des technologies HPLC et LC/MS/MS\n\nExpérience sur un poste similaire en collaboration étroite avec les équipes de ventes et/ou d’assistance sur les produits LC et LC/MS/MS\n\nConnaissance des techniques, des applications et du marché des instruments MatChar déployés idéalement dans les domaines toxicologique et environnementaux par exemple\n\nNiveau intermédiaire sur la Suite MS Office – Excel impérativement\n\nCréation et animation de formation\n\nProfil recherché\n\nNiveau ou diplôme scientifique (Master, Doctorat) ou expérience équivalente dans les technologies chromatographie LC/MS/MS\n\nOrganisation\n\nRelationnel\n\nPédagogie\n\nAnglais professionnel (lu, écrit et parlé)\n\nDisponibilité pour les déplacements professionnels\n\nPourquoi nous rejoindre\n\nMutuelle d'entreprise\n\nTickets restaurant (10€ par jour travaillé 40% salarié)\n\nJRTT",
+  "descriptionHtml": "<div><p><b>Le(a) Sp&eacute;cialiste Application</b>, en tant que r&eacute;f&eacute;rent technique et scientifique pour les applications, collabore avec l&rsquo;ensemble des &eacute;quipes sur le terrain pour d&eacute;velopper, promouvoir et d&eacute;ployer des syst&egrave;mes et des outils de rang mondial.</p><p>\nIl/elle est l&rsquo;interlocuteur des &eacute;quipes de Vente et de Services <b>de la phase de prospection jusqu&rsquo;&agrave; l&rsquo;apr&egrave;s-vente</b>. Par sa connaissance technique, le(a) Sp&eacute;cialiste Application concourt &agrave; la croissance du chiffre d&rsquo;affaires en identifiant les opportunit&eacute;s d&rsquo;&eacute;volution des produits afin de r&eacute;pondre au besoin du march&eacute; avec des solutions &agrave; forte valeur ajout&eacute;e et diff&eacute;renciantes.</p><p></p><p><b>\nPrincipales activit&eacute;s</b></p><ul><li><p>\nCr&eacute;er les contenus et animer les formations aupr&egrave;s des &eacute;quipes terrain (marketing &amp; vente) lorsque de nouvelles caract&eacute;ristiques/fonctionnalit&eacute;s sont disponibles sur les applications LC et LC/MS/MS.</p></li><li><p>\nSoutenir techniquement et scientifiquement les Responsables de Comptes lors des visites clients en avant-vente.</p></li><li><p>\nEffectuer des d&eacute;monstrations de produits (LC et LC/MS/MS) pour les clients sur leurs sites ou au sein de notre centre de d&eacute;monstration.</p></li><li><p>\nSoutenir le d&eacute;veloppement commercial en cr&eacute;ant/identifiant et coordonnant la mise en &oelig;uvre des opportunit&eacute;s de solutions de Try and Buy/collaborations sur des applications innovantes ou des cas critiques d'entreprise.</p></li><li><p>\nFormer les utilisateurs clients aux solutions MatChar vendues (sur site client ou au sein du centre de d&eacute;monstration).</p></li><li><p>\nD&eacute;velopper des applications clients et mettre en &oelig;uvre les solutions Perkin Elmer LC et LC/MS/MS sur les sites des clients.</p></li><li><p>\nAssurer la formation et le support pour les responsables de comptes d'Europe du Sud et le revendeur HTDS.</p></li><li><p>\nCollaborer avec les Responsables Produits et Services pour identifier, communiquer et incorporer les nouvelles am&eacute;liorations de produits visant &agrave; fournir aux clients des solutions comp&eacute;titives diff&eacute;renciantes.</p></li><li><p>\nCaract&eacute;riser le march&eacute; externe en effectuant une analyse et des &eacute;valuations concurrentielles sur le territoire et les segments sp&eacute;cifiques de march&eacute;.</p></li><li><p>\nIdentifier et d&eacute;velopper une strat&eacute;gie de mise en r&eacute;seau avec tous les VIP/d&eacute;cideurs fran&ccedil;ais pour tous les segments de march&eacute; auxquels nous pouvons nous adresser.</p></li><li><p>\nParticiper &agrave; des r&eacute;unions r&eacute;gionales et/ou nationales en pr&eacute;sentant aux clients les solutions PerkinElmer et en aidant le service des ventes &agrave; r&eacute;pondre aux demandes de renseignements.</p></li><li><p>\nParticiper aux conf&eacute;rences traitant des innovations et du march&eacute; et qui favorisent le d&eacute;veloppement des r&eacute;seaux professionnels et des collaborations.</p></li></ul><p></p><p><b>\nConnaissances professionnelles sp&eacute;cifiques</b></p><ul><li><p>\nConnaissances sp&eacute;cialis&eacute;es des technologies HPLC et LC/MS/MS</p></li><li><p>\nExp&eacute;rience sur un poste similaire en collaboration &eacute;troite avec les &eacute;quipes de ventes et/ou d&rsquo;assistance sur les produits LC et LC/MS/MS</p></li><li><p>\nConnaissance des techniques, des applications et du march&eacute; des instruments MatChar d&eacute;ploy&eacute;s id&eacute;alement dans les domaines toxicologique et environnementaux par exemple</p></li><li><p>\nNiveau interm&eacute;diaire sur la Suite MS Office &ndash; Excel imp&eacute;rativement</p></li><li><p>\nCr&eacute;ation et animation de formation</p></li></ul><p></p><p><b>\nProfil recherch&eacute;</b></p><ul><li><p>\nNiveau ou dipl&ocirc;me scientifique (Master, Doctorat) ou exp&eacute;rience &eacute;quivalente dans les technologies chromatographie LC/MS/MS</p></li><li><p>\nOrganisation</p></li><li><p>\nRelationnel</p></li><li><p>\nP&eacute;dagogie</p></li><li><p>\nAnglais professionnel (lu, &eacute;crit et parl&eacute;)</p></li><li><p>\nDisponibilit&eacute; pour les d&eacute;placements professionnels</p></li></ul><p></p><p><b>\nPourquoi nous rejoindre</b></p><ul><li><p>\nMutuelle d'entreprise</p></li><li><p>\nTickets restaurant (10&euro; par jour travaill&eacute; 40% salari&eacute;)</p></li><li><p>\nJRTT</p></li></ul></div><p></p>",
+  "benefits": [
+    "Titre restaurant"
+  ],
+  "occupation": [
+    "Commerciaux/les",
+    "Métiers de la vente et du développement commercial",
+    "Métiers de la vente, du commerce et du service client",
+    "Technico-commerciaux/les"
+  ],
+  "attributes": [
+    "Français",
+    "Niveau Doctorat",
+    "Marketing",
+    "Anglais",
+    "Télétravail",
+    "Microsoft Office",
+    "Titre restaurant",
+    "Master",
+    "Chromatographie"
+  ],
+  "workingSystem": [],
+  "source": "PerkinElmer",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {},
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 9,
+  "jobKey": "acaf5d3b3fbc249a",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=acaf5d3b3fbc249a",
+  "emails": [],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [],
+  "applyUrl": "https://jobs.perkinelmer.com/job/-/-/43930/95544845808",
+  "requirements": []
+},
+{
+  "title": "Business Developer, Paris & IdF region (M/W)",
+  "companyName": "Coalition - France",
+  "location": {
+    "city": "Paris",
+    "postalCode": null,
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "Paris (75)",
+    "formattedAddressShort": "Paris (75)",
+    "latitude": 48.85341,
+    "longitude": 2.3488,
+    "streetAddress": null,
+    "fullAddress": "Paris (75)"
+  },
+  "age": "6 days ago",
+  "datePublished": "2026-05-27",
+  "jobType": [
+    "CDI",
+    "Temps plein",
+    "Télétravail"
+  ],
+  "companyUrl": "https://fr.indeed.com/cmp/Coalition---France",
+  "rating": {
+    "rating": 0,
+    "count": 0
+  },
+  "descriptionText": "Qui sommes-nous ?\n\nCoalition est le premier fournisseur d'Assurance Active au monde, ayant été créé pour aider à prévenir les cyber risques avant qu'ils ne surviennent. Fondée en 2017, Coalition combine une couverture d'assurance intégrale avec des outils de cybersécurité innovants pour aider les entreprises à gérer et limiter les cyberattaques potentielles.\n\nUn esprit audacieux trouvera chez Coalition des opportunités quotidiennes d'avoir un impact réel.\n\nAbout the role\n\nAs a Business Developer at Coalition, you will join a fast growing team and share the efforts to create and maintain relationships with our insurance brokerage partners and customers. We are looking for an insurance sales professional to actively contribute to the development of our customer base and empower the success of our partners: the ideal candidate will help to align Coalition's best ideas, innovations, and capabilities with a broker's business goals.\n\nReporting directly to our Business Development Director for France, you will not only drive sales but also be an early member of Coalition's quickly expanding team of EU business development professionals, collaborating together to achieve strategic sales objectives in the cyber insurance French market. The position will prioritize business development within the perimeter of the Paris region and Ile-de-France, but will not be limited to it.\n\nCoalition fosters innovation all the way into its approach to work, through a culture of genuine collaboration, positive intent and empathetic direct feedback, to ensure that people who join our teams have the resources and environment needed to focus on growth, high standards, and an ownership mentality driven by the company's long-term mission.\n\nThe role is based in Paris / the parisian region but is fully remote within that territory.\n\nVoir ce poste en français\n\nResponsibilities\nDrive the development of new broker relationships from inbound leads and strategic outreach.\nContribute to the sales strategy and help identify target brokers and clients for new outbound campaigns.\nActively participate in achieving target quotas, qualified opportunities, sales pipeline value, and closed business.\nReport on sales activities and results, to contribute to the BD tracking system and ensure accurate forecasting.\nSupport the BD Director on post-sales activities for Coalition's broker partners (mid to large level brokers) and contribute to strategic relationship management.\nShare ownership of overall broker satisfaction with Coalition's services, enhancing the customer experience.\nCultivate a deep understanding of our solutions (insurance and technology) to effectively address broker needs, and share it with future team members.\nIdentify and proactively resolve risks impacting brokers' business goals.\nAssist in the monitoring and analysis efforts of performance trends in Coalition adoption and utilization, providing strategic guidance as part of brokers' Success Reviews.\nSkills and Qualifications\nSelf-motivated, entrepreneurial spirit with a commercial instinct.\nMinimum 5 years of experience in cyber insurance, with demonstrated ability in sales management.\nEstablished broker relationships in the Paris & Ile-de-France area.\nExcellent interpersonal communication skills (verbal & written).\nCapacity to quickly learn and relay technical concepts and terms.\nAbility to thrive in a fast-paced, multicultural, dynamic, virtual environment.\nProven ability to manage multiple tasks/projects simultaneously and drive team success.\nFluent in French, proficient in English.\nBonus Points\nExperience within other Financial Lines of insurance\nEstablished relationships with additional European broker partners.\nBenefits\nCDI contract (full time employment contract in France)\nPosition based in Paris area or Ile-de-France, in full remote work\nAnnual home office stipend + access to coworking spaces\n25 paid holidays + RTT days\nPrivate Medical Coverage (Mutuelle et complémentaire santé) covered by employer at 70% for medical, dental, and vision coverage, including out-patient treatment\nLife & Disability Insurance (Prévoyance) + Statutory pension\nMental & physical health wellness programs\nCompetitive compensation and opportunity for advancementv\n\nPourquoi Coalition ?\n\nTravailler chez Coalition, c'est partager notre mission commune : Protéger les Non Protégés. Nous avons construit une culture hautement inclusive, accueillant des personnes d'horizons divers, et fondée sur le télétravail généralisé. Au sein de nos équipes, nous nous faisons mutuellement confiance pour assumer nos responsabilités, partager nos apports dans les résultats et travailler ensemble pour protéger les entreprises contre les cyber risques. La croissance exceptionnelle de Coalition provient de sa capacité à résoudre des problèmes réels pour des organisations de toutes tailles, tout en restant fidèle à nos valeurs fondatrices que sont le caractère, l'humilité, la responsabilité, la détermination, l'authenticité et l'inclusion.\n\nNous sommes toujours à la recherche de personnes collaboratives et curieuses pour rejoindre #NotreCoalition.\n\nVisitez notre espace média >\n\nAvis de confidentialité\n\nCoalition s'engage à protéger votre vie privée et à traiter vos informations personnelles de manière responsable. Nous collectons, utilisons et conservons les informations personnelles nécessaires au processus de recrutement et conformément aux lois et réglementations locales applicables en matière de confidentialité, dans toutes les régions où nous exerçons nos activités.\n\nNous souhaitons que vous compreniez quelles informations personnelles nous collectons, comment nous les utilisons et quels sont vos droits concernant l'accès, la rectification et la suppression de vos données, le cas échéant. Les informations soumises, collectées et traitées dans le cadre de votre candidature sont soumises à la politique de confidentialité de la Coalition. Pour plus de détails, nous vous invitons à consulter notre politique de confidentialité complète, ou à nous contacter pour toute question concernant la façon dont vos informations sont traitées.\n\nNotre politique de confidentialité >\n\nAvis contre la discrimination\nCoalition est fier d'être un employeur garantissant l'égalité des chances. Notre politique est d'offrir des opportunités d'emploi égales à tous les individus, sans discrimination ni harcèlement sur la base de toute caractéristique protégée par les lois applicables dans chaque pays où nous exerçons nos activités. Cet engagement comprend, sans toutefois s'y limiter, la garantie de l'égalité de traitement en matière de recrutement, de sélection, de formation, de promotion, de transfert, de rémunération et de tous les autres aspects de l'emploi. Coalition ne tolère aucune forme de discrimination ou de harcèlement, et nous nous engageons à favoriser un environnement de travail inclusif et solidaire.\n\nAménagements raisonnables\nAménagements raisonnables Coalition s'engage à fournir des aménagements raisonnables aux personnes en situations de handicap qualifiées, y compris les candidats et les employés, conformément aux lois et réglementations applicables dans chaque pays où nous exerçons nos activités. Notre politique consiste à soutenir l'égalité des chances dans le processus d'embauche en considérant les candidats qualifiés indépendamment de leur handicap ou d'autres caractéristiques protégées, à moins que des aménagements n'imposent une contrainte excessive ou des besoins disproportionnés. Si vous avez besoin d'aménagements pour remplir une candidature, effectuer un entretien, compléter un test préalable à l'emploi ou participer au processus de sélection, veuillez nous contacter à candidataccommodations@coalitioninc.com.\n\nNous prenons également en compte tous.tes les candidat.e.s qualifié.e.s, y compris celles et ceux ayant des antécédents criminels, conformément aux lois et réglementations applicables dans chaque juridiction.\n\nÀ toutes les agences de recrutement : Coalition n'accepte pas les CV non sollicités des agences. Veuillez ne pas envoyer de CV à notre alias e-mail, aux employés ou à d'autres emplacements physiques ou virtuels de l'organisation. Coalition n'est pas responsable des frais liés aux CV non sollicités.",
+  "descriptionHtml": "<div><div><p><b>Qui sommes-nous ?</b></p>\n<p>\nCoalition est le premier fournisseur d'Assurance Active au monde, ayant &eacute;t&eacute; cr&eacute;&eacute; pour aider &agrave; pr&eacute;venir les cyber risques avant qu'ils ne surviennent. Fond&eacute;e en 2017, Coalition combine une couverture d'assurance int&eacute;grale avec des outils de cybers&eacute;curit&eacute; innovants pour aider les entreprises &agrave; g&eacute;rer et limiter les cyberattaques potentielles.</p>\n<p>\nUn esprit audacieux trouvera chez Coalition des opportunit&eacute;s quotidiennes d'avoir un impact r&eacute;el.</p></div><p></p><h4 class=\"jobSectionHeader\"><b><br>\nAbout the role</b></h4>\n<div>\n<p>As a Business Developer at Coalition, you will join a fast growing team and share the efforts to create and maintain relationships with our insurance brokerage partners and customers. We are looking for an insurance sales professional to actively contribute to the development of our customer base and empower the success of our partners: the ideal candidate will help to align Coalition's best ideas, innovations, and capabilities with a broker's business goals.</p>\n<p>\nReporting directly to our Business Development Director for France, you will not only drive sales but also be an early member of Coalition's quickly expanding team of EU business development professionals, collaborating together to achieve strategic sales objectives in the cyber insurance French market. The position will prioritize business development within the perimeter of the Paris region and Ile-de-France, but will not be limited to it.\n</p><p>Coalition fosters innovation all the way into its approach to work, through a culture of genuine collaboration, positive intent and empathetic direct feedback, to ensure that people who join our teams have the resources and environment needed to focus on growth, high standards, and an ownership mentality driven by the company's long-term mission.</p>\n<p><i>\nThe role is based in Paris / the parisian region but is fully remote within that territory.</i></p>\n<p><b>\nVoir ce poste en </b><b>fran&ccedil;ais</b></p>\n</div>\n<h4 class=\"jobSectionHeader\"><b>Responsibilities</b></h4>\n<ul><li>Drive the development of new broker relationships from inbound leads and strategic outreach.</li>\n<li>Contribute to the sales strategy and help identify target brokers and clients for new outbound campaigns.</li>\n<li>Actively participate in achieving target quotas, qualified opportunities, sales pipeline value, and closed business.</li>\n<li>Report on sales activities and results, to contribute to the BD tracking system and ensure accurate forecasting.</li>\n<li>Support the BD Director on post-sales activities for Coalition's broker partners (mid to large level brokers) and contribute to strategic relationship management.</li>\n<li>Share ownership of overall broker satisfaction with Coalition's services, enhancing the customer experience.</li>\n<li>Cultivate a deep understanding of our solutions (insurance and technology) to effectively address broker needs, and share it with future team members.</li>\n<li>Identify and proactively resolve risks impacting brokers' business goals.</li>\n<li>Assist in the monitoring and analysis efforts of performance trends in Coalition adoption and utilization, providing strategic guidance as part of brokers' Success Reviews.</li>\n</ul><h4 class=\"jobSectionHeader\"><b>Skills and Qualifications</b></h4>\n<ul><li>Self-motivated, entrepreneurial spirit with a commercial instinct.</li>\n<li>Minimum 5 years of experience in cyber insurance, with demonstrated ability in sales management.</li>\n<li>Established broker relationships in the Paris &amp; Ile-de-France area.</li>\n<li>Excellent interpersonal communication skills (verbal &amp; written).</li>\n<li>Capacity to quickly learn and relay technical concepts and terms.</li>\n<li>Ability to thrive in a fast-paced, multicultural, dynamic, virtual environment.</li>\n<li>Proven ability to manage multiple tasks/projects simultaneously and drive team success.</li>\n<li>Fluent in French, proficient in English.</li>\n</ul><h4 class=\"jobSectionHeader\"><b>Bonus Points</b></h4>\n<ul><li>Experience within other Financial Lines of insurance</li>\n<li>Established relationships with additional European broker partners.</li>\n</ul><h4 class=\"jobSectionHeader\"><b>Benefits</b></h4>\n<ul><li><i>CDI </i>contract (full time employment contract in France)</li>\n<li>Position based in Paris area or Ile-de-France, in full remote work</li>\n<li>Annual home office stipend + access to coworking spaces</li>\n<li>25 paid holidays + RTT days</li>\n<li>Private Medical Coverage (<i>Mutuelle et compl&eacute;mentaire sant&eacute;</i>) covered by employer at 70% for medical, dental, and vision coverage, including out-patient treatment</li>\n<li>Life &amp; Disability Insurance (<i>Pr&eacute;voyance</i>) + Statutory pension</li>\n<li>Mental &amp; physical health wellness programs</li>\n<li>Competitive compensation and opportunity for advancementv</li></ul><p></p><div><br>\n<p><b>\nPourquoi Coalition ?</b></p>\n<p>\nTravailler chez Coalition, c'est partager notre mission commune : Prot&eacute;ger les Non Prot&eacute;g&eacute;s. Nous avons construit une culture hautement inclusive, accueillant des personnes d'horizons divers, et fond&eacute;e sur le t&eacute;l&eacute;travail g&eacute;n&eacute;ralis&eacute;. Au sein de nos &eacute;quipes, nous nous faisons mutuellement confiance pour assumer nos responsabilit&eacute;s, partager nos apports dans les r&eacute;sultats et travailler ensemble pour prot&eacute;ger les entreprises contre les cyber risques. La croissance exceptionnelle de Coalition provient de sa capacit&eacute; &agrave; r&eacute;soudre des probl&egrave;mes r&eacute;els pour des organisations de toutes tailles, tout en restant fid&egrave;le &agrave; nos valeurs fondatrices que sont le caract&egrave;re, l'humilit&eacute;, la responsabilit&eacute;, la d&eacute;termination, l'authenticit&eacute; et l'inclusion.</p>\n<p>\nNous sommes toujours &agrave; la recherche de personnes collaboratives et curieuses pour rejoindre #NotreCoalition.</p>\n<p>\nVisitez notre espace m&eacute;dia &gt;</p><br>\n<p></p>\n<p><b>\nAvis de confidentialit&eacute;</b></p>\n<p>\nCoalition s'engage &agrave; prot&eacute;ger votre vie priv&eacute;e et &agrave; traiter vos informations personnelles de mani&egrave;re responsable. Nous collectons, utilisons et conservons les informations personnelles n&eacute;cessaires au processus de recrutement et conform&eacute;ment aux lois et r&eacute;glementations locales applicables en mati&egrave;re de confidentialit&eacute;, dans toutes les r&eacute;gions o&ugrave; nous exer&ccedil;ons nos activit&eacute;s.</p>\n<p>\nNous souhaitons que vous compreniez quelles informations personnelles nous collectons, comment nous les utilisons et quels sont vos droits concernant l'acc&egrave;s, la rectification et la suppression de vos donn&eacute;es, le cas &eacute;ch&eacute;ant. Les informations soumises, collect&eacute;es et trait&eacute;es dans le cadre de votre candidature sont soumises &agrave; la politique de confidentialit&eacute; de la Coalition. Pour plus de d&eacute;tails, nous vous invitons &agrave; consulter notre politique de confidentialit&eacute; compl&egrave;te, ou &agrave; nous contacter pour toute question concernant la fa&ccedil;on dont vos informations sont trait&eacute;es.</p>\n<p>\nNotre politique de confidentialit&eacute; &gt;</p><br>\n<p></p>\n<p><b>\nAvis contre la discrimination</b><br>\nCoalition est fier d'&ecirc;tre un employeur garantissant l'&eacute;galit&eacute; des chances. Notre politique est d'offrir des opportunit&eacute;s d'emploi &eacute;gales &agrave; tous les individus, sans discrimination ni harc&egrave;lement sur la base de toute caract&eacute;ristique prot&eacute;g&eacute;e par les lois applicables dans chaque pays o&ugrave; nous exer&ccedil;ons nos activit&eacute;s. Cet engagement comprend, sans toutefois s'y limiter, la garantie de l'&eacute;galit&eacute; de traitement en mati&egrave;re de recrutement, de s&eacute;lection, de formation, de promotion, de transfert, de r&eacute;mun&eacute;ration et de tous les autres aspects de l'emploi. Coalition ne tol&egrave;re aucune forme de discrimination ou de harc&egrave;lement, et nous nous engageons &agrave; favoriser un environnement de travail inclusif et solidaire.</p><br>\n<p></p>\n<p><b>\nAm&eacute;nagements raisonnables</b><br>\nAm&eacute;nagements raisonnables Coalition s'engage &agrave; fournir des am&eacute;nagements raisonnables aux personnes en situations de handicap qualifi&eacute;es, y compris les candidats et les employ&eacute;s, conform&eacute;ment aux lois et r&eacute;glementations applicables dans chaque pays o&ugrave; nous exer&ccedil;ons nos activit&eacute;s. Notre politique consiste &agrave; soutenir l'&eacute;galit&eacute; des chances dans le processus d'embauche en consid&eacute;rant les candidats qualifi&eacute;s ind&eacute;pendamment de leur handicap ou d'autres caract&eacute;ristiques prot&eacute;g&eacute;es, &agrave; moins que des am&eacute;nagements n'imposent une contrainte excessive ou des besoins disproportionn&eacute;s. Si vous avez besoin d'am&eacute;nagements pour remplir une candidature, effectuer un entretien, compl&eacute;ter un test pr&eacute;alable &agrave; l'emploi ou participer au processus de s&eacute;lection, veuillez nous contacter &agrave; candidataccommodations@coalitioninc.com.</p>\n<p>\nNous prenons &eacute;galement en compte tous.tes les candidat.e.s qualifi&eacute;.e.s, y compris celles et ceux ayant des ant&eacute;c&eacute;dents criminels, conform&eacute;ment aux lois et r&eacute;glementations applicables dans chaque juridiction.</p><br>\n<p></p>\n<p><b>\n&Agrave; toutes les agences de recrutement :</b> Coalition n'accepte pas les CV non sollicit&eacute;s des agences. Veuillez ne pas envoyer de CV &agrave; notre alias e-mail, aux employ&eacute;s ou &agrave; d'autres emplacements physiques ou virtuels de l'organisation. Coalition n'est pas responsable des frais li&eacute;s aux CV non sollicit&eacute;s.</p></div></div>",
+  "benefits": [
+    "RTT"
+  ],
+  "occupation": [
+    "Commerciaux/les",
+    "Métiers de la vente et du développement commercial",
+    "Métiers de la vente, du commerce et du service client",
+    "Commerciaux/les en assurances"
+  ],
+  "attributes": [
+    "Français",
+    "CDI",
+    "Temps plein",
+    "Anglais",
+    "Télétravail",
+    "RTT"
+  ],
+  "workingSystem": [],
+  "source": "Coalition - France",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {},
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 4,
+  "jobKey": "45a68203de2c16e4",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=45a68203de2c16e4",
+  "emails": [
+    "candidataccommodations@coalitioninc.com"
+  ],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [],
+  "applyUrl": "https://grnh.se/akn8r7lq5us",
+  "requirements": []
+},
+{
+  "title": "V.I.E Consultant(e) en Stratégie de Catégorie Non-Alimentaire & Intégration Commerciale (F/H) - Brésil",
+  "companyLogoUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/de58c46adeb4ec220268b7f468f4fb44",
+  "companyName": "Carrefour",
+  "location": {
+    "city": "Massy",
+    "postalCode": "91300",
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "91300 Massy",
+    "formattedAddressShort": "Massy (91)",
+    "latitude": 48.7333,
+    "longitude": 2.2833,
+    "streetAddress": "93 AVE DE PARIS",
+    "fullAddress": "91300 Massy"
+  },
+  "age": "14 days ago",
+  "datePublished": "2026-05-20",
+  "jobType": [
+    "Contrat renouvelable",
+    "Temps plein",
+    "Télétravail",
+    "VIE"
+  ],
+  "companyHeaderUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_headerimage/1960x400/d8c11f80d90c7a02058f15b9291b7d46",
+  "companyUrl": "https://fr.indeed.com/cmp/Carrefour",
+  "rating": {
+    "rating": 3.8,
+    "count": 29793
+  },
+  "descriptionText": "A propos de l'offre ::\n\nV.I.E Consultant(e) en Stratégie de Catégorie Non-Alimentaire & Intégration Commerciale (F/H) - Brésil\n\nDate : Septembre 2026\n\nPays : São Paulo, Brésil\n\n ️Durée : 12 mois renouvelables (24 mois au total)\n\nParticiper à l’aventure d’un groupe en pleine transformation, ça te tente ?\n\nCréateur de l’hypermarché, deuxième distributeur mondial et premier en Europe, Carrefour reste fidèle à ses racines mais se réinvente pour permettre à chacun, chaque jour, de manger mieux : plus sain, plus local, plus responsable.\n\nNos atouts pour y parvenir ? Un réseau multiformat de magasins, la création de services et d'une offre digitale de référence, une coopération renforcée avec les acteurs du monde agricole, de la chaîne alimentaire, de la Tech… et des collaborateurs passionnés, qui s’engagent, challengent leur métier et grandissent ensemble pour réussir la transition alimentaire pour tous !\n\nLe groupe Carrefour est également engagé dans une ambitieuse transformation pour devenir une Digital Retail Company, qui place le digital et la data au cœur de toutes ses opérations et de son modèle de création de valeur.\n\nConçu pour développer nos futurs leaders à l’international, le V.I.E Program Talent Carrefour permet d’accéder à des missions à forte valeur ajoutée pour accompagner ton développement et accélérer la transformation de Carrefour. Nous recherchons des candidat(e)s ayant une réelle motivation et un goût prononcé pour le challenge et l’innovation !\n\nTA FILIALE :\n\nDepuis 50 ans, Carrefour Brésil est un pionnier de la distribution sur le marché brésilien, avec une présence quotidienne dans la vie de millions de consommateurs grâce à son vaste réseau et le défi d'améliorer la qualité des aliments à un prix accessible pour des milliers de foyers brésiliens.\n\nCarrefour est le premier distributeur alimentaire au Brésil, présent dans plus de 150 villes des 26 États brésiliens et dans le district fédéral. Notre réseau s'appuie sur la force de nos marques Atacadão (plus de 400 magasins), Carrefour et Sam's Club. Ces marques sont parmi les plus reconnues dans le secteur de la vente en gros et des hypermarchés au Brésil. Pour soutenir cette présence unique, nous opérons un réseau logistique puissant composé de plus de 40 centres de distribution stratégiquement répartis, garantissant l'approvisionnement de plus de 900 points de vente.\n\nIl y a cinq formats de magasins au Brésil :\n\nCash & carry et commerce de gros (tous deux sous la marque Atacadão)\nHypermarchés (sous la marque Carrefour, dont des pharmacies et stations essence)\nSupermarchés (sous les marques Carrefour Bairro et Carrefour Market)\nMagasins de proximité (sous la marque Carrefour Express)\n\nTON ENVIRONNEMENT DE TRAVAIL :\n\nBien que Carrefour soit leader du commerce alimentaire, le secteur Non-Alimentaire constitue un levier clé de rentabilité et de fidélisation client. Dans le cadre du plan de transformation 2027–2029, Carrefour Brésil ambitionne de réinventer son offre Non-Alimentaire au sein d’un marché hautement digitalisé et sensible aux prix.\n\nTu travailleras avec les équipes internes en collaborant de manière transversale avec les acheteurs, la Supply Chain (gestion des imports), le Marketing (catalogues et promotions digitales) et les équipes E-commerce (intégration omnicanale).\n\nTu auras un contact direct avec l'équipe Internationale Non-Alimentaire du Groupe (située en France) pour assurer l'alignement sur les stratégies de marques de distributeur (MDD) mondiales.\n\nTu seras également en relation avec des parties prenantes externes : les fabricants locaux, les agents d'importation et les agences de tendances.\n\nTES MISSIONS :\n\nTu seras un acteur clé de la transformation dans un contexte de refonte des hypermarchés et d’émergence des nouvelles tendances de consommation du secteur Non-Alimentaire.\n\nEn tant que consultant en stratégie Non-Alimentaire, voici tes missions :\n\nIntégration Organisationnelle : piloter le processus d'intégration et de synergie des équipes commerciales Non-Alimentaires à travers les différentes enseignes (Atacadão, Carrefour, Sam’s Club).\nStratégie catégorielle 2027-2029 : définir la feuille de route stratégique pour les catégories majeures (électronique, maison, textile) en alignant l'assortiment sur les futures tendances de consommation et la compétitivité omnicanale.\nSourcing Mondial & Marques Propres : coordonner les échanges avec les bureaux de Sourcing Internationaux (France/Hong Kong) afin de maximiser l’intégration des marques propres (MDD) et d'optimiser les marges grâce à l'efficience logistique et fiscale.\nInnovation Financière & Commerciale : collaborer avec Banco Carrefour pour intégrer des solutions de financement et de paiement dans l'offre produit, ce qui constitue un levier de croissance majeur sur le marché brésilien.\n\nL’objectif est d’accroître significativement notre part de marché du non-alimentaire par rapport aux concurrents clés d'ici 2029.\n\nTON PROFIL :\n\nDe formation supérieure bac+5 (M2), tu es diplômé(e) d’une école de commerce, d’ingénieur ou d’une université avec une spécialisation en marketing.\n\nTu as une première expérience en category management, achats ou merchandising retail.\n\nTu disposes d’une forte capacité d’analyse (aptitude à gérer de larges bases de données et des rapports de ventes). Tu es à la pointe des tendances de consommation.\n\nQualités recherchées :\n\nEsprit commercial : trouver les meilleurs produits aux meilleurs prix.\nNégociation : être capable d’influencer les fournisseurs et les parties prenantes internes.\nRésolution de problèmes : trouver des alternatives locales lorsque tu fais face à des obstacles.\nAgilité culturelle : disposer d’une compréhension fine des spécificités du consommateur brésilien par rapport au modèle européen.\n\nLangues :\n\nAnglais : niveau courant requis (pour la coordination des achats internationaux)\n\nPortugais et Espagnol : notions requises\n\nAVANTAGES DU VIE TALENT PROGRAM CARREFOUR :\n\nNous rejoindre, c’est bénéficier d’un accompagnement signature :\n\nPrise en charge du voyage A/R et aide au logement.\nCours de langue en portugais (40h) pour t’accompagner lors de tes premiers pas.\nProgramme de formation sur mesure pour développer tes soft et hard skills.\nUn suivi individuel, par le Groupe et le Brésil, avec un accompagnement carrière en fin de mission.",
+  "descriptionHtml": "<div>A propos de l'offre ::\n<div><b>\nV.I.E Consultant(e) en Strat&eacute;gie de Cat&eacute;gorie Non-Alimentaire &amp; Int&eacute;gration Commerciale (F/H) - Br&eacute;sil</b></div><div></div><div><br>\nDate : Septembre 2026</div><div></div><div><br>\nPays : S&atilde;o Paulo, Br&eacute;sil</div><div></div><ul><li><br>\n️Dur&eacute;e : 12 mois renouvelables (24 mois au total)</li></ul><div></div><ul><li><b><br>\nParticiper &agrave; l&rsquo;aventure d&rsquo;un groupe en pleine transformation, &ccedil;a te tente ?</b></li></ul><div></div><div><br>\nCr&eacute;ateur de l&rsquo;hypermarch&eacute;, deuxi&egrave;me distributeur mondial et premier en Europe, Carrefour reste fid&egrave;le &agrave; ses racines mais se r&eacute;invente pour permettre &agrave; chacun, chaque jour, de manger mieux : plus sain, plus local, plus responsable.</div><div></div><div><br>\nNos atouts pour y parvenir ? Un r&eacute;seau multiformat de magasins, la cr&eacute;ation de services et d'une offre digitale de r&eacute;f&eacute;rence, une coop&eacute;ration renforc&eacute;e avec les acteurs du monde agricole, de la cha&icirc;ne alimentaire, de la Tech&hellip; et des collaborateurs passionn&eacute;s, qui s&rsquo;engagent, challengent leur m&eacute;tier et grandissent ensemble pour r&eacute;ussir <b>la transition alimentaire pour tous</b> !</div><div></div><div><br>\nLe groupe Carrefour est &eacute;galement engag&eacute; dans une ambitieuse transformation pour devenir une<b> Digital Retail Company, </b>qui place le digital et la data au c&oelig;ur de toutes ses op&eacute;rations et de son mod&egrave;le de cr&eacute;ation de valeur.</div><div></div><div><br>\nCon&ccedil;u pour d&eacute;velopper nos futurs leaders &agrave; l&rsquo;international, le<b> V.I.E Program Talent Carrefour </b>permet d&rsquo;acc&eacute;der &agrave; des missions &agrave; forte valeur ajout&eacute;e pour accompagner ton d&eacute;veloppement et acc&eacute;l&eacute;rer la transformation de Carrefour. Nous recherchons des candidat(e)s ayant une r&eacute;elle motivation et un go&ucirc;t prononc&eacute; pour le challenge et l&rsquo;innovation !</div><div></div><ul><li><b><br>\nTA FILIALE :</b></li></ul><div></div><div><br>\nDepuis 50 ans, Carrefour Br&eacute;sil est un pionnier de la distribution sur le march&eacute; br&eacute;silien, avec une pr&eacute;sence quotidienne dans la vie de millions de consommateurs gr&acirc;ce &agrave; son vaste r&eacute;seau et le d&eacute;fi d'am&eacute;liorer la qualit&eacute; des aliments &agrave; un prix accessible pour des milliers de foyers br&eacute;siliens.</div><div></div><div><br>\nCarrefour est le premier distributeur alimentaire au Br&eacute;sil, pr&eacute;sent dans plus de 150 villes des 26 &Eacute;tats br&eacute;siliens et dans le district f&eacute;d&eacute;ral. Notre r&eacute;seau s'appuie sur la force de nos marques Atacad&atilde;o (plus de 400 magasins), Carrefour et Sam's Club. Ces marques sont parmi les plus reconnues dans le secteur de la vente en gros et des hypermarch&eacute;s au Br&eacute;sil. Pour soutenir cette pr&eacute;sence unique, nous op&eacute;rons un r&eacute;seau logistique puissant compos&eacute; de plus de 40 centres de distribution strat&eacute;giquement r&eacute;partis, garantissant l'approvisionnement de plus de 900 points de vente.</div><div></div><div><br>\nIl y a cinq formats de magasins au Br&eacute;sil :</div><ul><li>\nCash &amp; carry et commerce de gros (tous deux sous la marque Atacad&atilde;o)</li><li>\nHypermarch&eacute;s (sous la marque Carrefour, dont des pharmacies et stations essence)</li><li>\nSupermarch&eacute;s (sous les marques Carrefour Bairro et Carrefour Market)</li><li>\nMagasins de proximit&eacute; (sous la marque Carrefour Express)</li></ul><div></div><ul><li><b><br>\nTON ENVIRONNEMENT DE TRAVAIL :</b></li></ul><p>\nBien que Carrefour soit leader du commerce alimentaire, le secteur Non-Alimentaire constitue un levier cl&eacute; de rentabilit&eacute; et de fid&eacute;lisation client. Dans le cadre du plan de transformation 2027&ndash;2029, Carrefour Br&eacute;sil ambitionne de r&eacute;inventer son offre Non-Alimentaire au sein d&rsquo;un march&eacute; hautement digitalis&eacute; et sensible aux prix.</p><p>\nTu travailleras avec les &eacute;quipes internes en collaborant de mani&egrave;re transversale avec les acheteurs, la Supply Chain (gestion des imports), le Marketing (catalogues et promotions digitales) et les &eacute;quipes E-commerce (int&eacute;gration omnicanale).</p><p>\nTu auras un contact direct avec l'&eacute;quipe Internationale Non-Alimentaire du Groupe (situ&eacute;e en France) pour assurer l'alignement sur les strat&eacute;gies de marques de distributeur (MDD) mondiales.</p><p>\nTu seras &eacute;galement en relation avec des parties prenantes externes : les fabricants locaux, les agents d'importation et les agences de tendances.</p><ul><li><b>\nTES MISSIONS :</b></li></ul><p>\nTu seras un acteur cl&eacute; de la transformation dans un contexte de refonte des hypermarch&eacute;s et d&rsquo;&eacute;mergence des nouvelles tendances de consommation du secteur Non-Alimentaire.</p><p>\nEn tant que consultant en strat&eacute;gie Non-Alimentaire, voici tes missions :</p><ul><li><b>\nInt&eacute;gration Organisationnelle :</b> piloter le processus d'int&eacute;gration et de synergie des &eacute;quipes commerciales Non-Alimentaires &agrave; travers les diff&eacute;rentes enseignes (Atacad&atilde;o, Carrefour, Sam&rsquo;s Club).</li><li><b>\nStrat&eacute;gie cat&eacute;gorielle 2027-2029 : </b>d&eacute;finir la feuille de route strat&eacute;gique pour les cat&eacute;gories majeures (&eacute;lectronique, maison, textile) en alignant l'assortiment sur les futures tendances de consommation et la comp&eacute;titivit&eacute; omnicanale.</li><li><b>\nSourcing Mondial &amp; Marques Propres :</b> coordonner les &eacute;changes avec les bureaux de Sourcing Internationaux (France/Hong Kong) afin de maximiser l&rsquo;int&eacute;gration des marques propres (MDD) et d'optimiser les marges gr&acirc;ce &agrave; l'efficience logistique et fiscale.</li><li><b>\nInnovation Financi&egrave;re &amp; Commerciale :</b> collaborer avec Banco Carrefour pour int&eacute;grer des solutions de financement et de paiement dans l'offre produit, ce qui constitue un levier de croissance majeur sur le march&eacute; br&eacute;silien.</li></ul><p>\nL&rsquo;objectif est d&rsquo;accro&icirc;tre significativement notre part de march&eacute; du non-alimentaire par rapport aux concurrents cl&eacute;s d'ici 2029.</p><ul><li><b>\nTON PROFIL :</b></li></ul><div></div><div><br>\nDe formation sup&eacute;rieure bac+5 (M2), tu es dipl&ocirc;m&eacute;(e) d&rsquo;une &eacute;cole de commerce, d&rsquo;ing&eacute;nieur ou d&rsquo;une universit&eacute; avec une sp&eacute;cialisation en marketing.</div><div></div><div><br>\nTu as une premi&egrave;re exp&eacute;rience en category management, achats ou merchandising retail.</div><div></div><div><br>\nTu disposes d&rsquo;une forte capacit&eacute; d&rsquo;analyse (aptitude &agrave; g&eacute;rer de larges bases de donn&eacute;es et des rapports de ventes). Tu es &agrave; la pointe des tendances de consommation.</div><p>\nQualit&eacute;s recherch&eacute;es :</p><ul><li><b>\nEsprit commercial :</b> trouver les meilleurs produits aux meilleurs prix.</li><li><b>\nN&eacute;gociation :</b> &ecirc;tre capable d&rsquo;influencer les fournisseurs et les parties prenantes internes.</li><li><b>\nR&eacute;solution de probl&egrave;mes :</b> trouver des alternatives locales lorsque tu fais face &agrave; des obstacles.\n</li><li><b>Agilit&eacute; culturelle :</b> disposer d&rsquo;une compr&eacute;hension fine des sp&eacute;cificit&eacute;s du consommateur br&eacute;silien par rapport au mod&egrave;le europ&eacute;en.</li></ul><p><b>\nLangues</b><b> :</b></p><div>\nAnglais : niveau courant requis (pour la coordination des achats internationaux)</div><div>\nPortugais et Espagnol : notions requises</div><div></div><ul><li><b><br>\nAVANTAGES DU VIE TALENT PROGRAM CARREFOUR :</b></li></ul><div></div><div><br>\nNous rejoindre, c&rsquo;est b&eacute;n&eacute;ficier d&rsquo;un accompagnement signature :</div><ul><li>\nPrise en charge du voyage A/R et aide au logement.</li><li>\nCours de langue en portugais (40h) pour t&rsquo;accompagner lors de tes premiers pas.</li><li>\nProgramme de formation sur mesure pour d&eacute;velopper tes soft et hard skills.</li><li>\nUn suivi individuel, par le Groupe et le Br&eacute;sil, avec un accompagnement carri&egrave;re en fin de mission.</li></ul></div>",
+  "benefits": [
+    "Contrat renouvelable",
+    "Aide au logement"
+  ],
+  "occupation": [
+    "Métiers du marketing produit",
+    "Métiers du marketing, de la publicité et des relations publiques",
+    "Métiers du marketing et de la publicité"
+  ],
+  "attributes": [
+    "Contrat renouvelable",
+    "Espagnol",
+    "Ingénierie",
+    "Temps plein",
+    "Anglais",
+    "Aide au logement",
+    "Télétravail",
+    "Master",
+    "Bases de données",
+    "Esprit d'analyse",
+    "Achats",
+    "Portugais",
+    "VIE",
+    "Commerce"
+  ],
+  "workingSystem": [],
+  "source": "Carrefour",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {
+    "salaryCurrency": "EUR",
+    "salarySource": "EXTRACTION",
+    "salaryText": "À partir de 1 700 € par mois",
+    "salaryType": "monthly"
+  },
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 8,
+  "jobKey": "b5d24a38b23e73fc",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=b5d24a38b23e73fc",
+  "emails": [],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [],
+  "applyUrl": "https://recrute1-carrefour.icims.com/jobs/140084/job?utm_source=indeed_integration&iis=Job%20Board&iisn=Indeed&indeed-apply-token=73a2d2b2a8d6d5c0a62696875eaebd669103652d3f0c2cd5445d3e66b1592b0f",
+  "requirements": []
+},
+{
+  "title": "Ingénieur commercial H/F",
+  "companyLogoUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/0737fbc981fc6ec6e29d2f414f756828",
+  "companyName": "Würth Elektronik Gruppe",
+  "location": {
+    "city": "Paris",
+    "postalCode": "75004",
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "75004 Paris",
+    "formattedAddressShort": "Paris (75)",
+    "latitude": 48.8601,
+    "longitude": 2.3507,
+    "streetAddress": "Paris,France",
+    "fullAddress": "75004 Paris"
+  },
+  "age": "14 days ago",
+  "datePublished": "2026-05-19",
+  "jobType": [
+    "CDI",
+    "Temps plein",
+    "Télétravail"
+  ],
+  "companyHeaderUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_headerimage/1960x400/39cd60674b78174937c865ce99ca7241",
+  "companyUrl": "https://fr.indeed.com/cmp/W%C3%BCrth-Elektronik-Gruppe",
+  "rating": {
+    "rating": 3.5,
+    "count": 27
+  },
+  "descriptionText": "Qui sommes-nous ?\n\nAvec plus de 8500 salariés répartis dans 50 pays, le groupe Würth Elektronik fabrique et vend des composants électroniques et électromécaniques, des circuits imprimés et des systèmes intelligents électroniques. Würth Elektronik eiSos est une des filiales les plus dynamiques du groupe Würth.\n\nLe siège français, situé dans la zone industrielle de Meyzieu Jonage, est un centre qualité et logistique à dimension internationale abritant les services commerciaux et experts techniques dédiés à chaque département. Notre objectif est d’apporter à nos clients une qualité de produits et de services dans un environnement industriel exigeant.\n\nEn tant qu'Ingénieur Commercial H/F, vous serez responsable de gérer et fidéliser une clientèle de professionnels de l’industrie (bureaux d’études et fabricants de produits avec de l’électronique). Vous promouvrez l’offre globale de Würth Elektronik et vendrez notre gamme de composants électroniques, tout en assurant la satisfaction de nos clients et en atteignant les objectifs fixés.\n\nVous êtes basé idéalement dans le nord de l’Essonne ou les Yvelines et le périmètre client sera le suivant : Eure (27), Eure-et-Loir (28), Yvelines (78), Essonne (91) et Val-de-Marne (94).\n\nAu sein d’une équipe dynamique, vos missions seront les suivantes :\n\nVisiter, développer et fidéliser les clients du secteur\n\nPar votre activité sur le terrain, vous accompagnerez les clients du développement électronique jusqu’à la production de leurs projets.\n\nVous aurez la responsabilité de l’implantation de nos produits et du développement des ventes sur votre secteur.\n\nEn lien avec l’équipe commerciale sédentaire, vous vous assurez d’offrir la meilleure qualité de service pour fidéliser nos clients\n\nNos clients sont des bureaux d’études et des fabricants de cartes électroniques.\n\nAvec une formation technique aux outils et aux méthodes du groupe et le support de notre équipe d’ingénieurs et de spécialistes, vous apporterez des solutions techniques chez nos clients.\n\nVotre cadre de travail\n\nUne équipe dynamique et accueillante\n\nUne formation complète sur nos produits et nos outils\n\nRémunération fixe + variable à définir selon profil\n\nVéhicule, téléphone portable, iPad et ordinateur seront à votre disposition\n\nDéplacements à raison de 3 jours par semaine sur le périmètre défini\n\nTélétravail lundi et vendredi\n\nPrimes de participation et d’intéressement au bénéfice\n\nCSE (chèques vacances, tickets KDEOS, possibilités de commandes et réductions diverses...)\n\nVotre profil\n\nVous avez acquis une expérience commerciale et/ou technique réussie d’au moins 5 ans sur un poste similaire.\n\nAutonome et réactif(ve), votre organisation et votre rigueur vous permettent d’être efficace dans votre travail.\n\nBac +3 à Bac+5 dans une formation commerciale ou technique, idéalement dans le milieu de l’électronique\n\nAnglais écrit et oral (niveau B1-B2), l’allemand est un plus.\n\nEn tant qu’employeur, Würth Elektronik France offre à tous les mêmes opportunités d’accès à l’emploi sans distinctions quelconques (genre, handicap, ethnicité, etc…).",
+  "descriptionHtml": "<div><p>Qui sommes-nous ?</p><p>\nAvec plus de 8500 salari&eacute;s r&eacute;partis dans 50 pays, le groupe W&uuml;rth Elektronik fabrique et vend des composants &eacute;lectroniques et &eacute;lectrom&eacute;caniques, des circuits imprim&eacute;s et des syst&egrave;mes intelligents &eacute;lectroniques. W&uuml;rth Elektronik eiSos est une des filiales les plus dynamiques du groupe W&uuml;rth.</p><p>\nLe si&egrave;ge fran&ccedil;ais, situ&eacute; dans la zone industrielle de Meyzieu Jonage, est un centre qualit&eacute; et logistique &agrave; dimension internationale abritant les services commerciaux et experts techniques d&eacute;di&eacute;s &agrave; chaque d&eacute;partement. Notre objectif est d&rsquo;apporter &agrave; nos clients une qualit&eacute; de produits et de services dans un environnement industriel exigeant.</p><p><br>\nEn tant qu'Ing&eacute;nieur Commercial H/F, vous serez responsable de g&eacute;rer et fid&eacute;liser une client&egrave;le de professionnels de l&rsquo;industrie (bureaux d&rsquo;&eacute;tudes et fabricants de produits avec de l&rsquo;&eacute;lectronique). Vous promouvrez l&rsquo;offre globale de W&uuml;rth Elektronik et vendrez notre gamme de composants &eacute;lectroniques, tout en assurant la satisfaction de nos clients et en atteignant les objectifs fix&eacute;s.</p><p>\n</p><p>Vous &ecirc;tes bas&eacute; id&eacute;alement dans le nord de l&rsquo;Essonne ou les Yvelines et le p&eacute;rim&egrave;tre client sera le suivant : <b>Eure (27), Eure-et-Loir (28), Yvelines (78), Essonne (91) et Val-de-Marne (94).</b></p><p>\nAu sein d&rsquo;une &eacute;quipe dynamique, vos missions seront les suivantes :</p><ul><li><p>\nVisiter, d&eacute;velopper et fid&eacute;liser les clients du secteur</p></li><li><p>\nPar votre activit&eacute; sur le terrain, vous accompagnerez les clients du d&eacute;veloppement &eacute;lectronique jusqu&rsquo;&agrave; la production de leurs projets.</p></li><li><p>\nVous aurez la responsabilit&eacute; de l&rsquo;implantation de nos produits et du d&eacute;veloppement des ventes sur votre secteur.</p></li><li><p>\nEn lien avec l&rsquo;&eacute;quipe commerciale s&eacute;dentaire, vous vous assurez d&rsquo;offrir la meilleure qualit&eacute; de service pour fid&eacute;liser nos clients</p></li><li><p>\nNos clients sont des bureaux d&rsquo;&eacute;tudes et des fabricants de cartes &eacute;lectroniques.</p></li><li><p>\nAvec une formation technique aux outils et aux m&eacute;thodes du groupe et le support de notre &eacute;quipe d&rsquo;ing&eacute;nieurs et de sp&eacute;cialistes, vous apporterez des solutions techniques chez nos clients.</p></li></ul><p><b><br>\nVotre cadre de travail</b></p><p>\n</p><ul><li><p>Une &eacute;quipe dynamique et accueillante</p></li><li><p>\nUne formation compl&egrave;te sur nos produits et nos outils</p></li><li><p>\nR&eacute;mun&eacute;ration fixe + variable &agrave; d&eacute;finir selon profil</p></li><li><p>\nV&eacute;hicule, t&eacute;l&eacute;phone portable, iPad et ordinateur seront &agrave; votre disposition</p></li><li><p>\nD&eacute;placements &agrave; raison de 3 jours par semaine sur le p&eacute;rim&egrave;tre d&eacute;fini</p></li><li><p>\nT&eacute;l&eacute;travail lundi et vendredi\n</p></li><li><p>Primes de participation et d&rsquo;int&eacute;ressement au b&eacute;n&eacute;fice</p></li><li><p>\nCSE (ch&egrave;ques vacances, tickets KDEOS, possibilit&eacute;s de commandes et r&eacute;ductions diverses...)</p></li></ul><p>\n</p><p><b>Votre profil</b></p><ul><li><p>\nVous avez acquis une exp&eacute;rience commerciale et/ou technique r&eacute;ussie d&rsquo;au moins 5 ans sur un poste similaire.</p></li><li><p>\nAutonome et r&eacute;actif(ve), votre organisation et votre rigueur vous permettent d&rsquo;&ecirc;tre efficace dans votre travail.</p></li><li><p>\nBac +3 &agrave; Bac+5 dans une formation commerciale ou technique, id&eacute;alement dans le milieu de l&rsquo;&eacute;lectronique</p></li><li><p>\nAnglais &eacute;crit et oral (niveau B1-B2), l&rsquo;allemand est un plus.</p></li></ul><p>\n</p><p>En tant qu&rsquo;employeur, W&uuml;rth Elektronik France offre &agrave; tous les m&ecirc;mes opportunit&eacute;s d&rsquo;acc&egrave;s &agrave; l&rsquo;emploi sans distinctions quelconques (genre, handicap, ethnicit&eacute;, etc&hellip;).</p></div>",
+  "benefits": [
+    "Tablette de fonction",
+    "Comité d’entreprise (CE)",
+    "Participation",
+    "Intéressement"
+  ],
+  "occupation": [
+    "Commerciaux/les",
+    "Métiers de la vente et du développement commercial",
+    "Métiers de la vente, du commerce et du service client",
+    "Technico-commerciaux/les"
+  ],
+  "attributes": [
+    "CDI",
+    "Tablette de fonction",
+    "Temps plein",
+    "Anglais",
+    "Télétravail",
+    "Master",
+    "Niveau Licence",
+    "Primes",
+    "Comité d’entreprise (CE)",
+    "B1 Preliminary",
+    "Du lundi au vendredi",
+    "Participation",
+    "Allemand",
+    "Intéressement"
+  ],
+  "workingSystem": [],
+  "source": "Wurth Elektronik France",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {},
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 7,
+  "jobKey": "28f892f89b846335",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=28f892f89b846335",
+  "emails": [],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [
+    "Du lundi au vendredi"
+  ],
+  "applyUrl": "https://careers.flatchr.io/vacancy/k0m5o9y7nzldxbqb-ingenieur-commercial-h-f?partner=32&source=Indeed",
+  "requirements": []
+},
+{
+  "title": "Ingénieur Technico-Commercial H/F – Secteur Sud-Est (itinérance)",
+  "companyLogoUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/872cb2a14ee14b0f0bf684468d42401b",
+  "companyName": "Anton Paar USA",
+  "location": {
+    "city": "Les Ulis",
+    "postalCode": null,
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "Les Ulis (91)",
+    "formattedAddressShort": "Les Ulis (91)",
+    "latitude": 48.68167,
+    "longitude": 2.16944,
+    "streetAddress": null,
+    "fullAddress": "Les Ulis (91)"
+  },
+  "age": "14 days ago",
+  "datePublished": "2026-05-19",
+  "jobType": [
+    "Temps plein",
+    "Télétravail"
+  ],
+  "companyHeaderUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_headerimage/1960x400/86e306aae77f8548cd087a11ef40f9ca",
+  "companyUrl": "https://fr.indeed.com/cmp/Anton-Paar-USA",
+  "rating": {
+    "rating": 4.2,
+    "count": 110
+  },
+  "descriptionText": "Description de l'entreprise\n\nNous recrutons : Ingénieur Technico-Commercial Itinérant (H/F) – Sud-Est\n\nAnton Paar France, filiale d’un groupe international reconnu pour son excellence technologique, conçoit et commercialise des instruments de mesure de haute précision au service de l’industrie et de la recherche.\n\nRejoindre Anton Paar, c’est intégrer une entreprise innovante, portée par une forte culture scientifique, où expertise, collaboration et développement des talents sont au cœur de notre réussite.\n\nDescription du poste\n\nRattaché(e) au Team Leader, vous rejoignez une équipe commerciale experte dans les solutions de mesure (densimétrie, viscosimétrie, analyse optique, essais pétroliers, proche infrarouge).\n\nVous aurez pour objectif de développer votre secteur Sud-Est à travers :\n\nLe déploiement de la stratégie commerciale\nL’animation de votre secteur (événements techniques, séminaires…)\nLe développement du chiffre d’affaires et la détection d’opportunités\nLa promotion de nos solutions (démonstrations, essais)\nLe suivi et la fidélisation de votre portefeuille clients\nLa gestion de votre activité dans le CRM\n\nQualifications\n\nFormation scientifique (Bac+5 idéalement)\n3 ans d’expérience minimum en vente de solutions techniques\nEsprit commercial, autonomie et appétence pour la technique\nBon niveau d’anglais (échanges réguliers avec l’Autriche)\nBasé(e) idéalement dans l’un des départements : 04, 05, 06, 11, 12, 13, 30, 34, 48, 66, 83 ou 84\n\nInformations supplémentaires\n\nUn poste à fort impact dans un environnement international\n37,5h/semaine + 12 RTT/an\nMutuelle prise en charge à 50 %\nVéhicule de fonction\nRémunération attractive : fixe + variable + primes",
+  "descriptionHtml": "<div><b>Description de l'entreprise</b><p><b><br>\nNous recrutons : Ing&eacute;nieur Technico-Commercial Itin&eacute;rant (H/F) &ndash; Sud-Est</b></p><p>\nAnton Paar France, filiale d&rsquo;un groupe international reconnu pour son excellence technologique, con&ccedil;oit et commercialise des instruments de mesure de haute pr&eacute;cision au service de l&rsquo;industrie et de la recherche.</p><p>\nRejoindre Anton Paar, c&rsquo;est int&eacute;grer une entreprise innovante, port&eacute;e par une forte culture scientifique, o&ugrave; expertise, collaboration et d&eacute;veloppement des talents sont au c&oelig;ur de notre r&eacute;ussite.</p><b><br>\nDescription du poste</b><p><br>\nRattach&eacute;(e) au Team Leader, vous rejoignez une &eacute;quipe commerciale experte dans les solutions de mesure (densim&eacute;trie, viscosim&eacute;trie, analyse optique, essais p&eacute;troliers, proche infrarouge).</p><p>\nVous aurez pour objectif de d&eacute;velopper votre secteur Sud-Est &agrave; travers :</p><ul><li>\nLe d&eacute;ploiement de la strat&eacute;gie commerciale</li><li>\nL&rsquo;animation de votre secteur (&eacute;v&eacute;nements techniques, s&eacute;minaires&hellip;)</li><li>\nLe d&eacute;veloppement du chiffre d&rsquo;affaires et la d&eacute;tection d&rsquo;opportunit&eacute;s</li><li>\nLa promotion de nos solutions (d&eacute;monstrations, essais)</li><li>\nLe suivi et la fid&eacute;lisation de votre portefeuille clients</li><li>\nLa gestion de votre activit&eacute; dans le CRM</li></ul><br>\n<b>\nQualifications</b><br>\n<ul><li>\nFormation scientifique (Bac+5 id&eacute;alement)</li><li>\n3 ans d&rsquo;exp&eacute;rience minimum en vente de solutions techniques</li><li>\nEsprit commercial, autonomie et app&eacute;tence pour la technique</li><li>\nBon niveau d&rsquo;anglais (&eacute;changes r&eacute;guliers avec l&rsquo;Autriche)</li><li>\nBas&eacute;(e) id&eacute;alement dans l&rsquo;un des d&eacute;partements : 04, 05, 06, 11, 12, 13, 30, 34, 48, 66, 83 ou 84</li></ul><br>\n<b>\nInformations suppl&eacute;mentaires</b><br>\n<ul><li>\nUn poste &agrave; fort impact dans un environnement international</li><li>\n37,5h/semaine + 12 RTT/an</li><li>\nMutuelle prise en charge &agrave; 50 %</li><li>\nV&eacute;hicule de fonction</li><li>\nR&eacute;mun&eacute;ration attractive : fixe + variable + primes</li></ul></div>",
+  "benefits": [
+    "Véhicule de fonction",
+    "RTT"
+  ],
+  "occupation": [
+    "Commerciaux/les",
+    "Métiers de la vente et du développement commercial",
+    "Métiers de la vente, du commerce et du service client",
+    "Technico-commerciaux/les"
+  ],
+  "attributes": [
+    "Vente",
+    "Temps plein",
+    "Anglais",
+    "Véhicule de fonction",
+    "Télétravail",
+    "Master",
+    "RTT",
+    "Primes"
+  ],
+  "workingSystem": [],
+  "source": "Anton Paar",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {},
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 12,
+  "jobKey": "8d6a52bbf24e145d",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=8d6a52bbf24e145d",
+  "emails": [],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [],
+  "applyUrl": "https://jobs.smartrecruiters.com/AntonPaar1/744000127238116-ingenieur-technico-commercial-h-f-secteur-sud-est-itinerance-",
+  "requirements": []
+},
+{
+  "title": "Ingénieur commercial H/F",
+  "companyLogoUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/0737fbc981fc6ec6e29d2f414f756828",
+  "companyName": "Würth Elektronik Gruppe",
+  "location": {
+    "city": "Paris",
+    "postalCode": "75004",
+    "country": "France",
+    "countryCode": "FR",
+    "formattedAddressLong": "75004 Paris",
+    "formattedAddressShort": "Paris (75)",
+    "latitude": 48.8601,
+    "longitude": 2.3507,
+    "streetAddress": "Paris,France",
+    "fullAddress": "75004 Paris"
+  },
+  "age": "14 days ago",
+  "datePublished": "2026-05-19",
+  "jobType": [
+    "CDI",
+    "Temps plein",
+    "Télétravail"
+  ],
+  "companyHeaderUrl": "https://d2q79iu7y748jz.cloudfront.net/s/_headerimage/1960x400/39cd60674b78174937c865ce99ca7241",
+  "companyUrl": "https://fr.indeed.com/cmp/W%C3%BCrth-Elektronik-Gruppe",
+  "rating": {
+    "rating": 3.5,
+    "count": 27
+  },
+  "descriptionText": "Qui sommes-nous ?\n\nAvec plus de 8500 salariés répartis dans 50 pays, le groupe Würth Elektronik fabrique et vend des composants électroniques et électromécaniques, des circuits imprimés et des systèmes intelligents électroniques. Würth Elektronik eiSos est une des filiales les plus dynamiques du groupe Würth.\n\nLe siège français, situé dans la zone industrielle de Meyzieu Jonage, est un centre qualité et logistique à dimension internationale abritant les services commerciaux et experts techniques dédiés à chaque département. Notre objectif est d’apporter à nos clients une qualité de produits et de services dans un environnement industriel exigeant.\n\nEn tant qu'Ingénieur Commercial H/F, vous serez responsable de gérer et fidéliser une clientèle de professionnels de l’industrie (bureaux d’études et fabricants de produits avec de l’électronique). Vous promouvrez l’offre globale de Würth Elektronik et vendrez notre gamme de composants électromécaniques, tout en assurant la satisfaction de nos clients et en atteignant les objectifs fixés.\n\nVous êtes basé idéalement dans le nord de l’Essonne ou les Yvelines et le périmètre client sera le suivant : Eure (27), Eure-et-Loir (28), Seine-Maritime (76), Yvelines (78) et Val-d’Oise (95).\n\nAu sein d’une équipe dynamique, vos missions seront les suivantes :\n\nVisiter, développer et fidéliser les clients du secteur\n\nPar votre activité sur le terrain, vous accompagnerez les clients du développement électronique jusqu’à la production de leurs projets.\n\nVous aurez la responsabilité de l’implantation de nos produits et du développement des ventes sur votre secteur.\n\nEn lien avec l’équipe commerciale sédentaire, vous vous assurez d’offrir la meilleure qualité de service pour fidéliser nos clients\n\nNos clients sont des bureaux d’études et des fabricants de cartes électroniques.\n\nAvec une formation technique aux outils et aux méthodes du groupe et le support de notre équipe d’ingénieurs et de spécialistes, vous apporterez des solutions techniques chez nos clients.\n\nVotre cadre de travail\n\nUne équipe dynamique et accueillante\n\nUne formation complète sur nos produits et nos outils\n\nRémunération fixe + variable à définir selon profil\n\nVéhicule, téléphone portable, iPad et ordinateur seront à votre disposition\n\nDéplacements à raison de 3 jours par semaine sur le périmètre défini\n\nTélétravail lundi et vendredi\n\nPrimes de participation et d’intéressement au bénéfice\n\nCSE (chèques vacances, tickets KDEOS, possibilités de commandes et réductions diverses...)\n\nVotre profil\n\nVous avez acquis une expérience commerciale et/ou technique réussie d’au moins 5 ans sur un poste similaire.\n\nAutonome et réactif(ve), votre organisation et votre rigueur vous permettent d’être efficace dans votre travail.\n\nBac +3 à Bac+5 dans une formation commerciale ou technique, idéalement dans le milieu de l’électronique\n\nAnglais écrit et oral (niveau B1-B2), l’allemand est un plus.\n\nEn tant qu’employeur, Würth Elektronik France offre à tous les mêmes opportunités d’accès à l’emploi sans distinctions quelconques (genre, handicap, ethnicité, etc…).",
+  "descriptionHtml": "<div><p>Qui sommes-nous ?</p><p>\nAvec plus de 8500 salari&eacute;s r&eacute;partis dans 50 pays, le groupe W&uuml;rth Elektronik fabrique et vend des composants &eacute;lectroniques et &eacute;lectrom&eacute;caniques, des circuits imprim&eacute;s et des syst&egrave;mes intelligents &eacute;lectroniques. W&uuml;rth Elektronik eiSos est une des filiales les plus dynamiques du groupe W&uuml;rth.</p><p>\nLe si&egrave;ge fran&ccedil;ais, situ&eacute; dans la zone industrielle de Meyzieu Jonage, est un centre qualit&eacute; et logistique &agrave; dimension internationale abritant les services commerciaux et experts techniques d&eacute;di&eacute;s &agrave; chaque d&eacute;partement. Notre objectif est d&rsquo;apporter &agrave; nos clients une qualit&eacute; de produits et de services dans un environnement industriel exigeant.</p><p><br>\nEn tant qu'Ing&eacute;nieur Commercial H/F, vous serez responsable de g&eacute;rer et fid&eacute;liser une client&egrave;le de professionnels de l&rsquo;industrie (bureaux d&rsquo;&eacute;tudes et fabricants de produits avec de l&rsquo;&eacute;lectronique). Vous promouvrez l&rsquo;offre globale de W&uuml;rth Elektronik et vendrez notre gamme de composants &eacute;lectrom&eacute;caniques, tout en assurant la satisfaction de nos clients et en atteignant les objectifs fix&eacute;s.</p><p>\n</p><p>Vous &ecirc;tes bas&eacute; id&eacute;alement dans le nord de l&rsquo;Essonne ou les Yvelines et le p&eacute;rim&egrave;tre client sera le suivant : <b>Eure (27), Eure-et-Loir (28), Seine-Maritime (76), Yvelines (78) et Val-d&rsquo;Oise (95).</b></p><p>\nAu sein d&rsquo;une &eacute;quipe dynamique, vos missions seront les suivantes :</p><ul><li><p>\nVisiter, d&eacute;velopper et fid&eacute;liser les clients du secteur</p></li><li><p>\nPar votre activit&eacute; sur le terrain, vous accompagnerez les clients du d&eacute;veloppement &eacute;lectronique jusqu&rsquo;&agrave; la production de leurs projets.</p></li><li><p>\nVous aurez la responsabilit&eacute; de l&rsquo;implantation de nos produits et du d&eacute;veloppement des ventes sur votre secteur.</p></li><li><p>\nEn lien avec l&rsquo;&eacute;quipe commerciale s&eacute;dentaire, vous vous assurez d&rsquo;offrir la meilleure qualit&eacute; de service pour fid&eacute;liser nos clients</p></li><li><p>\nNos clients sont des bureaux d&rsquo;&eacute;tudes et des fabricants de cartes &eacute;lectroniques.</p></li><li><p>\nAvec une formation technique aux outils et aux m&eacute;thodes du groupe et le support de notre &eacute;quipe d&rsquo;ing&eacute;nieurs et de sp&eacute;cialistes, vous apporterez des solutions techniques chez nos clients.</p></li></ul><p><b><br>\nVotre cadre de travail</b></p><p>\n</p><ul><li><p>Une &eacute;quipe dynamique et accueillante</p></li><li><p>\nUne formation compl&egrave;te sur nos produits et nos outils</p></li><li><p>\nR&eacute;mun&eacute;ration fixe + variable &agrave; d&eacute;finir selon profil</p></li><li><p>\nV&eacute;hicule, t&eacute;l&eacute;phone portable, iPad et ordinateur seront &agrave; votre disposition</p></li><li><p>\nD&eacute;placements &agrave; raison de 3 jours par semaine sur le p&eacute;rim&egrave;tre d&eacute;fini</p></li><li><p>\nT&eacute;l&eacute;travail lundi et vendredi\n</p></li><li><p>Primes de participation et d&rsquo;int&eacute;ressement au b&eacute;n&eacute;fice</p></li><li><p>\nCSE (ch&egrave;ques vacances, tickets KDEOS, possibilit&eacute;s de commandes et r&eacute;ductions diverses...)</p></li></ul><p>\n</p><p><b>Votre profil</b></p><ul><li><p>\nVous avez acquis une exp&eacute;rience commerciale et/ou technique r&eacute;ussie d&rsquo;au moins 5 ans sur un poste similaire.</p></li><li><p>\nAutonome et r&eacute;actif(ve), votre organisation et votre rigueur vous permettent d&rsquo;&ecirc;tre efficace dans votre travail.</p></li><li><p>\nBac +3 &agrave; Bac+5 dans une formation commerciale ou technique, id&eacute;alement dans le milieu de l&rsquo;&eacute;lectronique</p></li><li><p>\nAnglais &eacute;crit et oral (niveau B1-B2), l&rsquo;allemand est un plus.</p></li></ul><p>\n</p><p>En tant qu&rsquo;employeur, W&uuml;rth Elektronik France offre &agrave; tous les m&ecirc;mes opportunit&eacute;s d&rsquo;acc&egrave;s &agrave; l&rsquo;emploi sans distinctions quelconques (genre, handicap, ethnicit&eacute;, etc&hellip;).</p></div>",
+  "benefits": [
+    "Tablette de fonction",
+    "Comité d’entreprise (CE)",
+    "Participation",
+    "Intéressement"
+  ],
+  "occupation": [
+    "Commerciaux/les",
+    "Métiers de la vente et du développement commercial",
+    "Métiers de la vente, du commerce et du service client",
+    "Technico-commerciaux/les"
+  ],
+  "attributes": [
+    "CDI",
+    "Tablette de fonction",
+    "Temps plein",
+    "Anglais",
+    "Télétravail",
+    "Master",
+    "Niveau Licence",
+    "Primes",
+    "Comité d’entreprise (CE)",
+    "B1 Preliminary",
+    "Du lundi au vendredi",
+    "Participation",
+    "Allemand",
+    "Intéressement"
+  ],
+  "workingSystem": [],
+  "source": "Wurth Elektronik France",
+  "hiringDemand.isUrgentHire": false,
+  "hiringDemand.isHighVolumeHiring": false,
+  "locale": "fr",
+  "salary": {},
+  "expired": false,
+  "postedToday": false,
+  "scrapingInfo.page": 1,
+  "scrapingInfo.index": 6,
+  "jobKey": "34e40538bbeeda7d",
+  "jobUrl": "https://fr.indeed.com/viewjob?jk=34e40538bbeeda7d",
+  "emails": [],
+  "isRemote": true,
+  "socialInsurance": [],
+  "shiftAndSchedule": [
+    "Du lundi au vendredi"
+  ],
+  "applyUrl": "https://careers.flatchr.io/vacancy/vyja39j6m2k9lnqw-ingenieur-commercial-h-f?partner=32&source=Indeed",
+  "requirements": []
+}]

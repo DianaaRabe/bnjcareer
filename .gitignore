@@ -45,3 +45,8 @@ WALKTHROUGH_HISTORIQUE.md
 .gemini/
 *.csv
 scratch/
+
+*.mp4
+*.mov
+*.avi
+*.zip
