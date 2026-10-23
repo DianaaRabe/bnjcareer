@@ -35,6 +35,7 @@ import {
 } from './coverLetter.js'
 import { MATCH_PACING_MS, resolveAutomationSettings, type AutomationSettingsResolved } from './constants.js'
 import { evaluateJobEligibility, isValidRecipient, remainingBudget } from './eligibility.js'
+import { heuristicMatchScore } from './heuristicMatch.js'
 import { createPrismaAutomationStore, type AutomationStore } from './store.js'
 import type {
   CanonicalJob,
@@ -149,15 +150,26 @@ export async function runApplicationPipeline(
       }))
   const generateLetter = deps.generateLetter ?? generateCoverLetter
   const pace = deps.pacer ?? (() => sleep(MATCH_PACING_MS))
+
+  // Jobs whose score came from the deterministic fallback rather than the LLM. They are always
+  // routed to review: the overlap heuristic is a signal, not a verdict (skill §5).
+  const heuristicScored = new Set<string>()
   const match =
     deps.match ??
     (async (job: CanonicalJob, context: CvContext) => {
-      const result = await scoreJobOffer(context.extractedData, {
-        jobTitle: job.title,
-        company: job.company,
-        description: job.description,
-      })
-      return result.score
+      try {
+        const result = await scoreJobOffer(context.extractedData, {
+          jobTitle: job.title,
+          company: job.company,
+          description: job.description,
+        })
+        if (result.score != null) return result.score
+      } catch {
+        // The LLM is down or rate-limited. Continuity (skill §26): never let the whole run
+        // dead-end on the matcher — fall back to the deterministic scorer below.
+      }
+      heuristicScored.add(job.canonicalKey)
+      return heuristicMatchScore(context.extractedData, context.profile, job)
     })
 
   // Best-effort heartbeat: swallow its own failure so a flaky write never fails the run.
@@ -286,6 +298,7 @@ export async function runApplicationPipeline(
         generateLetter,
         pace,
         store: deps.store,
+        heuristicScore: heuristicScored.has(entry.job.canonicalKey),
       })
       if ('prepared' in outcome) prepared.push(outcome.prepared)
       else skipped.push(outcome.skipped)
@@ -322,6 +335,8 @@ async function prepareOne(
     generateLetter: (context: CoverLetterContext, job: CanonicalJob) => Promise<GeneratedCoverLetter>
     pace: () => Promise<void>
     store: AutomationStore
+    /** True when the match score came from the deterministic fallback, not the LLM. */
+    heuristicScore: boolean
   },
 ): Promise<PrepareOutcome> {
   const { job } = entry
@@ -334,7 +349,8 @@ async function prepareOne(
   const verified = resolution.verified.find((candidate) => isValidRecipient(candidate.email)) ?? null
 
   let contact = verified
-  let needsReview = false
+  // A fallback-scored match was never validated by the LLM, so the candidate must review it.
+  let needsReview = deps.heuristicScore
 
   if (!contact) {
     // A pattern guess is never auto-sent (skill §8). We still attach it so the candidate sees a
@@ -392,6 +408,7 @@ async function prepareOne(
   await deps.store.recordEvent(saved.applicationId, 'APPLICATION_PREPARED', {
     stage,
     matchScore: entry.score,
+    matchSource: deps.heuristicScore ? 'HEURISTIC' : 'LLM',
     contactSource: contact?.source ?? 'NONE',
     contactConfidence: contact?.confidence ?? 'NONE',
     needsReview,
