@@ -107,8 +107,20 @@ describe('matchesContractTypes', () => {
     assert.equal(matchesContractTypes(job({ tags: [], description: 'Poste en CDD de 12 mois' }), ['FIXED_TERM']), true)
   })
 
-  it('is conservative: an offer that states no contract type fails an explicit request', () => {
-    assert.equal(matchesContractTypes(job({ tags: [], description: 'Nous recrutons' }), ['PERMANENT']), false)
+  it('keeps an offer that states no contract type (provider already filtered upstream)', () => {
+    // The offer text omits any contract label. The provider was asked to filter by contract type
+    // upstream, so re-dropping these would silently discard valid matches — the exact
+    // "92 matched · 0 prepared" black hole. The match is kept (and flagged for review downstream).
+    assert.equal(matchesContractTypes(job({ tags: [], description: 'Nous recrutons' }), ['PERMANENT']), true)
+  })
+
+  it('drops an offer only on a genuine contract conflict', () => {
+    // The text explicitly says internship but the candidate wants a permanent role — a real
+    // mismatch, so this one is dropped.
+    assert.equal(
+      matchesContractTypes(job({ tags: [], description: 'Offre de stage de 6 mois' }), ['PERMANENT']),
+      false,
+    )
   })
 
   it('maps a display label ("Freelance") onto the enum synonym list', () => {

@@ -74,26 +74,36 @@ export function matchesLocations(job: CanonicalJob, locations: readonly string[]
   return wanted.some((location) => haystack.includes(location))
 }
 
-/**
- * Maps a stored contract-type value onto a {@link CONTRACT_LABELS} key. The UI stores free-form
- * strings — sometimes the enum value (`FREELANCE`), sometimes the display label (`Freelance`,
- * `Fixed term`) — so we upper-case and collapse separators to reach the canonical key. Without
- * this, a label like `"Freelance"` silently misses the `FREELANCE` key and its synonym list
- * (independant, mission, contractor…) is never consulted.
- */
-function contractLabelsFor(type: string): string[] {
-  const key = type.trim().toUpperCase().replace(/[\s-]+/g, '_')
-  return CONTRACT_LABELS[key] ?? [normalizeText(type)]
+/** Every contract-type key whose vocabulary appears anywhere in the offer text. */
+function statedContractTypes(haystack: string): Set<string> {
+  const stated = new Set<string>()
+  for (const [key, labels] of Object.entries(CONTRACT_LABELS)) {
+    if (labels.some((label) => haystack.includes(label))) stated.add(key)
+  }
+  return stated
 }
 
 /**
- * Conservative on purpose: a vacancy that never states a contract type does not satisfy an
- * explicit request for CDI. Applying to the wrong contract is worse than skipping it.
+ * The provider is already asked to filter by contract type upstream (see `buildSearchQuery`), so
+ * this is a post-AI safety re-check, not the primary filter. It must never become a silent black
+ * hole: an offer whose text states *no* recognisable contract type is allowed through (the match
+ * is flagged for review rather than dropped), because aggregator descriptions routinely omit the
+ * contract label even when the structured filter matched. We only drop an offer when its text
+ * states a contract type and *none* of those stated types is one the candidate asked for — i.e. a
+ * genuine conflict (an internship when the candidate wants a CDI).
  */
 export function matchesContractTypes(job: CanonicalJob, contractTypes: readonly string[]): boolean {
   if (contractTypes.length === 0) return true
+
   const haystack = jobText(job)
-  return contractTypes.some((type) => contractLabelsFor(type).some((label) => haystack.includes(label)))
+  const stated = statedContractTypes(haystack)
+  if (stated.size === 0) return true // contract type unknown from text — keep it, don't silently drop
+
+  const wanted = new Set(contractTypes.map((type) => type.trim().toUpperCase().replace(/[\s-]+/g, '_')))
+  for (const type of stated) {
+    if (wanted.has(type)) return true
+  }
+  return false
 }
 
 /** An address a real application may be sent to. Reuses the enrichment reject-list. */

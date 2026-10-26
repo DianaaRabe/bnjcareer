@@ -35,6 +35,7 @@ import {
 } from './coverLetter.js'
 import { MATCH_PACING_MS, resolveAutomationSettings, type AutomationSettingsResolved } from './constants.js'
 import { evaluateJobEligibility, isValidRecipient, remainingBudget } from './eligibility.js'
+import { formatFunnel, summarizeFunnel } from './funnel.js'
 import { heuristicMatchScore } from './heuristicMatch.js'
 import { createPrismaAutomationStore, type AutomationStore } from './store.js'
 import type {
@@ -471,6 +472,11 @@ export async function runAutomationForCandidate(
       heartbeat: options.heartbeat,
     },
   )
+
+  // One redacted funnel line per run, so "92 matched · 0 prepared" is never a black hole again:
+  // it names the exact gate (keywords/locations/contractTypes/budget) that dropped every job.
+  const cvPresent = cv?.extractedData != null
+  console.info(formatFunnel(candidateId, options.runId ?? null, summarizeFunnel(outcome, settings.minMatchScore, cvPresent)))
 
   return { outcome, settings }
 }
