@@ -1,0 +1,67 @@
+[
+  {
+    "id": "apollo-neurones-aurelien-terrassin",
+    "entreprise": "Neurones IT",
+    "intitule": "Data Analyst",
+    "lieu": "Paris La Defense (92)",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "aurelien.terrassin@neurones-it.com",
+    "contact_nom": "Aurelien",
+    "contact_titre": "Responsable Recrutement",
+    "url_offre": "https://www.neurones-it.com",
+    "score": 88
+  },
+  {
+    "id": "apollo-viamedis-carole-rainivelo",
+    "entreprise": "Viamedis",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 13e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "carole.rainivelo@viamedis.fr",
+    "contact_nom": "Carole",
+    "contact_titre": "Responsable Ressources Humaines",
+    "url_offre": "https://www.viamedis.fr",
+    "score": 86
+  },
+  {
+    "id": "apollo-innoha-thibault-pezy",
+    "entreprise": "Innoha",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 8e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "tpezy@innoha.com",
+    "contact_nom": "Thibault",
+    "contact_titre": "Recruitment Manager",
+    "url_offre": "https://www.innoha.com",
+    "score": 84
+  },
+  {
+    "id": "apollo-lesbonsartisans-lina-driche",
+    "entreprise": "Les Bons Artisans",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 9e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "lina.d@lesbonsartisans.fr",
+    "contact_nom": "Lina",
+    "contact_titre": "Responsable Ressources Humaines",
+    "url_offre": "https://www.lesbonsartisans.fr",
+    "score": 82
+  },
+  {
+    "id": "apollo-ohmycream-fanny-cherest",
+    "entreprise": "Oh My Cream",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 7e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "fcherest@ohmycream.com",
+    "contact_nom": "Fanny",
+    "contact_titre": "Responsable des Ressources Humaines",
+    "url_offre": "https://www.ohmycream.com",
+    "score": 80
+  }
+]

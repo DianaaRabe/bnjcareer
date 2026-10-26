@@ -1,0 +1,67 @@
+[
+  {
+    "id": "apollo-6721accd2c19c4000185f952",
+    "entreprise": "Kolecto",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 8e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "hugo.chabrouty@kolecto.fr",
+    "contact_nom": "Hugo",
+    "contact_titre": "Head of Talent Acquisition",
+    "url_offre": "https://www.kolecto.fr",
+    "score": 88
+  },
+  {
+    "id": "apollo-64a953b9a9b02600015ca699",
+    "entreprise": "FINAXYS",
+    "intitule": "Data Analyst",
+    "lieu": "Puteaux (92)",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "jgoldman@finaxys.com",
+    "contact_nom": "Joanna",
+    "contact_titre": "Head of Talent Acquisition",
+    "url_offre": "https://www.finaxys.com",
+    "score": 86
+  },
+  {
+    "id": "apollo-613acbbe2031e40001122d36",
+    "entreprise": "Dailymotion",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 17e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "alexandre.bourin@dailymotion.com",
+    "contact_nom": "Alexandre",
+    "contact_titre": "Talent Acquisition Specialist",
+    "url_offre": "https://www.dailymotion.com",
+    "score": 84
+  },
+  {
+    "id": "apollo-65faba8abbd49f0007bcf031",
+    "entreprise": "Joko",
+    "intitule": "Data Analyst",
+    "lieu": "Paris 3e",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "vdemange-ext@joko.com",
+    "contact_nom": "Vincent",
+    "contact_titre": "Talent Acquisition",
+    "url_offre": "https://www.joko.com",
+    "score": 82
+  },
+  {
+    "id": "apollo-66f8e6961cc13a000104e624",
+    "entreprise": "sunday",
+    "intitule": "Data Analyst",
+    "lieu": "Paris",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "fanny.godillon@sundayapp.com",
+    "contact_nom": "Fanny",
+    "contact_titre": "Talent Acquisition",
+    "url_offre": "https://www.sundayapp.com",
+    "score": 80
+  }
+]

@@ -1,0 +1,67 @@
+[
+  {
+    "id": "apollo-unlimitail-charlotte-ganry",
+    "entreprise": "Unlimitail",
+    "intitule": "Data Analyst",
+    "lieu": "Paris",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "charlotte.ganry@unlimitail.com",
+    "contact_nom": "Charlotte",
+    "contact_titre": "RRH - Corporate Functions & Talent Acquisition France - Europe",
+    "url_offre": "https://www.unlimitail.com",
+    "score": 88
+  },
+  {
+    "id": "apollo-datatorii-nathalie-etrillard",
+    "entreprise": "Datatorii",
+    "intitule": "Data Analyst",
+    "lieu": "Paris",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "netrillard@datatorii.com",
+    "contact_nom": "Nathalie",
+    "contact_titre": "Talent Acquisition Manager",
+    "url_offre": "https://www.datatorii.com",
+    "score": 86
+  },
+  {
+    "id": "apollo-pluxee-karla-mouton",
+    "entreprise": "Pluxee France",
+    "intitule": "Data Analyst",
+    "lieu": "Issy-les-Moulineaux (92)",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "karla.mouton@pluxeegroup.com",
+    "contact_nom": "Karla",
+    "contact_titre": "Senior Talent Acquisition Specialist",
+    "url_offre": "https://www.pluxee.fr",
+    "score": 84
+  },
+  {
+    "id": "apollo-kurkdjian-cintia-garcia",
+    "entreprise": "Maison Francis Kurkdjian",
+    "intitule": "Data Analyst",
+    "lieu": "Paris",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "cintia.lariosgarcia@franciskurkdjian.com",
+    "contact_nom": "Cintia",
+    "contact_titre": "Talent Acquisition Manager / Chef de Projet Recrutement",
+    "url_offre": "https://www.franciskurkdjian.com",
+    "score": 82
+  },
+  {
+    "id": "apollo-astrelya-louise-perette",
+    "entreprise": "ASTRELYA",
+    "intitule": "Data Analyst",
+    "lieu": "Paris",
+    "type_contrat": "CDI",
+    "source": "apollo",
+    "destinataire": "lperette@astrelya.com",
+    "contact_nom": "Louise",
+    "contact_titre": "Talent Acquisition Specialist",
+    "url_offre": "https://www.astrelya.com",
+    "score": 80
+  }
+]
