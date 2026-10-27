@@ -33,6 +33,7 @@ const schema = z.object({
   BREVO_API_KEY: z.string().optional().default(''),
   BREVO_SMTP_API_KEY: z.string().optional().default(''),
   BREVO_SENDER_EMAIL: z.string().optional().default(''),
+  BREVO_SENDER_NAME: z.string().optional().default(''),
   EMAIL_SEND_LIVE: z.string().optional().default('false'),
 
   // Encryption key for candidate mailbox OAuth tokens (Gmail/Microsoft). A candidate's access &

@@ -20,6 +20,18 @@ import { createDryRunProvider } from './dryRunProvider.js'
 import { nullEmailStore, type EmailStore } from './store.js'
 import { EmailSendError, type MailProvider, type OutgoingEmail, type SendResult } from './types.js'
 
+/**
+ * The `From` header: the configured address, prefixed with the optional display name.
+ * `BREVO_SENDER_NAME` exists because an env value containing `<…>` is routinely mangled by
+ * shells and dashboards, so the two parts are configured separately.
+ */
+function defaultSender(): string {
+  const email = env.BREVO_SENDER_EMAIL.trim()
+  const name = env.BREVO_SENDER_NAME.trim()
+  if (!email || !name || email.includes('<')) return email
+  return `${name} <${email}>`
+}
+
 /** Whether the environment permits any real send at all. Defaults closed. */
 export function liveSendAllowed(): boolean {
   return env.EMAIL_SEND_LIVE.trim().toLowerCase() === 'true'
@@ -95,7 +107,7 @@ export async function sendApplicationEmail(
     }
   }
 
-  const from = (deps.from ?? env.BREVO_SENDER_EMAIL).trim()
+  const from = (deps.from ?? defaultSender()).trim()
   if (!from) {
     throw new EmailSendError('No sender address configured', 'NOT_CONFIGURED', false)
   }
